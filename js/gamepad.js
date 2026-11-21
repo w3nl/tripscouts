@@ -70,17 +70,22 @@ function gpMove(dir) {
   if (state === "hero" && heroMove(dir)) return;
   const list = gpFocusables(); if (!list.length) return;
   const cur = gpCurrent(); if (!cur) return gpFocus(gpDefault(list));
-  const r = cur.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-  let best = null, bestScore = Infinity;
-  for (const el of list) {
-    if (el === cur) continue;
-    const q = el.getBoundingClientRect(), x = q.left + q.width / 2 - cx, y = q.top + q.height / 2 - cy;
-    const main = dir === "left" ? -x : dir === "right" ? x : dir === "up" ? -y : y;
-    const side = dir === "left" || dir === "right" ? Math.abs(y) : Math.abs(x);
-    if (main <= 4) continue;
-    const score = main + side * 2.5;
-    if (score < bestScore) { bestScore = score; best = el; }
-  }
+  const nearest = items => {
+    const r = cur.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    let best = null, bestScore = Infinity;
+    for (const el of items) {
+      if (el === cur) continue;
+      const q = el.getBoundingClientRect(), x = q.left + q.width / 2 - cx, y = q.top + q.height / 2 - cy;
+      const main = dir === "left" ? -x : dir === "right" ? x : dir === "up" ? -y : y;
+      const side = dir === "left" || dir === "right" ? Math.abs(y) : Math.abs(x);
+      if (main <= 4) continue;
+      const score = main + side * 2.5;
+      if (score < bestScore) { bestScore = score; best = el; }
+    }
+    return best;
+  };
+  const bar = cur.closest("#installBar");
+  const best = (bar && nearest(list.filter(el => el.closest("#installBar")))) || nearest(list);
   if (best) gpFocus(best);
 }
 /** Druk op de knop met focus; blijft de focus daarna hangen, zet hem terug op dezelfde plek. */
