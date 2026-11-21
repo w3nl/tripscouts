@@ -51,6 +51,52 @@ test('met de pijltjes kies je een ander personage', async ({ page }) => {
   await expect(page.locator('#chars button').nth(2)).toBeFocused();   // de focus blijft op dezelfde plek
 });
 
+for (const [name, ua, id, url] of [
+  ['Chrome Web Store', 'Mozilla/5.0 (X11; CrOS x86_64 14526.64.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'installChrome', 'https://chromewebstore.google.com/detail/tripscouts/pcpdooenjphohflgmclkpachhfonjokc'],
+  ['Google Play', 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36', 'installPlay', 'https://play.google.com/store/apps/details?id=nl.w3nl.cabinweek'],
+]) {
+  test(`met de controller kies en open je ${name}`, async ({ page }) => {
+    await fakePad(page);
+    await page.addInitScript(ua => Object.defineProperty(navigator, 'userAgent', { get: () => ua }), ua);
+    await page.route('**/*', route => route.request().url() === url
+      ? route.fulfill({ status: 200, contentType: 'text/html', body: '<title>Store link opened</title>' })
+      : route.continue());
+    await seed(page);
+    const link = page.locator('#' + id);
+    await expect(link).toBeVisible();
+    await page.mouse.click(1, 1);
+    await page.locator('#installClose').focus();
+    await press(page, BTN.LEFT);
+    await expect(link).toBeFocused();
+    await expect(link).toHaveCSS('outline-width', '4px');
+    await page.evaluate(() => { window.__pad.buttons[0] = 1; });
+    await expect(page).toHaveURL(url);
+  });
+}
+
+test('with a controller, web-app installation falls back to Chrome menu instructions', async ({ page }) => {
+  await fakePad(page);
+  await page.addInitScript(() => Object.defineProperty(navigator, 'userAgent', { get: () => 'Mozilla/5.0 (X11; CrOS x86_64 14526.64.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36' }));
+  await seed(page);
+  await page.evaluate(() => {
+    window.__gevraagd = false;
+    const e = new Event('beforeinstallprompt', { cancelable: true });
+    e.prompt = () => { window.__gevraagd = true; };
+    e.userChoice = Promise.resolve({ outcome: 'accepted' });
+    dispatchEvent(e);
+  });
+  const install = page.locator('#installBtn');
+  await expect(install).toBeVisible();
+  await page.mouse.click(1, 1);
+  await page.locator('#installClose').focus();
+  await press(page, BTN.LEFT);
+  await press(page, BTN.LEFT);
+  await expect(install).toBeFocused();
+  await press(page, BTN.A);
+  await expect(page.locator('#installText')).toContainText('open Chrome');
+  expect(await page.evaluate(() => window.__gevraagd)).toBe(false);
+});
+
 test('lopen met de stick, springen met ✕, praten met □, verder met ✕, en Start voor het menu', async ({ page }) => {
   await fakePad(page);
   await seed(page);

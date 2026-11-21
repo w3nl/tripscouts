@@ -1,5 +1,5 @@
-const { test, expect } = require('@playwright/test');
-const fs = require('fs'), path = require('path');
+const { test, expect, chromium } = require('@playwright/test');
+const fs = require('fs'), path = require('path'), os = require('os');
 const root = path.join(__dirname, '..');
 
 test('het spel is een installeerbare app die offline werkt', async ({ page, context }) => {
@@ -18,6 +18,79 @@ test('het spel is een installeerbare app die offline werkt', async ({ page, cont
   await page.locator('#card .btn').first().click();
   await expect(page.locator('#hud')).toBeVisible();
   await context.setOffline(false);
+});
+
+test('Chrome biedt de Chrome Web Store-extensie aan', async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(navigator, 'userAgent', { get: () => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36' }));
+  await page.goto('/');
+  await page.evaluate(() => { const e = new Event('beforeinstallprompt'); e.prompt = () => {}; e.userChoice = Promise.resolve({ outcome: 'accepted' }); dispatchEvent(e); });
+  await expect(page.locator('#installBar')).toBeVisible();
+  await expect(page.locator('#installChrome')).toBeVisible();
+  await expect(page.locator('#installChrome')).toHaveAttribute('href', 'https://chromewebstore.google.com/detail/tripscouts/pcpdooenjphohflgmclkpachhfonjokc');
+  await expect(page.locator('#installText')).toContainText('install the web app');
+});
+
+test('een Chromebook toont de Chrome Web Store-optie zonder installatieprompt', async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(navigator, 'userAgent', { get: () => 'Mozilla/5.0 (X11; CrOS x86_64 14526.64.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36' }));
+  await page.goto('/');
+  await expect(page.locator('#installBar')).toBeVisible();
+  await expect(page.locator('#installChrome')).toBeVisible();
+  await expect(page.locator('#installBtn')).toBeHidden();
+  await expect(page.locator('#installText')).toContainText("Chrome's menu");
+});
+
+test('de installatiemelding werkt met pijltjes en Enter', async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(navigator, 'userAgent', { get: () => 'Mozilla/5.0 (X11; CrOS x86_64 14526.64.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36' }));
+  await page.goto('/');
+  await expect(page.locator('#installChrome')).toBeVisible();
+  expect(await page.evaluate(() => gpFocusables().map(el => el.id))).toEqual(expect.arrayContaining(['installChrome', 'installClose']));
+  const focusables = await page.evaluate(() => gpFocusables().map(el => el.id));
+  expect(focusables).not.toContain('installBtn');
+  expect(focusables).not.toContain('installPlay');
+  await page.evaluate(() => {
+    window.__storeClicks = 0;
+    document.querySelector('#installChrome').addEventListener('click', e => { e.preventDefault(); window.__storeClicks++; });
+  });
+  await page.locator('#installClose').focus();
+  await page.keyboard.press('ArrowLeft');
+  await expect(page.locator('#installChrome')).toBeFocused();
+  await page.keyboard.press('Enter');
+  expect(await page.evaluate(() => window.__storeClicks)).toBe(1);
+  await page.locator('#installClose').focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#installBar')).toBeHidden();
+  expect(await page.evaluate(() => gpFocusables().some(el => el.closest('#installBar')))).toBe(false);
+});
+
+test('een Chromebook biedt de geïnstalleerde Chrome-extensie niet opnieuw aan', async () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'tripscouts-extension-'));
+  let context;
+  try {
+    const extension = path.join(tmp, 'extension');
+    fs.mkdirSync(extension);
+    for (const f of ['index.html', 'manifest.webmanifest', 'css', 'js', 'icons'])
+      fs.cpSync(path.join(root, f), path.join(extension, f), { recursive: true });
+    fs.copyFileSync(path.join(root, 'chrome', 'background.js'), path.join(extension, 'background.js'));
+    fs.writeFileSync(path.join(extension, 'manifest.json'), JSON.stringify({
+      manifest_version: 3, name: 'TripScouts', version: '1.0.0', action: {}, background: { service_worker: 'background.js' }
+    }));
+    context = await chromium.launchPersistentContext(path.join(tmp, 'profile'), {
+      headless: true,
+      channel: 'chromium',
+      executablePath: process.env.PW_CHROMIUM || undefined,
+      ignoreDefaultArgs: ['--disable-extensions'],
+      args: [`--disable-extensions-except=${extension}`, `--load-extension=${extension}`],
+      userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 14526.64.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36'
+    });
+    const worker = context.serviceWorkers()[0] || await context.waitForEvent('serviceworker');
+    const page = await context.newPage();
+    await page.goto(new URL('/index.html', worker.url()).href);
+    await expect(page.locator('html')).toHaveClass(/ready/);
+    await expect(page.locator('#installBar')).toBeHidden();
+  } finally {
+    if (context) await context.close();
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
 });
 
 test('elk bestand in de offline-lijst bestaat, en elk spelbestand staat erin', async () => {
