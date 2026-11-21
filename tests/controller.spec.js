@@ -72,6 +72,29 @@ for (const [name, ua, id, url] of [
   });
 }
 
+test('with a controller, web-app installation falls back to Chrome menu instructions', async ({ page }) => {
+  await fakePad(page);
+  await page.addInitScript(() => Object.defineProperty(navigator, 'userAgent', { get: () => 'Mozilla/5.0 (X11; CrOS x86_64 14526.64.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36' }));
+  await seed(page);
+  await page.evaluate(() => {
+    window.__gevraagd = false;
+    const e = new Event('beforeinstallprompt', { cancelable: true });
+    e.prompt = () => { window.__gevraagd = true; };
+    e.userChoice = Promise.resolve({ outcome: 'accepted' });
+    dispatchEvent(e);
+  });
+  const install = page.locator('#installBtn');
+  await expect(install).toBeVisible();
+  await page.mouse.click(1, 1);
+  await page.locator('#installClose').focus();
+  await press(page, BTN.LEFT);
+  await press(page, BTN.LEFT);
+  await expect(install).toBeFocused();
+  await press(page, BTN.A);
+  await expect(page.locator('#installText')).toContainText('open Chrome');
+  expect(await page.evaluate(() => window.__gevraagd)).toBe(false);
+});
+
 test('lopen met de stick, springen met ✕, praten met □, verder met ✕, en Start voor het menu', async ({ page }) => {
   await fakePad(page);
   await seed(page);

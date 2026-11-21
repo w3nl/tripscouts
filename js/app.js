@@ -2,7 +2,7 @@
 // Start het spel: versie, service worker, updatebalk en de spellus.
 
 /** Staat op het titelscherm. Altijd hetzelfde getal als CACHE in sw.js (tests/pwa.spec.js controleert dat). */
-const GAME_VERSION = 38;
+const GAME_VERSION = 39;
 $("version").textContent = "v" + GAME_VERSION;
 
 /* ---------- Installeerbare app en updates ---------- */
@@ -67,8 +67,12 @@ addEventListener("appinstalled", () => { installOffer = false; installEvt = null
 if ((IS_IOS || IS_ANDROID || (IS_CHROMEOS && location.protocol !== "chrome-extension:")) && !IS_APP() && !IN_TV_APP) installOffer = true;
 installChoice();
 $("installPlay").onclick = () => { playClicked = true; setTimeout(updateHints, 0); };
-$("installBtn").onclick = async () => {
+$("installBtn").onclick = async e => {
   if (!installEvt) return;
+  if (!e.isTrusted) {
+    $("installText").textContent = T("To install, open Chrome’s ⋮ menu and choose “Install TripScouts” or “Add to Home screen”.", "Open het ⋮-menu van Chrome en kies ‘TripScouts installeren’ of ‘Toevoegen aan startscherm’.");
+    return;
+  }
   installEvt.prompt();
   try { await installEvt.userChoice; } catch (e) {}
   installEvt = null; installOffer = false; updateHints();
