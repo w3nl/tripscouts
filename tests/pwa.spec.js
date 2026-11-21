@@ -20,17 +20,14 @@ test('het spel is een installeerbare app die offline werkt', async ({ page, cont
   await context.setOffline(false);
 });
 
-test('Chrome biedt de Chrome Web Store-extensie aan, Android niet', async ({ page }) => {
+test('Chrome biedt de Chrome Web Store-extensie aan', async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(navigator, 'userAgent', { get: () => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36' }));
   await page.goto('/');
-  const chrome = await page.evaluate(() => /(?:Chrome|Chromium)\//.test(navigator.userAgent) && !/(?:Android|Edg\/|OPR\/|CriOS\/)/.test(navigator.userAgent));
-  if (chrome) {
-    await page.evaluate(() => { const e = new Event('beforeinstallprompt'); e.prompt = () => {}; e.userChoice = Promise.resolve({ outcome: 'accepted' }); dispatchEvent(e); });
-    await expect(page.locator('#installBar')).toBeVisible();
-    await expect(page.locator('#installChrome')).toBeVisible();
-    await expect(page.locator('#installChrome')).toHaveAttribute('href', 'https://chrome.google.com/webstore/detail/pcpdooenjphohflgmclkpachhfonjokc');
-  } else {
-    await expect(page.locator('#installChrome')).toBeHidden();
-  }
+  await page.evaluate(() => { const e = new Event('beforeinstallprompt'); e.prompt = () => {}; e.userChoice = Promise.resolve({ outcome: 'accepted' }); dispatchEvent(e); });
+  await expect(page.locator('#installBar')).toBeVisible();
+  await expect(page.locator('#installChrome')).toBeVisible();
+  await expect(page.locator('#installChrome')).toHaveAttribute('href', 'https://chromewebstore.google.com/detail/tripscouts/pcpdooenjphohflgmclkpachhfonjokc');
+  await expect(page.locator('#installText')).toContainText('install the web app');
 });
 
 test('een Chromebook toont de Chrome Web Store-optie zonder installatieprompt', async ({ page }) => {
@@ -39,6 +36,7 @@ test('een Chromebook toont de Chrome Web Store-optie zonder installatieprompt', 
   await expect(page.locator('#installBar')).toBeVisible();
   await expect(page.locator('#installChrome')).toBeVisible();
   await expect(page.locator('#installBtn')).toBeHidden();
+  await expect(page.locator('#installText')).toContainText("Chrome's menu");
 });
 
 test('de installatiemelding werkt met pijltjes en Enter', async ({ page }) => {

@@ -52,13 +52,15 @@ test('met de pijltjes kies je een ander personage', async ({ page }) => {
 });
 
 for (const [name, ua, id, url] of [
-  ['Chrome Web Store', 'Mozilla/5.0 (X11; CrOS x86_64 14526.64.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'installChrome', 'https://chrome.google.com/webstore/detail/pcpdooenjphohflgmclkpachhfonjokc'],
+  ['Chrome Web Store', 'Mozilla/5.0 (X11; CrOS x86_64 14526.64.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'installChrome', 'https://chromewebstore.google.com/detail/tripscouts/pcpdooenjphohflgmclkpachhfonjokc'],
   ['Google Play', 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36', 'installPlay', 'https://play.google.com/store/apps/details?id=nl.w3nl.cabinweek'],
 ]) {
   test(`met de controller kies en open je ${name}`, async ({ page }) => {
     await fakePad(page);
     await page.addInitScript(ua => Object.defineProperty(navigator, 'userAgent', { get: () => ua }), ua);
-    await page.route(url, route => route.fulfill({ status: 302, headers: { location: 'http://127.0.0.1:4180/?store=' + id } }));
+    await page.route('**/*', route => route.request().url() === url
+      ? route.fulfill({ status: 200, contentType: 'text/html', body: '<title>Store link opened</title>' })
+      : route.continue());
     await seed(page);
     const link = page.locator('#' + id);
     await expect(link).toBeVisible();
@@ -68,7 +70,7 @@ for (const [name, ua, id, url] of [
     await expect(link).toBeFocused();
     await expect(link).toHaveCSS('outline-width', '4px');
     await page.evaluate(() => { window.__pad.buttons[0] = 1; });
-    await expect(page).toHaveURL('http://127.0.0.1:4180/?store=' + id);
+    await expect(page).toHaveURL(url);
   });
 }
 

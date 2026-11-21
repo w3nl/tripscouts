@@ -41,7 +41,8 @@ function installChoice() {
   $("installText").textContent = IS_IOS ? T("📲 Put the game on your home screen: tap Share, then Add to Home Screen.", "📲 Zet het spel op je beginscherm: tik op Deel en dan op Zet op beginscherm.")
     : IS_ANDROID && web ? T("📲 Play as an app: add the web app to your home screen, or get the Android app from Google Play.", "📲 Speel als app: zet de web-app op je beginscherm, of haal de Android-app uit Google Play.")
     : IS_ANDROID ? T("📲 Play as an app: get the Android app from Google Play, or add the game to your home screen from the browser menu.", "📲 Speel als app: haal de Android-app uit Google Play, of zet het spel via het browsermenu op je beginscherm.")
-    : IS_CHROME ? T("📲 Add TripScouts to Chrome: get the extension, or install the web app for offline play.", "📲 Zet TripScouts in Chrome: haal de extensie op, of installeer de web-app om offline te spelen.")
+    : IS_CHROME && web ? T("📲 Add TripScouts to Chrome: get the extension, or install the web app for offline play.", "📲 Zet TripScouts in Chrome: haal de extensie op, of installeer de web-app om offline te spelen.")
+    : IS_CHROME ? T("📲 Add TripScouts to Chrome: get the extension, or use Chrome's menu to install the web app for offline play.", "📲 Zet TripScouts in Chrome: haal de extensie op, of installeer de web-app via het Chrome-menu om offline te spelen.")
     : T("📲 Put TripScouts on your home screen: play with one tap, even offline.", "📲 Zet TripScouts op je beginscherm: met één tik spelen, ook zonder internet.");
 }
 function installLater() { try { return Date.now() < +(localStorage.getItem("cabin-week-install-later") || 0); } catch (e) { return false; } }

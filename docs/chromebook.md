@@ -26,7 +26,7 @@ When online, the web app checks for updates. Use the in-game update bar when off
 
 ## 2. Install the Chrome extension
 
-Open [TripScouts in the Chrome Web Store](https://chrome.google.com/webstore/detail/pcpdooenjphohflgmclkpachhfonjokc) in Chrome and select **Add to Chrome**. The extension adds a TripScouts button to the toolbar and opens the game in a browser tab. The game files are included, so it works offline after installation. Its progress is separate from the website and Android app.
+Open [TripScouts in the Chrome Web Store](https://chromewebstore.google.com/detail/tripscouts/pcpdooenjphohflgmclkpachhfonjokc) in Chrome and select **Add to Chrome**. The extension adds a TripScouts button to the toolbar and opens the game in a browser tab. The game files are included, so it works offline after installation. Its progress is separate from the website and Android app.
 
 ## 3. Install the Android app through Google Play
 
