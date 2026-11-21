@@ -51,21 +51,26 @@ test('met de pijltjes kies je een ander personage', async ({ page }) => {
   await expect(page.locator('#chars button').nth(2)).toBeFocused();   // de focus blijft op dezelfde plek
 });
 
-test('met de controller kies en open je de Chrome Web Store', async ({ page }) => {
-  await fakePad(page);
-  await page.addInitScript(() => Object.defineProperty(navigator, 'userAgent', { get: () => 'Mozilla/5.0 (X11; CrOS x86_64 14526.64.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36' }));
-  await seed(page);
-  await expect(page.locator('#installChrome')).toBeVisible();
-  await page.evaluate(() => {
-    window.__storeClicks = 0;
-    document.querySelector('#installChrome').addEventListener('click', e => { e.preventDefault(); window.__storeClicks++; });
+for (const [name, ua, id, url] of [
+  ['Chrome Web Store', 'Mozilla/5.0 (X11; CrOS x86_64 14526.64.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36', 'installChrome', 'https://chrome.google.com/webstore/detail/pcpdooenjphohflgmclkpachhfonjokc'],
+  ['Google Play', 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Mobile Safari/537.36', 'installPlay', 'https://play.google.com/store/apps/details?id=nl.w3nl.cabinweek'],
+]) {
+  test(`met de controller kies en open je ${name}`, async ({ page }) => {
+    await fakePad(page);
+    await page.addInitScript(ua => Object.defineProperty(navigator, 'userAgent', { get: () => ua }), ua);
+    await page.route(url, route => route.fulfill({ status: 302, headers: { location: 'http://127.0.0.1:4180/?store=' + id } }));
+    await seed(page);
+    const link = page.locator('#' + id);
+    await expect(link).toBeVisible();
+    await page.mouse.click(1, 1);
+    await page.locator('#installClose').focus();
+    await press(page, BTN.LEFT);
+    await expect(link).toBeFocused();
+    await expect(link).toHaveCSS('outline-width', '4px');
+    await page.evaluate(() => { window.__pad.buttons[0] = 1; });
+    await expect(page).toHaveURL('http://127.0.0.1:4180/?store=' + id);
   });
-  await page.locator('#installClose').focus();
-  await press(page, BTN.LEFT);
-  await expect(page.locator('#installChrome')).toBeFocused();
-  await press(page, BTN.A);
-  expect(await page.evaluate(() => window.__storeClicks)).toBe(1);
-});
+}
 
 test('lopen met de stick, springen met ✕, praten met □, verder met ✕, en Start voor het menu', async ({ page }) => {
   await fakePad(page);

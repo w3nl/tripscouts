@@ -84,11 +84,12 @@ function gpMove(dir) {
   if (best) gpFocus(best);
 }
 /** Druk op de knop met focus; blijft de focus daarna hangen, zet hem terug op dezelfde plek. */
-function gpPress() {
+function gpPress(fromPad = false) {
   // ✕/A on the name field: the letters on screen, to type a name without a keyboard
   if (state === "hero" && document.activeElement === $("heroName")) { openHeroKeys(); return; }
   const list = gpFocusables(), cur = gpCurrent();
   if (!cur) return gpFocus(gpDefault(list));
+  if (fromPad && cur.matches("#installBar a[href]")) { location.assign(cur.href); return; }
   const idx = list.indexOf(cur), before = state;
   cur.click();
   requestAnimationFrame(() => {
@@ -155,9 +156,9 @@ function pollGamepads() {
       if (down(BTN.START)) toTitle();
     } else {
       if (L) dir = "left"; else if (R) dir = "right"; else if (U) dir = "up"; else if (D) dir = "down";
-      if (down(BTN.A)) gpPress();
+      if (down(BTN.A)) gpPress(true);
       else if (down(BTN.B)) gpBack();
-      else if (down(BTN.START) && state === "intro") gpPress();
+      else if (down(BTN.START) && state === "intro") gpPress(true);
     }
     GP.prev[i] = now;
   });
