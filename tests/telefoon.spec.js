@@ -71,6 +71,7 @@ test('meldingen: installeren als app (Android: web-app of Google Play) en het sc
   await expect(page.locator('#installBar')).toBeVisible();
   await expect(page.locator('#installPlay')).toBeVisible();
   await expect(page.locator('#installPlay')).toHaveAttribute('href', 'https://play.google.com/store/apps/details?id=nl.w3nl.cabinweek');
+  await expect(page.locator('#installChrome')).toBeHidden();
   await expect(page.locator('#installBtn')).toBeHidden();
   // Chrome biedt installeren aan: de knop voor de web-app komt erbij en opent de vraag van Chrome
   await page.evaluate(() => { const e = new Event('beforeinstallprompt'); e.prompt = () => { window.__gevraagd = true; }; e.userChoice = Promise.resolve({ outcome: 'accepted' }); dispatchEvent(e); });

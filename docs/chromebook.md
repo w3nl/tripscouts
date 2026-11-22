@@ -1,12 +1,13 @@
 # TripScouts on a Chromebook (Chrome OS)
 
-There are two ways to install TripScouts. Both use the existing game; there is no separate Chrome OS package or build workflow.
+There are three ways to install TripScouts. All use the existing game; there is no separate Chrome OS package or build workflow.
 
 The game is also packaged as a Chrome extension for the Chrome Web Store, which works on a Chromebook too: see [chrome-web-store.md](chrome-web-store.md).
 
 | Route | Needed | Updates |
 |---|---|---|
 | Web app (recommended) | Chrome and permission to install web apps | The website's service worker |
+| Chrome extension | Chrome and access to the Chrome Web Store | The Chrome Web Store |
 | Android app | A Chromebook with Google Play enabled and access to the game's testing track | Google Play, after a new bundle is published |
 
 School or work administrators may block either installation route. The web game can still be played in a browser if the site is allowed.
@@ -23,7 +24,11 @@ Use the normal window controls to maximise or close it. The game scales when the
 
 When online, the web app checks for updates. Use the in-game update bar when offered. Closing the window keeps completed days and your saved hero; progress inside the current day is not saved.
 
-## 2. Install the Android app through Google Play
+## 2. Install the Chrome extension
+
+Open [TripScouts in the Chrome Web Store](https://chromewebstore.google.com/detail/tripscouts/pcpdooenjphohflgmclkpachhfonjokc) in Chrome and select **Add to Chrome**. The extension adds a TripScouts button to the toolbar and opens the game in a browser tab. The game files are included, so it works offline after installation. Its progress is separate from the website and Android app.
+
+## 3. Install the Android app through Google Play
 
 This is the **same Android app** used on phones, tablets and Google TV, with package name `nl.w3nl.cabinweek`. A Chromebook must support Android apps and have the Play Store enabled. Not all Chromebooks do.
 

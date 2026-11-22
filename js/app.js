@@ -2,7 +2,7 @@
 // Start het spel: versie, service worker, updatebalk en de spellus.
 
 /** Staat op het titelscherm. Altijd hetzelfde getal als CACHE in sw.js (tests/pwa.spec.js controleert dat). */
-const GAME_VERSION = 34;
+const GAME_VERSION = 39;
 $("version").textContent = "v" + GAME_VERSION;
 
 /* ---------- Installeerbare app en updates ---------- */
@@ -27,17 +27,22 @@ const IN_TV_APP = location.hostname === "appassets.androidplatform.net";
 if (IN_TV_APP) $("credits").textContent = T("Source: github.com/w3nl/tripscouts · Licence: GPL-3.0", "Broncode: github.com/w3nl/tripscouts · Licentie: GPL-3.0");
 const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 const IS_ANDROID = /Android/i.test(navigator.userAgent);
+const IS_CHROMEOS = /\bCrOS\b/.test(navigator.userAgent);
+const IS_CHROME = /(?:Chrome|Chromium)\//.test(navigator.userAgent) && !/(?:Android|Edg\/|OPR\/|CriOS\/)/.test(navigator.userAgent);
 const IS_APP = () => matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: fullscreen)").matches || navigator.standalone === true;
 let installEvt = null, installOffer = false, playClicked = false, rotateClosed = false, rotateTimer = 0;
-/** De tekst en knoppen van de installeerbalk: de web-app (als de browser dat aanbiedt) en op Android ook de app uit Google Play. */
+/** De tekst en knoppen van de installeerbalk: de web-app, de Chrome-extensie en op Android ook de app uit Google Play. */
 function installChoice() {
   const web = !!installEvt;
   $("installBtn").hidden = !web;
   $("installBtn").textContent = IS_ANDROID ? T("Web app", "Web-app") : T("Install", "Installeren");
   $("installPlay").hidden = !IS_ANDROID;
+  $("installChrome").hidden = !IS_CHROME;
   $("installText").textContent = IS_IOS ? T("📲 Put the game on your home screen: tap Share, then Add to Home Screen.", "📲 Zet het spel op je beginscherm: tik op Deel en dan op Zet op beginscherm.")
     : IS_ANDROID && web ? T("📲 Play as an app: add the web app to your home screen, or get the Android app from Google Play.", "📲 Speel als app: zet de web-app op je beginscherm, of haal de Android-app uit Google Play.")
     : IS_ANDROID ? T("📲 Play as an app: get the Android app from Google Play, or add the game to your home screen from the browser menu.", "📲 Speel als app: haal de Android-app uit Google Play, of zet het spel via het browsermenu op je beginscherm.")
+    : IS_CHROME && web ? T("📲 Add TripScouts to Chrome: get the extension, or install the web app for offline play.", "📲 Zet TripScouts in Chrome: haal de extensie op, of installeer de web-app om offline te spelen.")
+    : IS_CHROME ? T("📲 Add TripScouts to Chrome: get the extension, or use Chrome's menu to install the web app for offline play.", "📲 Zet TripScouts in Chrome: haal de extensie op, of installeer de web-app via het Chrome-menu om offline te spelen.")
     : T("📲 Put TripScouts on your home screen: play with one tap, even offline.", "📲 Zet TripScouts op je beginscherm: met één tik spelen, ook zonder internet.");
 }
 function installLater() { try { return Date.now() < +(localStorage.getItem("cabin-week-install-later") || 0); } catch (e) { return false; } }
@@ -60,11 +65,15 @@ addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = 
 addEventListener("appinstalled", () => { installOffer = false; installEvt = null; updateHints(); });
 // iPhone en iPad: Safari heeft geen installeerknop, dus uitleg in één zin.
 // Android: meteen de keuze voor de Android-app uit Google Play (de web-app-knop komt erbij zodra de browser die aanbiedt).
-if ((IS_IOS || IS_ANDROID) && !IS_APP() && !IN_TV_APP) installOffer = true;
+if ((IS_IOS || IS_ANDROID || (IS_CHROMEOS && location.protocol !== "chrome-extension:")) && !IS_APP() && !IN_TV_APP) installOffer = true;
 installChoice();
 $("installPlay").onclick = () => { playClicked = true; setTimeout(updateHints, 0); };
-$("installBtn").onclick = async () => {
+$("installBtn").onclick = async e => {
   if (!installEvt) return;
+  if (!e.isTrusted) {
+    $("installText").textContent = T("To install, open Chrome’s ⋮ menu and choose “Install TripScouts” or “Add to Home screen”.", "Open het ⋮-menu van Chrome en kies ‘TripScouts installeren’ of ‘Toevoegen aan startscherm’.");
+    return;
+  }
   installEvt.prompt();
   try { await installEvt.userChoice; } catch (e) {}
   installEvt = null; installOffer = false; updateHints();

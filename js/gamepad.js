@@ -50,7 +50,11 @@ addEventListener("gamepaddisconnected", gpStatus);
 
 /* ---------- Menu's met de controller ---------- */
 function gpRoot() { return state === "title" ? $("title") : state === "map" ? $("mapWrap") : state === "hero" ? $("heroWrap") : state === "save" ? $("saveWrap") : state === "pad" ? $("padWrap") : $("cardWrap"); }
-function gpFocusables() { return [...gpRoot().querySelectorAll("button")].filter(b => !b.disabled && b.offsetParent !== null); }
+function gpFocusables() {
+  const list = [...gpRoot().querySelectorAll("button")];
+  if (state === "title") list.push(...$("installBar").querySelectorAll("button, a[href]"));
+  return list.filter(b => !b.disabled && b.offsetParent !== null);
+}
 function gpCurrent() { const list = gpFocusables(); return list.includes(document.activeElement) ? document.activeElement : null; }
 function gpFocus(el) { if (!el) return; el.focus({ preventScroll: true }); el.scrollIntoView({ block: "nearest", inline: "nearest" }); }
 /** Waar de focus begint: de laatst vrijgespeelde dag, de eerste knop op een kaart, of de 1 op het codeslot. */
@@ -66,25 +70,31 @@ function gpMove(dir) {
   if (state === "hero" && heroMove(dir)) return;
   const list = gpFocusables(); if (!list.length) return;
   const cur = gpCurrent(); if (!cur) return gpFocus(gpDefault(list));
-  const r = cur.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-  let best = null, bestScore = Infinity;
-  for (const el of list) {
-    if (el === cur) continue;
-    const q = el.getBoundingClientRect(), x = q.left + q.width / 2 - cx, y = q.top + q.height / 2 - cy;
-    const main = dir === "left" ? -x : dir === "right" ? x : dir === "up" ? -y : y;
-    const side = dir === "left" || dir === "right" ? Math.abs(y) : Math.abs(x);
-    if (main <= 4) continue;
-    const score = main + side * 2.5;
-    if (score < bestScore) { bestScore = score; best = el; }
-  }
+  const nearest = items => {
+    const r = cur.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    let best = null, bestScore = Infinity;
+    for (const el of items) {
+      if (el === cur) continue;
+      const q = el.getBoundingClientRect(), x = q.left + q.width / 2 - cx, y = q.top + q.height / 2 - cy;
+      const main = dir === "left" ? -x : dir === "right" ? x : dir === "up" ? -y : y;
+      const side = dir === "left" || dir === "right" ? Math.abs(y) : Math.abs(x);
+      if (main <= 4) continue;
+      const score = main + side * 2.5;
+      if (score < bestScore) { bestScore = score; best = el; }
+    }
+    return best;
+  };
+  const bar = cur.closest("#installBar");
+  const best = (bar && nearest(list.filter(el => el.closest("#installBar")))) || nearest(list);
   if (best) gpFocus(best);
 }
 /** Druk op de knop met focus; blijft de focus daarna hangen, zet hem terug op dezelfde plek. */
-function gpPress() {
+function gpPress(fromPad = false) {
   // ✕/A on the name field: the letters on screen, to type a name without a keyboard
   if (state === "hero" && document.activeElement === $("heroName")) { openHeroKeys(); return; }
   const list = gpFocusables(), cur = gpCurrent();
   if (!cur) return gpFocus(gpDefault(list));
+  if (fromPad && cur.matches("#installBar a[href]")) { location.assign(cur.href); return; }
   const idx = list.indexOf(cur), before = state;
   cur.click();
   requestAnimationFrame(() => {
@@ -151,9 +161,9 @@ function pollGamepads() {
       if (down(BTN.START)) toTitle();
     } else {
       if (L) dir = "left"; else if (R) dir = "right"; else if (U) dir = "up"; else if (D) dir = "down";
-      if (down(BTN.A)) gpPress();
+      if (down(BTN.A)) gpPress(true);
       else if (down(BTN.B)) gpBack();
-      else if (down(BTN.START) && state === "intro") gpPress();
+      else if (down(BTN.START) && state === "intro") gpPress(true);
     }
     GP.prev[i] = now;
   });

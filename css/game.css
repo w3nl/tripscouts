@@ -256,7 +256,7 @@ html.wide #padWrap .pad .cta { justify-content: flex-start !important; margin-to
 /* ---------- Controller ---------- */
 .gp-status { margin-top: 12px; padding: 8px 12px; border-radius: 12px; background: rgba(89,194,138,.12); border: 1px solid rgba(89,194,138,.45); color: #bff0d2; font-weight: 700; line-height: 1.45; }
 /* met een controller is de focus het enige dat laat zien welke knop je kiest: maak hem goed zichtbaar */
-html.gp-on button:focus { outline: 4px solid var(--gold); outline-offset: 3px; box-shadow: 0 0 0 7px rgba(255,210,94,.25); }
+html.gp-on button:focus, html.gp-on #installBar a[href]:focus { outline: 4px solid var(--gold); outline-offset: 3px; box-shadow: 0 0 0 7px rgba(255,210,94,.25); }
 .update-bar { position: absolute; left: 50%; transform: translateX(-50%); top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 30;
   display: flex; gap: 12px; align-items: center; background: var(--panel); border: 2px solid var(--gold); border-radius: 14px; padding: 8px 10px 8px 16px;
   box-shadow: 0 10px 30px rgba(0,0,0,.5); font-weight: 700; width: max-content; max-width: calc(100% - 32px); }

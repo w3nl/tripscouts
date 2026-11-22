@@ -2,6 +2,7 @@
 
 The Chrome extension is a small wrapper around the same game files as the website, like the Android and Linux apps:
 
+- Install [TripScouts from the Chrome Web Store](https://chromewebstore.google.com/detail/tripscouts/pcpdooenjphohflgmclkpachhfonjokc).
 - `chrome/background.js` opens the game in a tab when you click the TripScouts button in the toolbar (and once right after installing). If the game is already open, it brings that tab to the front.
 - The game is **inside the extension**, so it works offline, also on a Chromebook. There is no service worker: it only runs on http(s), and the extension doesn't need one.
 - It asks for **no permissions** and runs no code from elsewhere. Only the fonts come from Google Fonts; without internet the game uses the fallback fonts.
@@ -14,13 +15,13 @@ The Chrome extension is a small wrapper around the same game files as the websit
 npm run build:chrome
 ```
 
-This makes `dist/tripscouts-chrome.zip` (to upload) and `dist/chrome/` (the same files unpacked). The version follows the game, like the Linux app: `GAME_VERSION` 34 becomes `1.34.0`. The Web Store only takes a higher version than the last upload, so raise `GAME_VERSION` before uploading again.
+This makes `dist/tripscouts-chrome.zip` (to upload) and `dist/chrome/` (the same files unpacked). The version follows the game, like the Linux app: `GAME_VERSION` becomes `1.<GAME_VERSION>.0`. The Web Store only takes a higher version than the last upload, so raise `GAME_VERSION` before uploading again.
 
 To try it first: open `chrome://extensions`, turn on **Developer mode**, choose **Load unpacked** and select `dist/chrome/`.
 
 ## Publishing, step by step
 
-1. Sign in to the [Chrome Web Store developer dashboard](https://chrome.google.com/webstore/devconsole) (a one-time registration fee applies).
+1. Sign in to the [Chrome Web Store developer dashboard](https://chromewebstore.google.com/devconsole) (a one-time registration fee applies).
 2. **New item** → drop `dist/tripscouts-chrome.zip` where it says *Drop a ZIP or CRX file here*.
 3. **Store listing:** the texts from [play-store/](play-store/) fit (English and Dutch), category *Games*. The images are in [chrome-store/](chrome-store/), made by `npm run store:chrome` (it leaves the Google Play images alone):
    - **Store icon:** `store-icon.png` (128×128: the artwork 96×96 with 16 px transparent space around it, as Google asks).
