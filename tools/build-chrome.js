@@ -10,7 +10,7 @@ const manifest = JSON.parse(fs.readFileSync(path.join(root, 'manifest.webmanifes
 
 fs.rmSync(out, { recursive: true, force: true });
 // No sw.js: a service worker only runs on http(s), and the extension has the game inside it already (offline).
-for (const f of ['index.html', 'manifest.webmanifest', 'css', 'js', 'icons'])
+for (const f of ['index.html', 'privacy.html', 'manifest.webmanifest', 'css', 'js', 'icons', 'fonts'])
   fs.cpSync(path.join(root, f), path.join(out, f), { recursive: true });
 fs.cpSync(path.join(root, 'chrome'), out, { recursive: true });
 

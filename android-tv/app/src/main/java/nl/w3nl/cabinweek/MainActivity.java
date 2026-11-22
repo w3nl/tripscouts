@@ -112,7 +112,11 @@ public class MainActivity extends Activity {
             // De terug-knop: het spel doet een stap terug; op het titelscherm sluit de app.
             if (!down && e.getRepeatCount() == 0) {
                 web.evaluateJavascript("window.tvBack ? window.tvBack() : false", value -> {
-                    if (!"true".equals(value)) finish();
+                    if ("true".equals(value)) return;
+                    // Op de privacypagina (of een link daarvandaan): Terug gaat naar het spel, niet uit de app.
+                    String url = web.getUrl();
+                    if (url != null && !url.contains("/index.html") && web.canGoBack()) web.goBack();
+                    else finish();
                 });
             }
             return true;

@@ -7,9 +7,9 @@ name: Build the Linux app
 on:
   push:
     branches: [main]
-    paths: ["linux/**", "snapcraft.yaml", "index.html", "manifest.webmanifest", "sw.js", "css/**", "js/**", "icons/**", "tools/build-site.js", ".github/workflows/linux.yml"]
+    paths: ["linux/**", "snapcraft.yaml", "index.html", "privacy.html", "manifest.webmanifest", "sw.js", "css/**", "js/**", "icons/**", "fonts/**", "tools/build-site.js", ".github/workflows/linux.yml"]
   pull_request:
-    paths: ["linux/**", "snapcraft.yaml", "index.html", "manifest.webmanifest", "sw.js", "css/**", "js/**", "icons/**", "tools/build-site.js", ".github/workflows/linux.yml"]
+    paths: ["linux/**", "snapcraft.yaml", "index.html", "privacy.html", "manifest.webmanifest", "sw.js", "css/**", "js/**", "icons/**", "fonts/**", "tools/build-site.js", ".github/workflows/linux.yml"]
   workflow_dispatch:
 
 permissions:

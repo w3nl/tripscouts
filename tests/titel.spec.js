@@ -100,13 +100,23 @@ test("day 4 is Paul's birthday: he wears a party hat", async ({ page }) => {
   expect(await page.evaluate(() => LEVELS[3].birthday)).toBe('Paul');
 });
 
-test('the menu links to the source code and the licence, like the escape rooms', async ({ page }) => {
+test('the menu links to the source code, the licence and the privacy policy, like the escape rooms', async ({ page }) => {
   await seed(page);
   const src = page.locator('#credits a', { hasText: 'Source code' }), lic = page.locator('#credits a', { hasText: 'Licence (GPL-3.0)' });
   await expect(src).toHaveAttribute('href', 'https://github.com/w3nl/tripscouts');
   await expect(lic).toHaveAttribute('href', 'https://github.com/w3nl/tripscouts/blob/main/LICENSE');
   await expect(src).toBeVisible();
+  const privacy = page.locator('.version a[href="privacy.html"]');
+  await expect(privacy).toHaveText('Privacy policy');
+  await expect(privacy).toBeVisible();
+  await expect(privacy).not.toHaveAttribute('target', /.+/);   // the same window, so it also works in the Android and Linux apps
   await seed(page, { lang: 'nl' });
   await expect(page.locator('#credits')).toContainText('Broncode');
   await expect(page.locator('#credits')).toContainText('Licentie (GPL-3.0)');
+  await expect(privacy).toHaveText('Privacybeleid');
+  await privacy.click();
+  await expect(page).toHaveURL(/\/privacy\.html$/);
+  await expect(page.locator('h1').first()).toHaveText('Privacy');
+  await page.getByRole('link', { name: 'To the game' }).click();
+  await expect(page.locator('html')).toHaveClass(/ready/);
 });

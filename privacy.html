@@ -14,6 +14,7 @@
     --snow: #eef4f8; --muted: #a7bccb; --gold: #ffd25e;
     color-scheme: dark;
   }
+  @font-face { font-family: "Nunito"; font-style: normal; font-weight: 200 1000; font-display: swap; src: url("fonts/nunito-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122; }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--night); color: var(--snow); font: 16px/1.6 "Nunito", "Segoe UI", system-ui, sans-serif; }
   main { max-width: 720px; margin: 0 auto; padding: 32px 16px 48px; }
@@ -30,7 +31,7 @@
 <body>
 <main>
   <h1>Privacy</h1>
-  <p class="muted">TripScouts · updated 20 November 2026 · <a href="#nl" lang="nl">Nederlands</a></p>
+  <p class="muted">TripScouts · updated 22 November 2026 · <a href="#nl" lang="nl">Nederlands</a></p>
 
   <div class="box"><strong>In short:</strong> the game collects no personal data. There are no accounts, no ads, no analytics, and nothing is shared with anyone.</div>
 
@@ -54,7 +55,7 @@
   </ul>
 
   <h2>Internet</h2>
-  <p>The game also works offline. When there is internet, the game loads its fonts from Google Fonts. Like with any website, Google then sees the IP address of your device; the game sends nothing else. See the <a href="https://policies.google.com/privacy">Google privacy policy</a>.</p>
+  <p>The game works offline. Everything it needs, including its fonts, is part of the game, so it loads nothing from other websites and sends nothing anywhere. Like with any website, the web version at tripscouts.online is served by GitHub Pages, which sees the IP address of your device when you open the page (see the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub privacy statement</a>). The Android app, the Linux app and the Chrome extension have the game inside them and need no internet at all.</p>
   <p>If you turn on <em>Voices</em>, your device reads the conversations aloud with its own speech voices. Some browsers use an online voice service for that; it then receives the game's lines (never anything about you).</p>
 
   <h2>Children</h2>
@@ -67,7 +68,7 @@
 
   <section id="nl" lang="nl">
   <h1>Privacy</h1>
-  <p class="muted">TripScouts · bijgewerkt op 20 november 2026</p>
+  <p class="muted">TripScouts · bijgewerkt op 22 november 2026</p>
 
   <div class="box"><strong>Kort gezegd:</strong> het spel verzamelt geen persoonsgegevens. Er zijn geen accounts, geen advertenties, geen statistieken en er wordt niets gedeeld met anderen.</div>
 
@@ -91,7 +92,7 @@
   </ul>
 
   <h2>Internet</h2>
-  <p>Het spel werkt ook zonder internet. Is er wel internet, dan haalt het spel de lettertypen op bij Google Fonts. Daarbij ziet Google, zoals bij elke website, het IP-adres van je apparaat; het spel stuurt verder niets mee. Zie het <a href="https://policies.google.com/privacy?hl=nl">privacybeleid van Google</a>.</p>
+  <p>Het spel werkt zonder internet. Alles wat het nodig heeft, ook de lettertypen, zit in het spel zelf. Het haalt dus niets op bij andere websites en stuurt nergens iets naartoe. Zoals bij elke website wordt de webversie op tripscouts.online geleverd door GitHub Pages, dat het IP-adres van je apparaat ziet als je de pagina opent (zie de <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">privacyverklaring van GitHub</a>). De Android-app, de Linux-app en de Chrome-extensie hebben het spel in zich en hebben helemaal geen internet nodig.</p>
   <p>Zet je <em>Stemmen</em> aan, dan leest je apparaat de gesprekken voor met zijn eigen stemmen. Sommige browsers gebruiken daarvoor een online stemdienst; die krijgt dan de zinnen uit het spel (nooit iets over jou).</p>
 
   <h2>Kinderen</h2>
@@ -101,7 +102,7 @@
   <p>Vragen of opmerkingen? Maak een melding op <a href="https://github.com/w3nl/tripscouts/issues">github.com/w3nl/tripscouts/issues</a>.</p>
   </section>
 
-  <p class="muted"><a href="./">To the game</a> · <a href="./?lang=nl" lang="nl">Naar het spel</a></p>
+  <p class="muted"><a href="index.html">To the game</a> · <a href="index.html?lang=nl" lang="nl">Naar het spel</a></p>
 </main>
 </body>
 </html>

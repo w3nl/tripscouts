@@ -5,7 +5,7 @@ The Chrome extension is a small wrapper around the same game files as the websit
 - Install [TripScouts from the Chrome Web Store](https://chromewebstore.google.com/detail/tripscouts/pcpdooenjphohflgmclkpachhfonjokc).
 - `chrome/background.js` opens the game in a tab when you click the TripScouts button in the toolbar (and once right after installing). If the game is already open, it brings that tab to the front.
 - The game is **inside the extension**, so it works offline, also on a Chromebook. There is no service worker: it only runs on http(s), and the extension doesn't need one.
-- It asks for **no permissions** and runs no code from elsewhere. Only the fonts come from Google Fonts; without internet the game uses the fallback fonts.
+- It asks for **no permissions** and runs no code from elsewhere. The fonts are inside the extension too, so nothing is loaded from other servers.
 - Progress is saved in the extension, separate from the website. To bring it along, use 💾 *Progress* on the map and 💾 *Hero code* in the hero creator.
 - The icons are in `chrome/chrome-icons/` (16, 32, 48 and 128 px), made by `npm run icons` from the TripScouts artwork.
 
