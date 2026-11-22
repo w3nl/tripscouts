@@ -5,7 +5,7 @@ name: Publish the game
 on:
   push:
     branches: [main]
-    paths: ["index.html", "privacy.html", "manifest.webmanifest", "sw.js", "css/**", "js/**", "icons/**", "tools/build-site.js", ".github/workflows/pages.yml"]
+    paths: ["index.html", "privacy.html", "manifest.webmanifest", "sw.js", "css/**", "js/**", "icons/**", "fonts/**", "tools/build-site.js", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 permissions:

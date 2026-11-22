@@ -20,6 +20,21 @@ test('het spel is een installeerbare app die offline werkt', async ({ page, cont
   await context.setOffline(false);
 });
 
+test('het spel en de privacypagina halen niets op bij andere servers, en gebruiken de eigen lettertypen', async ({ page }) => {
+  const outside = [];
+  page.on('request', r => { if (/^https?:/.test(r.url()) && new URL(r.url()).origin !== 'http://127.0.0.1:4180') outside.push(r.url()); });
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveClass(/ready/);
+  const fonts = await page.evaluate(async () => {
+    await Promise.all(['600 20px Fredoka', '700 20px Nunito', '700 20px "Fredoka"'].map(f => document.fonts.load(f, 'Šibenik Ardèche')));
+    return [...document.fonts].filter(f => f.status === 'loaded').map(f => f.family.replace(/"/g, '')).sort();
+  });
+  expect(fonts).toEqual(expect.arrayContaining(['Fredoka', 'Nunito']));
+  await page.goto('/privacy.html');
+  await expect(page.locator('h1').first()).toHaveText('Privacy');
+  expect(outside).toEqual([]);
+});
+
 test('de privacypagina overschrijft de offline kopie van het spel niet', async ({ page, context }) => {
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
@@ -84,7 +99,7 @@ test('een Chromebook biedt de geïnstalleerde Chrome-extensie niet opnieuw aan',
   try {
     const extension = path.join(tmp, 'extension');
     fs.mkdirSync(extension);
-    for (const f of ['index.html', 'manifest.webmanifest', 'css', 'js', 'icons'])
+    for (const f of ['index.html', 'manifest.webmanifest', 'css', 'js', 'icons', 'fonts'])
       fs.cpSync(path.join(root, f), path.join(extension, f), { recursive: true });
     fs.copyFileSync(path.join(root, 'chrome', 'background.js'), path.join(extension, 'background.js'));
     fs.writeFileSync(path.join(extension, 'manifest.json'), JSON.stringify({
@@ -113,8 +128,8 @@ test('elk bestand in de offline-lijst bestaat, en elk spelbestand staat erin', a
   const sw = fs.readFileSync(path.join(root, 'sw.js'), 'utf8');
   const core = [...sw.match(/const CORE = \[([\s\S]*?)\];/)[1].matchAll(/'\.\/([^']*)'/g)].map(m => m[1]).filter(Boolean);
   for (const f of core) expect(fs.existsSync(path.join(root, f)), f).toBe(true);
-  for (const dir of ['js', 'css', 'icons'])
-    for (const f of fs.readdirSync(path.join(root, dir))) expect(core, `${dir}/${f} staat niet in sw.js`).toContain(`${dir}/${f}`);
+  for (const dir of ['js', 'css', 'icons', 'fonts'])
+    for (const f of fs.readdirSync(path.join(root, dir)).filter(f => dir !== 'fonts' || f.endsWith('.woff2'))) expect(core, `${dir}/${f} staat niet in sw.js`).toContain(`${dir}/${f}`);
   const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
   for (const f of fs.readdirSync(path.join(root, 'js'))) expect(html, `js/${f} wordt niet geladen in index.html`).toContain(`js/${f}`);
 });

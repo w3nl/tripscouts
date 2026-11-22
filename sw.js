@@ -1,7 +1,7 @@
 // Service worker: maakt het spel installeerbaar en offline speelbaar.
 // Verhoog CACHE bij elke wijziging, zodat telefoons de nieuwe versie krijgen, en houd GAME_VERSION in js/app.js
 // hetzelfde getal (tests/pwa.spec.js controleert dat). De pagina toont dat getal en biedt herladen aan bij een nieuwere versie.
-const CACHE = 'cabinweek-v40';
+const CACHE = 'cabinweek-v41';
 const CORE = [
   './',
   './index.html',
@@ -12,6 +12,10 @@ const CORE = [
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
   './css/game.css',
+  './fonts/fredoka-latin.woff2',
+  './fonts/fredoka-latin-ext.woff2',
+  './fonts/nunito-latin.woff2',
+  './fonts/nunito-latin-ext.woff2',
   './js/i18n.js',
   './js/data.js',
   './js/levels.js',
@@ -74,13 +78,5 @@ self.addEventListener('fetch', event => {
     event.respondWith(fetch(req, { cache: 'no-cache' }).then(res => { if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); } return res; })
       .catch(() => caches.match(req)));
     return;
-  }
-
-  // Google Fonts: eerst de cache, anders ophalen en bewaren.
-  if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
-    event.respondWith(caches.match(req).then(hit => hit || fetch(req).then(res => {
-      if (res.ok || res.type === 'opaque') { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
-      return res;
-    })));
   }
 });
