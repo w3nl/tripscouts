@@ -45,7 +45,7 @@ Do these in this order, so the game never goes offline:
 1. **DNS for tripscouts.online:** add the records above at the registrar of tripscouts.online.
 2. **GitHub:** Settings → Pages → Custom domain: change `cabinweek.online` to `tripscouts.online` → *Save*. Wait for the certificate, then tick **Enforce HTTPS**. (The `CNAME` file in the repository says `tripscouts.online` too, but with GitHub Actions the setting is what counts.)
 3. **cabinweek.online:** at its registrar, replace its A/AAAA records by a **301 redirect** to `https://tripscouts.online/`, so old links and installed web apps still find the game. Keep the domain for at least a year.
-4. **Google Play:** update the website and privacy policy (see [play-store/README.md](play-store/README.md)).
+4. **Google Play:** update the website and the privacy policy URL to `https://tripscouts.online/privacy.html` (see [play-store/README.md](play-store/README.md)): in **Policy → App content → Privacy policy** and in the main store listing. Play checks the URL, and while `cabinweek.online` has no valid certificate or redirect it reports *does not link to a valid privacy policy page* and blocks updates.
 5. **The games overview** (w3nl/games) and anywhere else that links to cabinweek.online.
 
 ## Renaming the repository (cabin-week → tripscouts)

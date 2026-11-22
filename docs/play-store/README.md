@@ -177,7 +177,7 @@ Policy → App content → **Content rating** asks the IARC questionnaire; Play 
 
 PEGI 3 allows very mild violence in a comical or child-like setting. **Got PEGI 7 instead?** Then check the violence answer first (cartoon, comical and child-like, not realistic), then the alcohol answer (references only, no use shown). If it stays higher, removing the few wine references from the texts would lower it.
 
-**Target audience and the Families policy:** with age groups under 13, Google Play's Families policy applies. TripScouts meets it: no ads, no data collected or shared (Data safety), and a privacy policy (`https://cabinweek.online/privacy.html`).
+**Target audience and the Families policy:** with age groups under 13, Google Play's Families policy applies. TripScouts meets it: no ads, no data collected or shared (Data safety), and a privacy policy (`https://tripscouts.online/privacy.html`, also linked from the title screen inside the app).
 
 ## GitHub social preview
 

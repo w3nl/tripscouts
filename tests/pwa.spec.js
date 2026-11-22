@@ -20,6 +20,22 @@ test('het spel is een installeerbare app die offline werkt', async ({ page, cont
   await context.setOffline(false);
 });
 
+test('de privacypagina overschrijft de offline kopie van het spel niet', async ({ page, context }) => {
+  await page.goto('/');
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.waitForTimeout(500);
+  await page.goto('/privacy.html');
+  await expect(page.locator('h1').first()).toHaveText('Privacy');
+  await page.waitForTimeout(500);
+  await context.setOffline(true);
+  await page.goto('/privacy.html');
+  await expect(page.locator('h1').first()).toHaveText('Privacy');
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveClass(/ready/);
+  await expect(page.locator('#title')).toBeVisible();
+  await context.setOffline(false);
+});
+
 test('Chrome biedt de Chrome Web Store-extensie aan', async ({ page }) => {
   await page.addInitScript(() => Object.defineProperty(navigator, 'userAgent', { get: () => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36' }));
   await page.goto('/');
