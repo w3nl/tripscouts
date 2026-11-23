@@ -113,16 +113,18 @@ for (const lang of ['en', 'nl']) test(`tirol: vragen over kaart, tijd en dieren 
     expect(info.signs).toContain(`${symbol}: ${info.questions[i]}`);
 });
 
-for (const lang of ['en', 'nl']) test(`rendierstallen: bellenvragen geven de tonen zonder ze voor te spelen (${lang})`, async ({ page }) => {
-  await seed(page, { lang, region: 'pole', unlocked: 8 });
-  await startDay(page, 1);
+for (const lang of ['en', 'nl']) for (const [region, day, answer] of [
+  ['pole', 1, '1355'], ['tirol', 3, '5315']
+]) test(`${region} dag ${day + 1}: bellenvragen geven de tonen zonder ze voor te spelen (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region, unlocked: 8 });
+  await startDay(page, day);
   const info = await page.evaluate(() => {
     const c = L.clues[0];
     P.x = c.x + 5; P.y = c.y + 32 - P.h; P.vx = P.vy = 0;
     step();
     return { x: c.x, y: c.y, heard: c.heard, ring: c.ring, question: c.question[0], answer: L.d.code.answer };
   });
-  expect(info.answer).toBe('1355');
+  expect(info.answer).toBe(answer);
   expect(info.heard).toBe(false);
   expect(info.ring).toBe(0);
   await put(page, info.x + 5, info.y + 32);

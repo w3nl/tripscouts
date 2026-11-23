@@ -100,8 +100,19 @@ const TIROL_LEVELS = [
            T(["A stall sells only wooden stars. Hundreds of them. I want them all."], ["Een kraampje verkoopt alleen houten sterren. Honderden. Ik wil ze allemaal."]),
            T(["Hot apple juice with cinnamon. The kids' version of mulled wine. Even better."], ["Warm appelsap met kaneel. De kinderversie van glühwein. Nog lekkerder."])],
     code: { kind: "melody", answer: "5315", title: T("Gate of the market square", "Hek van het marktplein"),
-      riddle: T("The brass band left four bells along the way. Play their notes in order and the gate opens.",
-        "De blaaskapel heeft onderweg vier bellen laten hangen. Speel hun tonen op volgorde en het hek gaat open.") },
+      riddle: T("Solve the questions at the four bells. Each answer gives a note: 1 = do, 2 = re, 3 = mi, 4 = sol, 5 = la.",
+        "Los de vragen bij de vier bellen op. Elk antwoord geeft een toon: 1 = do, 2 = re, 3 = mi, 4 = sol, 5 = la."),
+      questions: T([
+        ["Which country is Innsbruck in? 5: Austria; 3: Norway.", "Innsbruck is a city in Austrian Tirol."],
+        ["How many sides does a triangle have?", "A triangle has three corners and three sides."],
+        ["The Golden Roof is gold-plated. What does that mean? 1: a layer of gold covers it; 4: it is solid gold.", "Gold-plated means covered with a thin layer of gold."],
+        ["A band has ten players. Half play trumpets. How many trumpet players?", "Half of ten is five."]
+      ], [
+        ["In welk land ligt Innsbruck? 5: Oostenrijk; 3: Noorwegen.", "Innsbruck is een stad in het Oostenrijkse Tirol."],
+        ["Hoeveel zijden heeft een driehoek?", "Een driehoek heeft drie hoeken en drie zijden."],
+        ["Het Gouden Dakje is verguld. Wat betekent dat? 1: er zit een laagje goud op; 4: het is van massief goud.", "Verguld betekent bedekt met een dun laagje goud."],
+        ["Een kapel heeft tien muzikanten. De helft speelt trompet. Hoeveel trompettisten zijn dat?", "De helft van tien is vijf."]
+      ]) },
     decoKinds: ["stall", "stall", "streetlamp", "xtree"],
     doneMsg: T("Candles bought, chestnuts eaten, the band played. Back up the mountain.", "Kaarsjes gekocht, kastanjes gegeten, de kapel speelde. Terug de berg op.")
   }),
