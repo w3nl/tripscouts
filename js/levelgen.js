@@ -215,6 +215,16 @@ function genLevel(o) {
   [gateX, gateX - 1, gateX + 1, codeX, codeX - 1, codeX + 1, w - 6].forEach(c => used.add(c));
   // Levers, lamps, the bell, the animal and clues get some room, so nobody stands right next to them.
   const room = c => { for (let d = -2; d <= 2; d++) used.add(c + d); return c; };
+  const questionPlace = t => {
+    t = Math.round(t);
+    for (let d = 0; d < 80; d++) for (const c of [t + d, t - d]) {
+      if (c < 3 || c > codeX - 4 || bad.has(c) || used.has(c) || topAt[c] >= ROWS_GEN) continue;
+      if (ents.some(([kind, x]) => ["npc", "sign", "switch", "bell", "animal", "clue"].includes(kind) && Math.abs(x - c) < 3)) continue;
+      used.add(c);
+      return c;
+    }
+    throw new Error(`No room for a question clue in level ${o.seed}`);
+  };
 
   if (o.intro) { const c = free(5); ents.push(["sign", c, yAt(c), o.intro]); }
   ladderSigns.forEach(lx => { const c = free(lx - 2, lx - 6, lx); ents.push(["sign", c, yAt(c), [T("A ladder! Hold ↑ (or jump) to climb up, and ↓ (or 💬) to climb down.", "Een ladder! Houd ↑ (of springen) ingedrukt om naar boven te klimmen, en ↓ (of 💬) om naar beneden te gaan."),
@@ -290,7 +300,7 @@ function genLevel(o) {
     } else if (kind === "melody" || kind === "colours" || kind === "arrows" || kind === "word") {
       // numbered clues along the way: bells, coloured lamps, signposts with an arrow, or carved letters
       const n = ans.length, end = (codeX - 4) / w;
-      ans.forEach((v, i) => { const c = free(w * (.12 + i * (end - .16) / (n - 1))); ents.push(["clue", room(c), yAt(c), { kind, i, n, v, look: o.code.look, question: o.code.questions && o.code.questions[i] }]); });
+      ans.forEach((v, i) => { const at = w * (.12 + i * (end - .16) / (n - 1)), c = o.code.questions ? questionPlace(at) : free(at); ents.push(["clue", room(c), yAt(c), { kind, i, n, v, look: o.code.look, question: o.code.questions && o.code.questions[i] }]); });
     } else if (kind === "clock") {
       (o.code.signs || []).forEach(([f, lines]) => { const c = free(w * f); ents.push(["sign", c, yAt(c), lines]); });
     }

@@ -41,7 +41,18 @@ const TIROL_LEVELS = [
            T(["The button lift pulls you up. Don't sit down. I sat down."], ["De sleeplift trekt je omhoog. Niet gaan zitten. Ik ging zitten."]),
            T(["Après-ski: that's French for hot chocolate."], ["Après-ski: dat is Frans voor warme chocolademelk."])],
     code: { kind: "arrows", answer: "→↓→↓", title: T("Ski school gate", "Hek van de skischool"),
-      riddle: T("Four piste signs show the run down to the ski school. Enter their arrows in order.", "Vier pistebordjes wijzen de afdaling naar de skischool. Voer hun pijlen in, op volgorde.") },
+      riddle: T("Solve the questions on the four piste signs. Enter the arrows in order.", "Los de vragen op de vier pistebordjes op. Voer de pijlen op volgorde in."),
+      questions: T([
+        ["On a map with north at the top, which arrow points east?", "East is to the right of north."],
+        ["Gravity pulls a dropped snowball towards the ground. Which arrow shows that?", "The ground is below the snowball."],
+        ["Face north on the map, then turn right. Which arrow shows your direction?", "Turning right from north points east."],
+        ["Which arrow shows a skier going from a high point to a lower point on a diagram?", "A lower point is below a higher one."]
+      ], [
+        ["Op een kaart met het noorden boven, welke pijl wijst naar het oosten?", "Het oosten ligt rechts van het noorden."],
+        ["De zwaartekracht trekt een gevallen sneeuwbal naar de grond. Welke pijl laat dat zien?", "De grond is onder de sneeuwbal."],
+        ["Kijk op de kaart naar het noorden en draai rechtsaf. Welke pijl wijst jouw richting aan?", "Rechtsaf vanaf het noorden is het oosten."],
+        ["Welke pijl laat op een tekening zien dat een skiër van hoog naar laag gaat?", "Een lager punt ligt onder een hoger punt."]
+      ]) },
     task: { kind: "timer", hud: "🔔", secs: 7, name: T("bell", "bel"),
       need: T(["The ski school start gate opens when you ring the bell up there.", "Then you have a few seconds. Like a real race!"],
         ["Het starthek van de skischool gaat open als je daarboven de bel luidt.", "Dan heb je een paar tellen. Net een echte wedstrijd!"]),

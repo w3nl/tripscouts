@@ -185,16 +185,18 @@ for (const lang of ['en', 'nl']) test(`postkantoor: lampvragen bepalen de kleure
   await expect(page.locator('#dialog')).toContainText(info.question);
 });
 
-for (const lang of ['en', 'nl']) test(`noorderlicht: kaartvragen bepalen de pijlen (${lang})`, async ({ page }) => {
-  await seed(page, { lang, region: 'pole', unlocked: 8 });
-  await startDay(page, 5);
+for (const lang of ['en', 'nl']) for (const [region, day, answer] of [
+  ['pole', 5, '↑→→↓'], ['tirol', 1, '→↓→↓']
+]) test(`${region} dag ${day + 1}: vragen bepalen de pijlen (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region, unlocked: 8 });
+  await startDay(page, day);
   const info = await page.evaluate(() => {
     const c = L.clues[0], draw = g.fillText, text = [];
     try { g.fillText = (...args) => { text.push(args[0]); return draw.apply(g, args); }; drawClue(c); }
     finally { g.fillText = draw; }
     return { x: c.x, y: c.y, question: c.question[0], text, answer: L.d.code.answer, count: L.clues.filter(x => x.question).length };
   });
-  expect(info.answer).toBe('↑→→↓');
+  expect(info.answer).toBe(answer);
   expect(info.count).toBe(4);
   expect(info.text).toContain('?');
   await put(page, info.x + 5, info.y + 32);
@@ -262,4 +264,15 @@ test('every lock in every region can be solved from what is in the level', async
     return clues.join('') === c.answer ? null : `${where}: clues ${clues.join('')} for ${c.answer}`;
   })).filter(Boolean));
   expect(bad).toEqual([]);
+});
+
+test('question clues have room away from other interactions', async ({ page }) => {
+  await seed(page, { unlocked: 8 });
+  const overlaps = await page.evaluate(() => REGIONS.flatMap(region => region.levels.flatMap((level, day) =>
+    level.ents.filter(e => e[0] === 'clue' && e[3].question).flatMap(clue =>
+      level.ents.filter(e => e !== clue && ['npc', 'sign', 'switch', 'bell', 'animal', 'clue'].includes(e[0]) && Math.abs(e[1] - clue[1]) < 3)
+        .map(e => `${region.id} ${day + 1}: clue ${clue[3].i + 1} near ${e[0]}`)
+    )
+  )));
+  expect(overlaps).toEqual([]);
 });
