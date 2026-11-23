@@ -40,11 +40,13 @@ test('off by default; the button turns it on and it plays in a level, not in the
   expect(await page.evaluate(() => AMB)).toBeNull();
 
   await page.locator('#hud button', { hasText: 'Menu' }).click();
+  await page.locator('#settingsOpen').click();
   await page.locator('#ambBtn').click();
   await expect(page.locator('#ambBtn')).toHaveText('🌲 Ambience on');
   await expect(page.locator('#ambBtn')).toHaveAttribute('aria-pressed', 'true');
   expect(await page.evaluate(() => localStorage.getItem('cabin-week-ambience'))).toBe('1');
 
+  await page.locator('#settingsBack').click();
   await startDay(page, 0);
   await expect.poll(() => page.evaluate(() => AMB && AMB.k.beds.join())).toBe('wind');
   // every little sound plays without errors
@@ -57,4 +59,32 @@ test('off by default; the button turns it on and it plays in a level, not in the
   await page.evaluate(() => localStorage.setItem('cabin-week-ambience', '1'));
   await page.reload();
   await expect(page.locator('#ambBtn')).toHaveText('🌲 Sfeergeluid aan');
+});
+
+test('after a level, settings, help and progress stay quiet but level screens keep their ambience', async ({ page }) => {
+  await seed(page);
+  await page.locator('#settingsOpen').click();
+  await page.locator('#ambBtn').click();
+  await page.locator('#settingsBack').click();
+  await page.locator('#levels button').first().click();
+  await expect.poll(() => page.evaluate(() => AMB && AMB.k.beds.join())).toBe('wind');
+  await page.locator('#card .btn').first().click();
+  await expect.poll(() => page.evaluate(() => AMB && AMB.k.beds.join())).toBe('wind');
+  await page.evaluate(() => openPad());
+  await expect.poll(() => page.evaluate(() => AMB && AMB.k.beds.join())).toBe('wind');
+  await page.evaluate(() => setScreen('card'));
+  await expect.poll(() => page.evaluate(() => AMB && AMB.k.beds.join())).toBe('wind');
+  await page.evaluate(() => setScreen('play'));
+  await page.locator('#hMenu').click();
+  await expect.poll(() => page.evaluate(() => AMB)).toBeNull();
+
+  await page.locator('#settingsOpen').click();
+  expect(await page.evaluate(() => AMB)).toBeNull();
+  await page.locator('#settingsBack').click();
+  await page.locator('#helpOpen').click();
+  expect(await page.evaluate(() => AMB)).toBeNull();
+  await page.locator('#helpBack').click();
+  await page.locator('#regionBtn').click();
+  await page.locator('#mapSave').click();
+  expect(await page.evaluate(() => AMB)).toBeNull();
 });

@@ -2,9 +2,9 @@
 // Optional background sounds that fit the place, like in the escape rooms: wind in the snow, birds in the summer forest,
 // waves at the coast, the river, a crackling fire indoors, drips in the cave, bells in town, cicadas in the south.
 // All made with Web Audio (no sound files): a steady bed of filtered noise that swells slowly, plus little sounds now and
-// then. Off by default; the Ambience button on the title screen (#ambBtn) turns it on, saved per device in
+// then. Off by default; the Ambience button in settings (#ambBtn) turns it on, saved per device in
 // localStorage['cabin-week-ambience']. It plays in a level (also during the intro, the code lock and the card) and stops
-// on the title screen, the map and the hero creator (ambFollow() from setScreen()). Loaded after voice.js.
+// in the menus (ambFollow() from setScreen()). Loaded after voice.js.
 const AMB_KEY = "cabin-week-ambience";
 let ambOn = (() => { try { return localStorage.getItem(AMB_KEY) === "1"; } catch (e) { return false; } })();
 let AMB = null; // { kind, master, beds: [], timer }
@@ -148,12 +148,12 @@ function ambTick() {
 }
 /** Called by setScreen(): play in a level, quiet in the menus. */
 function ambFollow(s) {
-  if (s === "title" || s === "map" || s === "hero" || !L) ambStop();
-  else ambStart(L.d);
+  if (L && (s === "play" || s === "intro" || s === "pad" || s === "card")) ambStart(L.d);
+  else ambStop();
 }
 addEventListener("visibilitychange", () => { if (document.hidden) ambStop(); else if (typeof state !== "undefined") ambFollow(state); });
 
-/* ---------- the Ambience button (title screen) ---------- */
+/* ---------- the Ambience button ---------- */
 function showAmb() {
   const b = $("ambBtn");
   b.textContent = ambOn ? T("🌲 Ambience on", "🌲 Sfeergeluid aan") : T("🌲 Ambience off", "🌲 Sfeergeluid uit");
@@ -164,7 +164,7 @@ $("ambBtn").onclick = () => {
   ambOn = !ambOn;
   try { localStorage.setItem(AMB_KEY, ambOn ? "1" : "0"); } catch (e) {}
   showAmb(); tone(700, .04, "triangle", .04);
-  // a little taste of it on the title screen
+  // a little taste of it in the menu
   if (ambOn) { const a = ambAudio(); if (a) { AMB = AMB || { key: "taste", k: { events: [] }, master: a.createGain(), beds: [], wait: 9 }; AMB.master.gain.value = .7; AMB.master.connect(a.destination); AMB_EVENTS.bird(); setTimeout(() => { if (AMB && AMB.key === "taste") ambStop(); }, 1500); } }
   else ambStop();
 };

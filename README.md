@@ -6,7 +6,7 @@ A platform game in the browser about two families, **the Hills and the Woods**, 
 
 Play as one of the nine, or **make your own hero** (name, height, skin, hair, coat, glasses, hat and scarf). You walk and jump through the forest, the cabin, the snow and a Christmas market. You find lost things, get through a gate halfway (bring something, pull levers, light lamps, race the bell or walk a lost animal home) and open a lock at the end: a code, a tune, colours, arrows, a word or a clock, with clues along the way. Every trip mixes them differently. Finish a day to unlock the next one.
 
-**In English and Dutch** (choose at the bottom of the title screen, or add `?lang=nl` to the link).
+**In English and Dutch** (Dutch browsers start in Dutch; choose a language in Settings, or add `?lang=nl` to the link).
 
 ## Play
 

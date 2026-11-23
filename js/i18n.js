@@ -1,12 +1,12 @@
 "use strict";
-// Languages: English (default) and Dutch. Every text in the game is written as T("English", "Nederlands").
+// Languages: Dutch for a Dutch browser, otherwise English. Every text in the game is written as T("English", "Nederlands").
 // The choice is remembered; ?lang=nl or ?lang=en in the link also works (handy for tests and sharing).
 const LANG_KEY = "cabin-week-lang";
 const LANG = (() => {
   const q = /[?&]lang=(en|nl)\b/.exec(location.search);
   if (q) { try { localStorage.setItem(LANG_KEY, q[1]); } catch (e) {} return q[1]; }
   try { const v = localStorage.getItem(LANG_KEY); if (v === "en" || v === "nl") return v; } catch (e) {}
-  return "en";
+  return /^nl(?:-|$)/i.test(navigator.language || "") ? "nl" : "en";
 })();
 /** Pick the text in the current language. */
 function T(en, nl) { return LANG === "nl" ? nl : en; }

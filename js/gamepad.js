@@ -49,10 +49,10 @@ addEventListener("gamepadconnected", () => { gpStatus(); lastInput = "pad"; menu
 addEventListener("gamepaddisconnected", gpStatus);
 
 /* ---------- Menu's met de controller ---------- */
-function gpRoot() { return state === "title" ? $("title") : state === "map" ? $("mapWrap") : state === "hero" ? $("heroWrap") : state === "save" ? $("saveWrap") : state === "pad" ? $("padWrap") : $("cardWrap"); }
+function gpRoot() { return state === "title" ? $("title") : state === "settings" ? $("settingsWrap") : state === "help" ? $("helpWrap") : state === "map" ? $("mapWrap") : state === "hero" ? $("heroWrap") : state === "save" ? $("saveWrap") : state === "pad" ? $("padWrap") : $("cardWrap"); }
 function gpFocusables() {
   const list = [...gpRoot().querySelectorAll("button")];
-  if (state === "title") list.push(...$("installBar").querySelectorAll("button, a[href]"));
+  if (state === "title" || state === "settings") list.push(...$("installBar").querySelectorAll("button, a[href]"));
   return list.filter(b => !b.disabled && b.offsetParent !== null);
 }
 function gpCurrent() { const list = gpFocusables(); return list.includes(document.activeElement) ? document.activeElement : null; }
@@ -106,7 +106,7 @@ function gpPress(fromPad = false) {
 function gpBack() {
   if (state === "hero" && heroKeysOpen()) closeHeroKeys(); // Back closes the letters first
   else if (state === "pad") setScreen("play");
-  else if (state === "intro" || state === "card" || state === "map" || state === "hero") toTitle();
+  else if (state === "intro" || state === "card" || state === "map" || state === "hero" || state === "settings" || state === "help") toTitle();
   else if (state === "save") saveBack();
 }
 
