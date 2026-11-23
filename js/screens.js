@@ -30,6 +30,8 @@ function questLabel() {
 function setScreen(s) {
   state = s;
   $("title").hidden = s !== "title";
+  $("settingsWrap").hidden = s !== "settings";
+  $("helpWrap").hidden = s !== "help";
   $("mapWrap").hidden = s !== "map";
   $("heroWrap").hidden = s !== "hero";
   $("saveWrap").hidden = s !== "save";
@@ -91,6 +93,10 @@ function completeLevel() {
 }
 
 function toTitle() { hideDialog(); dialog = null; setScreen("title"); buildTitle(); menuAutoFocus(); }
+$("settingsOpen").onclick = () => setScreen("settings");
+$("helpOpen").onclick = () => setScreen("help");
+$("settingsBack").onclick = toTitle;
+$("helpBack").onclick = toTitle;
 
 /* ---------- Code lock ---------- */
 // One lock for every kind: digits, notes (a melody), colours, arrows or letters. The answer is a string of key values.

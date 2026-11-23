@@ -148,7 +148,7 @@ addEventListener("keydown", e => {
   if (state !== "play" && menuKey(e)) return;
   if (state === "pad") { padKey(e); return; }
   if (e.code === "Escape" && state === "hero" && heroKeysOpen()) { closeHeroKeys(); return; }
-  if (e.code === "Escape") { if (state === "save") saveBack(); else if (state === "play" || state === "intro" || state === "map" || state === "hero") toTitle(); return; }
+  if (e.code === "Escape") { if (state === "save") saveBack(); else if (state === "play" || state === "intro" || state === "map" || state === "hero" || state === "settings" || state === "help") toTitle(); return; }
   const a = KEYMAP[e.code];
   if (!a) return;
   if (state === "play") e.preventDefault();

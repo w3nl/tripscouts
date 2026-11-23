@@ -1,7 +1,7 @@
 "use strict";
 // Optional voices, like in the escape rooms: every dialogue line is read aloud with the browser's own speech
-// (Web Speech API: speechSynthesis and SpeechSynthesisUtterance). Off by default; the Voices button on the title
-// screen turns it on, saved per device in localStorage['cabin-week-voice']. say() and advanceDialog() in game.js call
+// (Web Speech API: speechSynthesis and SpeechSynthesisUtterance). Off by default; the Voices button in settings
+// turns it on, saved per device in localStorage['cabin-week-voice']. say() and advanceDialog() in game.js call
 // speakLine(); hideDialog() stops it. The button stays hidden where the browser cannot speak (often in an Android
 // WebView, so in the Android app). Loaded after hero.js.
 const VOICE_KEY = "cabin-week-voice";

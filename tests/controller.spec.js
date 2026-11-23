@@ -22,6 +22,24 @@ async function press(page, b, ms = 90) {
   await page.waitForTimeout(60);
 }
 
+test('instellingen en uitleg zijn met de controller te openen en met B te sluiten', async ({ page }) => {
+  await fakePad(page);
+  await seed(page);
+  for (const [open, panel] of [['#settingsOpen', '#settingsWrap'], ['#helpOpen', '#helpWrap']]) {
+    await page.locator(open).focus();
+    await press(page, BTN.A);
+    await expect(page.locator(panel)).toBeVisible();
+    expect(await page.evaluate(() => !!document.activeElement.closest(gpRoot().id === 'settingsWrap' ? '#settingsWrap' : '#helpWrap'))).toBe(true);
+    if (panel === '#settingsWrap') {
+      await expect(page.locator('button[data-lang="en"]')).toBeFocused();
+      await press(page, BTN.RIGHT);
+      await expect(page.locator('button[data-lang="nl"]')).toBeFocused();
+    }
+    await press(page, BTN.B);
+    await expect(page.locator('#title')).toBeVisible();
+  }
+});
+
 for (const [region, day, kind] of [['ardennes', 1, 'railbike'], ['netherlands', 5, 'bike']]) test(`op de ${kind} buk je met de controller zolang je omlaag of X vasthoudt`, async ({ page }) => {
   await fakePad(page);
   await seed(page, { unlocked: 8, region });

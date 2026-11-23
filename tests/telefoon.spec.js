@@ -6,6 +6,7 @@ const noSideScroll = page => page.evaluate(() => document.documentElement.scroll
 test('rechtop: het titelscherm past en je kunt met de knoppen op het scherm spelen', async ({ page }) => {
   await seed(page);
   expect(await noSideScroll(page)).toBe(true);
+  await expect(page.locator('#regionBtn')).toBeInViewport({ ratio: .99 });
   await page.locator('#levels button').first().tap();
   await page.locator('#card .btn').first().tap();
   await expect(page.locator('#touch')).toBeVisible();
@@ -57,7 +58,14 @@ for (const [w, h, wat] of [[960, 540, 'tv'], [1366, 768, 'laptop'], [740, 360, '
       const n = await page.locator(sel).count();
       for (let i = 0; i < n; i++) await expect(page.locator(sel).nth(i)).toBeInViewport({ ratio: .99 });
     }
-    await expect(page.locator('#title .help')).toBeInViewport({ ratio: .99 });
+    await expect(page.locator('#regionBtn')).toBeInViewport({ ratio: .99 });
+    await expect(page.locator('#settingsOpen')).toBeInViewport({ ratio: .99 });
+    await expect(page.locator('#helpOpen')).toBeInViewport({ ratio: .99 });
+    await page.locator('#installClose').tap();
+    await page.locator('#helpOpen').tap();
+    await expect(page.locator('#helpWrap .help')).toBeInViewport({ ratio: .99 });
+    await expect(page.locator('#helpBack')).toBeInViewport({ ratio: .99 });
+    await page.locator('#helpBack').tap();
     await page.locator('#levels button').first().click();
     await expect(page.locator('#card .btn').first()).toBeInViewport({ ratio: .99 });
     await expect(page.locator('#card h2')).toBeInViewport({ ratio: .99 });
@@ -83,3 +91,17 @@ test('meldingen: installeren als app (Android: web-app of Google Play) en het sc
   await page.setViewportSize({ width: 915, height: 412 });
   await expect(page.locator('#rotateHint')).toBeHidden();
 });
+
+for (const [width, height] of [[740, 360], [960, 540], [1366, 768]]) {
+  test(`installatie opnieuw openen past op ${width}×${height}`, async ({ page }) => {
+    await page.setViewportSize({ width, height });
+    await seed(page, { lang: 'nl' });
+    await page.locator('#installClose').tap();
+    await page.locator('#settingsOpen').tap();
+    await expect(page.locator('#installAgain')).toBeInViewport({ ratio: .99 });
+    await expect(page.locator('#settingsBack')).toBeInViewport({ ratio: .99 });
+    await page.locator('#installAgain').tap();
+    await expect(page.locator('#installBar')).toBeVisible();
+    await expect(page.locator('#installPlay')).toBeVisible();
+  });
+}

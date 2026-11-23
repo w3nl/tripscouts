@@ -2,7 +2,7 @@
 // Optional background sounds that fit the place, like in the escape rooms: wind in the snow, birds in the summer forest,
 // waves at the coast, the river, a crackling fire indoors, drips in the cave, bells in town, cicadas in the south.
 // All made with Web Audio (no sound files): a steady bed of filtered noise that swells slowly, plus little sounds now and
-// then. Off by default; the Ambience button on the title screen (#ambBtn) turns it on, saved per device in
+// then. Off by default; the Ambience button in settings (#ambBtn) turns it on, saved per device in
 // localStorage['cabin-week-ambience']. It plays in a level (also during the intro, the code lock and the card) and stops
 // on the title screen, the map and the hero creator (ambFollow() from setScreen()). Loaded after voice.js.
 const AMB_KEY = "cabin-week-ambience";

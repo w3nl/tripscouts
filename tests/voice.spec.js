@@ -24,8 +24,10 @@ const talkTo = async (page, name) => {
 test('voices are off by default; when on, every line is read aloud, each person in their own voice', async ({ page }) => {
   await page.addInitScript(recorder);
   await seed(page);
+  await page.locator('#settingsOpen').click();
   await expect(page.locator('#voiceBtn')).toBeVisible();
   await expect(page.locator('#voiceBtn')).toHaveText('🔈 Voices off');
+  await page.locator('#settingsBack').click();
 
   // off: talking says nothing out loud
   await startDay(page, 0);
@@ -35,6 +37,7 @@ test('voices are off by default; when on, every line is read aloud, each person 
 
   // on (on the title screen): a short line to hear it works, in British English
   await page.locator('#hud button', { hasText: 'Menu' }).click();
+  await page.locator('#settingsOpen').click();
   await page.locator('#voiceBtn').click();
   await expect(page.locator('#voiceBtn')).toHaveText('🔊 Voices on');
   await expect(page.locator('#voiceBtn')).toHaveAttribute('aria-pressed', 'true');
@@ -42,6 +45,7 @@ test('voices are off by default; when on, every line is read aloud, each person 
   expect((await spoken(page))[0]).toMatchObject({ text: 'Voices on. Let\'s go scouting!', lang: 'en-GB' });
 
   // in a level: each line of a conversation is spoken; the next line when you go on
+  await page.locator('#settingsBack').click();
   await startDay(page, 0);
   const who = await talkTo(page);
   const lines = await page.evaluate(() => dialog.lines);
@@ -79,6 +83,7 @@ test('emoji and arrows are not read aloud; a line of only emoji stays silent', a
 test('Dutch: the voices speak Dutch, and the button is translated', async ({ page }) => {
   await page.addInitScript(recorder);
   await seed(page, { lang: 'nl' });
+  await page.locator('#settingsOpen').click();
   await expect(page.locator('#voiceBtn')).toHaveText('🔈 Stemmen uit');
   await page.locator('#voiceBtn').click();
   await expect(page.locator('#voiceBtn')).toHaveText('🔊 Stemmen aan');
@@ -92,7 +97,9 @@ test('Dutch: the voices speak Dutch, and the button is translated', async ({ pag
 test('where the browser cannot speak (like an Android WebView), there is no Voices button', async ({ page }) => {
   await page.addInitScript(() => { delete window.speechSynthesis; delete window.SpeechSynthesisUtterance; });
   await seed(page);
+  await page.locator('#settingsOpen').click();
   await expect(page.locator('#voiceBtn')).toBeHidden();
+  await page.locator('#settingsBack').click();
   // and talking still works, silently
   await startDay(page, 0);
   await talkTo(page);

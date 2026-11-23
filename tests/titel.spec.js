@@ -53,6 +53,7 @@ test('English by default; Dutch with ?lang=nl and with the language button, and 
   await expect(page.locator('html')).toHaveAttribute('lang', 'en-GB');
   await expect(page.locator('#title h2').first()).toContainText('Choose your hero');
   await expect(page.locator('#levels .n').first()).toContainText('Day 1');
+  await page.locator('#settingsOpen').click();
   await page.locator('button[data-lang="nl"]').click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'nl');
   await expect(page.locator('#title h2').first()).toContainText('Kies je held');
@@ -62,6 +63,45 @@ test('English by default; Dutch with ?lang=nl and with the language button, and 
   await expect(page.locator('html')).toHaveAttribute('lang', 'nl');
   await page.goto('/?lang=en');
   await expect(page.locator('#title h2').first()).toContainText('Choose your hero');
+});
+
+test('trip choice is explicit and settings and help return to the title with Escape or TV Back', async ({ page }) => {
+  await seed(page, { lang: 'nl' });
+  await expect(page.locator('#regionBtn')).toContainText('Andere reis');
+  await expect(page.locator('#regionBtn')).toContainText('Ardennen');
+  await page.locator('#regionBtn').click();
+  await expect(page.locator('#mapWrap')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await page.locator('#settingsOpen').focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#settingsWrap')).toBeVisible();
+  await expect(page.locator('button[data-lang="en"]')).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#title')).toBeVisible();
+  await page.locator('#helpOpen').focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#helpWrap')).toContainText('Met een controller');
+  expect(await page.evaluate(() => window.tvBack())).toBe(true);
+  await expect(page.locator('#title')).toBeVisible();
+});
+
+test('all title actions can be reached with directional menu navigation', async ({ page }) => {
+  await seed(page, { unlocked: 8 });
+  const reached = await page.evaluate(() => {
+    const buttons = gpFocusables(), start = document.activeElement;
+    const seen = new Set([start]), queue = [start];
+    while (queue.length) {
+      const current = queue.shift();
+      for (const dir of ['up', 'down', 'left', 'right']) {
+        current.focus();
+        gpMove(dir);
+        const next = document.activeElement;
+        if (buttons.includes(next) && !seen.has(next)) { seen.add(next); queue.push(next); }
+      }
+    }
+    return [...seen].map(button => button.id);
+  });
+  expect(reached).toEqual(expect.arrayContaining(['regionBtn', 'settingsOpen', 'helpOpen']));
 });
 
 // The original game was made for one family. This list holds the first 16 hex digits of the SHA-256 of words

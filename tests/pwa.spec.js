@@ -70,6 +70,84 @@ test('een Chromebook toont de Chrome Web Store-optie zonder installatieprompt', 
   await expect(page.locator('#installText')).toContainText("Chrome's menu");
 });
 
+for (const [platform, userAgent, language] of [
+  ['Android', 'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 Chrome/133.0.0.0 Mobile Safari/537.36', 'nl'],
+  ['iPhone', 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1', 'en']
+]) test(`${platform}: installatiemelding opnieuw openen na Niet nu`, async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(ua => Object.defineProperty(navigator, 'userAgent', { get: () => ua }), userAgent);
+  await page.goto('/?lang=' + language);
+  await expect(page.locator('#installBar')).toBeVisible();
+  await page.locator('#installClose').click();
+  const until = await page.evaluate(() => localStorage.getItem('cabin-week-install-later'));
+  await expect(page.locator('#installBar')).toBeHidden();
+  await page.reload();
+  await expect(page.locator('#installBar')).toBeHidden();
+  await page.locator('#settingsOpen').click();
+  await expect(page.locator('#installAgain')).toBeVisible();
+  await page.locator('#installAgain').click();
+  await expect(page.locator('#installBar')).toBeVisible();
+  expect(await page.evaluate(() => gpFocusables().map(el => el.id))).toContain('installClose');
+  expect(await page.evaluate(() => localStorage.getItem('cabin-week-install-later'))).toBe(until);
+  if (platform === 'Android') {
+    await expect(page.locator('#installPlay')).toBeVisible();
+    await expect(page.locator('#installText')).toContainText('browsermenu');
+  } else {
+    await expect(page.locator('#installText')).toContainText('Add to Home Screen');
+    await expect(page.locator('#installPlay')).toBeHidden();
+  }
+  await page.locator('#installClose').click();
+  await expect(page.locator('#installAgain')).toBeVisible();
+});
+
+test('Android: opnieuw openen bewaart de web-app-prompt en biedt na afwijzen een alternatief', async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(navigator, 'userAgent', { get: () => 'Mozilla/5.0 (Linux; Android 13) Chrome/133.0.0.0 Mobile' }));
+  await page.goto('/');
+  await page.evaluate(() => {
+    const e = new Event('beforeinstallprompt');
+    e.prompt = () => { window.promptCalled = true; };
+    e.userChoice = Promise.resolve({ outcome: 'dismissed' });
+    dispatchEvent(e);
+  });
+  await page.locator('#installClose').click();
+  await page.locator('#settingsOpen').click();
+  await page.locator('#installAgain').click();
+  await expect(page.locator('#installBtn')).toBeVisible();
+  await page.locator('#installBtn').click();
+  await expect(page.locator('#installBar')).toBeHidden();
+  expect(await page.evaluate(() => window.promptCalled)).toBe(true);
+  await page.locator('#installAgain').click();
+  await expect(page.locator('#installPlay')).toBeVisible();
+  await expect(page.locator('#installBtn')).toBeHidden();
+  await expect(page.locator('#installText')).toContainText('browser menu');
+});
+
+test('Android: de installatiekeuze kan ook na Google Play opnieuw open', async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(navigator, 'userAgent', { get: () => 'Mozilla/5.0 (Linux; Android 13) Chrome/133.0.0.0 Mobile' }));
+  await page.goto('/');
+  await page.evaluate(() => document.querySelector('#installPlay').addEventListener('click', e => e.preventDefault()));
+  await page.locator('#installPlay').click();
+  await expect(page.locator('#installBar')).toBeHidden();
+  await page.locator('#settingsOpen').click();
+  await page.locator('#installAgain').click();
+  await expect(page.locator('#installPlay')).toBeVisible();
+});
+
+test('de heropenknop verschijnt niet op desktop of in een geïnstalleerde app', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#settingsOpen').click();
+  await expect(page.locator('#installAgain')).toBeHidden();
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'userAgent', { get: () => 'Mozilla/5.0 (Linux; Android 13) Chrome/133.0.0.0 Mobile' });
+    const original = window.matchMedia;
+    window.matchMedia = query => query === '(display-mode: standalone)' ? { matches: true } : original.call(window, query);
+  });
+  await page.reload();
+  await expect(page.locator('#installBar')).toBeHidden();
+  await page.locator('#settingsOpen').click();
+  await expect(page.locator('#installAgain')).toBeHidden();
+});
+
 test('de installatiemelding werkt met pijltjes en Enter', async ({ page }) => {
   await page.addInitScript(() => Object.defineProperty(navigator, 'userAgent', { get: () => 'Mozilla/5.0 (X11; CrOS x86_64 14526.64.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36' }));
   await page.goto('/');

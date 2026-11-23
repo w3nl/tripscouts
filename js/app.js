@@ -2,7 +2,7 @@
 // Start het spel: versie, service worker, updatebalk en de spellus.
 
 /** Staat op het titelscherm. Altijd hetzelfde getal als CACHE in sw.js (tests/pwa.spec.js controleert dat). */
-const GAME_VERSION = 91;
+const GAME_VERSION = 92;
 $("version").textContent = "v" + GAME_VERSION;
 
 /* ---------- Installeerbare app en updates ---------- */
@@ -30,7 +30,7 @@ const IS_ANDROID = /Android/i.test(navigator.userAgent);
 const IS_CHROMEOS = /\bCrOS\b/.test(navigator.userAgent);
 const IS_CHROME = /(?:Chrome|Chromium)\//.test(navigator.userAgent) && !/(?:Android|Edg\/|OPR\/|CriOS\/)/.test(navigator.userAgent);
 const IS_APP = () => matchMedia("(display-mode: standalone)").matches || matchMedia("(display-mode: fullscreen)").matches || navigator.standalone === true;
-let installEvt = null, installOffer = false, playClicked = false, rotateClosed = false, rotateTimer = 0;
+let installEvt = null, installOffer = false, installManual = false, playClicked = false, rotateClosed = false, rotateTimer = 0;
 /** De tekst en knoppen van de installeerbalk: de web-app, de Chrome-extensie en op Android ook de app uit Google Play. */
 function installChoice() {
   const web = !!installEvt;
@@ -49,7 +49,11 @@ function installLater() { try { return Date.now() < +(localStorage.getItem("cabi
 /** Zet de meldingen aan of uit, passend bij het scherm (aangeroepen vanuit setScreen() en bij draaien). */
 function updateHints() {
   const inst = $("installBar"), rot = $("rotateHint");
-  if (inst) inst.hidden = !(installOffer && !playClicked && state === "title" && !IS_APP() && !IN_TV_APP && !installLater());
+  if (state !== "settings") installManual = false;
+  if (inst) {
+    inst.hidden = !(installOffer && !playClicked && !IS_APP() && !IN_TV_APP && ((state === "title" && !installLater()) || (state === "settings" && installManual)));
+    $("installAgain").hidden = !(IS_IOS || IS_ANDROID) || IS_APP() || IN_TV_APP || !inst.hidden;
+  }
   // Draaien: alleen op een aanraakscherm dat rechtop staat, in het menu of tijdens het spelen.
   if (rot) {
     rot.hidden = !(isTouch && innerHeight > innerWidth && !rotateClosed && (state === "title" || state === "play") && !dialog);
@@ -62,11 +66,12 @@ function updateHints() {
 }
 // Android en Chrome: de browser biedt installeren aan; wij tonen een eigen balk met een knop.
 addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; installOffer = true; installChoice(); updateHints(); });
-addEventListener("appinstalled", () => { installOffer = false; installEvt = null; updateHints(); });
+addEventListener("appinstalled", () => { installOffer = false; installManual = false; installEvt = null; updateHints(); });
 // iPhone en iPad: Safari heeft geen installeerknop, dus uitleg in één zin.
 // Android: meteen de keuze voor de Android-app uit Google Play (de web-app-knop komt erbij zodra de browser die aanbiedt).
 if ((IS_IOS || IS_ANDROID || (IS_CHROMEOS && location.protocol !== "chrome-extension:")) && !IS_APP() && !IN_TV_APP) installOffer = true;
 installChoice();
+$("installAgain").onclick = () => { installManual = true; installOffer = true; playClicked = false; installChoice(); updateHints(); };
 $("installPlay").onclick = () => { playClicked = true; setTimeout(updateHints, 0); };
 $("installBtn").onclick = async e => {
   if (!installEvt) return;
@@ -78,7 +83,7 @@ $("installBtn").onclick = async e => {
   try { await installEvt.userChoice; } catch (e) {}
   installEvt = null; installOffer = false; updateHints();
 };
-$("installClose").onclick = () => { try { localStorage.setItem("cabin-week-install-later", String(Date.now() + 14 * 864e5)); } catch (e) {} updateHints(); };
+$("installClose").onclick = () => { installManual = false; try { localStorage.setItem("cabin-week-install-later", String(Date.now() + 14 * 864e5)); } catch (e) {} updateHints(); };
 $("rotateClose").onclick = () => { rotateClosed = true; updateHints(); };
 // Language: English or Dutch (see i18n.js); the current one is marked.
 document.querySelectorAll("[data-lang]").forEach(b => { b.setAttribute("aria-pressed", String(b.dataset.lang === LANG)); b.onclick = () => setLang(b.dataset.lang); });

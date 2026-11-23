@@ -185,7 +185,7 @@ kbd { font-family: var(--body); font-weight: 800; font-size: 12px; background: r
 
 /* ---------- Het menu in de breedte (html.wide, zie fitMenu() in canvas.js) ----------
    Ontworpen op 960×540, de schermgrootte van de Google TV; --fit schaalt het naar elk scherm in de breedte,
-   zodat helden, dagen, aftelling en uitleg altijd tegelijk in beeld zijn. */
+   zodat helden, dagen en menuknoppen altijd tegelijk in beeld zijn. */
 html.wide #title { overflow: hidden; padding: 0; }
 html.wide #title .sheet {
   position: absolute; left: 50%; top: 50%; width: 960px; height: 540px; max-width: none; margin: 0; padding: 16px 20px 12px;
@@ -198,7 +198,6 @@ html.wide #title .col-b { grid-area: b; min-width: 0; min-height: 0; display: fl
 html.wide #title .ticker { grid-area: t; margin: 0; min-height: 0; overflow: hidden; font-size: 13px; padding: 9px 12px; align-self: start; }
 html.wide #title .foot { grid-area: f; min-width: 0; }
 html.wide #title .version { margin: 2px 0 0; font-size: 10.5px; }
-html.wide #title .help .tips { display: none; }
 html.wide #title .eyebrow { font-size: 9.5px; letter-spacing: .03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 html.wide #title h1 { font-size: 42px; margin: 4px 0 8px; }
 html.wide #title .tagline { font-size: 12px; margin: -4px 0 8px; }
@@ -226,8 +225,6 @@ html.wide #title .levels button { padding: 8px 10px; border-radius: 13px; overfl
 html.wide #title .levels .n { font-size: 11px; }
 html.wide #title .levels .t { font-size: 14.5px; }
 html.wide #title .levels .s { font-size: 11.5px; line-height: 1.3; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
-html.wide #title .help { margin: 0; font-size: 10.5px; line-height: 1.5; }
-html.wide #title .help kbd { font-size: 10px; padding: 0 4px; }
 html.wide #title .gp-status { margin-top: 4px; padding: 4px 10px; font-size: 11.5px; }
 
 /* Kaarten (intro, gehaald) in de breedte: in het midden van het scherm, en de intro in twee kolommen
@@ -253,8 +250,17 @@ html.wide #padWrap .pad .cta { justify-content: flex-start !important; margin-to
 .version { margin-top: 10px; font-size: 12px; color: var(--muted); }
 
 /* ---------- Language ---------- */
-.version .lang { font: inherit; font-weight: 700; color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 8px; padding: 1px 8px; margin-left: 2px; }
-.version .lang[aria-pressed="true"] { color: var(--gold); border-color: var(--gold); }
+.settings-options { display: flex; flex-wrap: wrap; gap: 10px; }
+.settings-options .lang { font: inherit; font-weight: 700; color: var(--snow); background: var(--panel-2); border: 2px solid var(--line); border-radius: 12px; padding: 10px 14px; }
+.settings-options #installAgain { color: var(--pine); border-color: var(--pine); }
+.settings-options .lang[aria-pressed="true"] { color: var(--gold); border-color: var(--gold); }
+.title-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.title-actions .btn { font-size: 15px; padding: 7px 14px; }
+.menu-sheet { max-width: 640px; }
+.menu-sheet h2 { margin-top: 0; }
+.menu-sheet p { line-height: 1.5; }
+html.wide #settingsWrap, html.wide #helpWrap { display: flex; padding: 12px; }
+html.wide .menu-sheet { margin: auto; padding: 16px 20px; }
 .version .credits a { color: var(--muted); text-underline-offset: 3px; }
 .version .credits a:hover, .version .credits a:focus-visible { color: var(--gold); }
 
@@ -286,9 +292,9 @@ html.gp-on button:focus, html.gp-on #installBar a[href]:focus { outline: 4px sol
 .dayhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin: 26px 0 10px; }
 .dayhead h2 { margin: 0; }
 .region-btn { border: 2px solid var(--gold); background: rgba(255,210,94,.14); color: var(--snow); border-radius: 999px; padding: 6px 14px;
-  font-family: var(--display); font-weight: 600; font-size: 15px; white-space: nowrap; }
+  font-family: var(--display); font-weight: 600; font-size: 15px; white-space: nowrap; margin-bottom: 10px; }
 html.wide #title .dayhead { margin: 0 0 6px; }
-html.wide #title .region-btn { font-size: 13px; padding: 3px 11px; }
+html.wide #title .region-btn { font-size: 14px; padding: 4px 11px; margin-bottom: 7px; }
 
 #mapWrap { display: flex; padding: 12px; }
 #mapWrap[hidden] { display: none; }

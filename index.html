@@ -68,6 +68,7 @@
       <div class="eyebrow" id="eyebrow">The Hills × the Woods</div>
       <h1><span class="a">Trip</span><span class="b">Scouts</span></h1>
       <p class="tagline" data-nl="Twee gezinnen, tien reizen. Jij verkent waar ze heen gaan!">Two families, ten trips. You scout where they go!</p>
+      <button type="button" class="region-btn" id="regionBtn" title="Choose another trip" data-nl-title="Kies een andere reis">🗺️ <span data-nl="Andere reis">Change trip</span> · <span id="regionName"></span></button>
 
       <div class="count">
         <b id="cdNum">8</b>
@@ -83,29 +84,53 @@
 
       <div class="dayhead">
         <h2 data-nl="Kies je dag <small>elke dag een eigen level</small>">Choose your day <small>every day has its own level</small></h2>
-        <button type="button" class="region-btn" id="regionBtn" title="Choose another trip" data-nl-title="Kies een andere reis">🗺️ <span id="regionName"></span></button>
       </div>
       <div class="levels" id="levels"></div>
       </div>
 
       <p class="ticker" id="ticker" title="Click for the next joke" data-nl-title="Klik voor de volgende grap"></p>
       <div class="foot">
-      <p class="help" data-nl="<kbd>←</kbd> <kbd>→</kbd> lopen (rennen: <kbd>Shift</kbd>, of dubbeltik en vasthouden) · <kbd>Spatie</kbd> of <kbd>↑</kbd> springen · <kbd>E</kbd> of <kbd>↓</kbd> praten, lezen en gebruiken · lopen + <kbd>↓</kbd> op je buik glijden · <kbd>Esc</kbd> menu.<br>
-        Met een controller (PlayStation, Stadia, Xbox): stick of pijltjes lopen · <kbd>R1</kbd>/<kbd>L1</kbd> rennen · <kbd>✕</kbd>/<kbd>A</kbd> springen · <kbd>□</kbd>/<kbd>X</kbd> of <kbd>○</kbd>/<kbd>B</kbd> praten · <kbd>Start</kbd> menu. Druk eerst op een knop, dan ziet de browser hem.<br>
-        <span class='tips'>Spring op wilde zwijnen, robotstofzuigers en sneeuwpoppen. Lees de bordjes: de cijfers voor de codesloten staan erop. Elke dag van de week heeft een eigen level.</span>">
-        <kbd>←</kbd> <kbd>→</kbd> walk (run: <kbd>Shift</kbd>, or double-tap and hold) · <kbd>Space</kbd> or <kbd>↑</kbd> jump · <kbd>E</kbd> or <kbd>↓</kbd> talk, read and use · walk + <kbd>↓</kbd> belly slide · <kbd>Esc</kbd> menu.<br>
-        With a controller (PlayStation, Stadia, Xbox): stick or D-pad walk · <kbd>R1</kbd>/<kbd>L1</kbd> run · <kbd>✕</kbd>/<kbd>A</kbd> jump · <kbd>□</kbd>/<kbd>X</kbd> or <kbd>○</kbd>/<kbd>B</kbd> talk · <kbd>Start</kbd> menu. Press a button first so the browser sees it.<br>
-        <span class="tips">Jump on wild boars, robot vacuums and snowmen. Read the signs: the digits for the code locks are on them. Every day of the week has its own level.</span>
-      </p>
+      <div class="title-actions">
+        <button type="button" class="btn ghost" id="helpOpen" data-nl="❔ Uitleg">❔ How to play</button>
+        <button type="button" class="btn ghost" id="settingsOpen" data-nl="⚙️ Instellingen">⚙️ Settings</button>
+      </div>
       <p class="gp-status" id="gpStatus" role="status" hidden></p>
       <p class="version">TripScouts <span id="version" translate="no"></span> ·
         <span class="credits" id="credits"><a href="https://github.com/w3nl/tripscouts" target="_blank" rel="noopener noreferrer" data-nl="Broncode">Source code</a> · <a href="https://github.com/w3nl/tripscouts/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" data-nl="Licentie (GPL-3.0)">Licence (GPL-3.0)</a></span> ·
-        <span class="credits"><a href="privacy.html" data-nl="Privacybeleid">Privacy policy</a></span> ·
+        <span class="credits"><a href="privacy.html" data-nl="Privacybeleid">Privacy policy</a></span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="settingsWrap" hidden>
+    <div class="sheet menu-sheet">
+      <h2 data-nl="⚙️ Instellingen">⚙️ Settings</h2>
+      <p data-nl="Taal">Language</p>
+      <div class="settings-options">
         <button type="button" class="lang" data-lang="en" lang="en">English</button>
         <button type="button" class="lang" data-lang="nl" lang="nl">Nederlands</button>
-        <button type="button" class="lang voice" id="voiceBtn" aria-pressed="false" hidden>🔈 Voices off</button>
-        <button type="button" class="lang voice" id="ambBtn" aria-pressed="false">🌲 Ambience off</button></p>
       </div>
+      <p data-nl="Geluid en installatie">Sound and installation</p>
+      <div class="settings-options">
+        <button type="button" class="lang" id="installAgain" aria-controls="installBar" data-nl="📲 Installeren" hidden>📲 Install</button>
+        <button type="button" class="lang voice" id="voiceBtn" aria-pressed="false" hidden>🔈 Voices off</button>
+        <button type="button" class="lang voice" id="ambBtn" aria-pressed="false">🌲 Ambience off</button>
+      </div>
+      <div class="cta"><button type="button" class="btn ghost" id="settingsBack" data-nl="Terug">Back</button></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="helpWrap" hidden>
+    <div class="sheet menu-sheet">
+      <h2 data-nl="❔ Uitleg">❔ How to play</h2>
+      <p class="help" data-nl="<kbd>←</kbd> <kbd>→</kbd> lopen (rennen: <kbd>Shift</kbd>, of dubbeltik en vasthouden) · <kbd>Spatie</kbd> of <kbd>↑</kbd> springen · <kbd>E</kbd> of <kbd>↓</kbd> praten, lezen en gebruiken · lopen + <kbd>↓</kbd> op je buik glijden · <kbd>Esc</kbd> menu.<br><br>
+        Met een controller (PlayStation, Stadia, Xbox): stick of pijltjes lopen · <kbd>R1</kbd>/<kbd>L1</kbd> rennen · <kbd>✕</kbd>/<kbd>A</kbd> springen · <kbd>□</kbd>/<kbd>X</kbd> of <kbd>○</kbd>/<kbd>B</kbd> praten · <kbd>Start</kbd> menu. Druk eerst op een knop, dan ziet de browser hem.<br><br>
+        Spring op de meeste dieren om ze om te gooien. Lees de aanwijzingen voor de codesloten. Elke reis heeft acht dagen.">
+        <kbd>←</kbd> <kbd>→</kbd> walk (run: <kbd>Shift</kbd>, or double-tap and hold) · <kbd>Space</kbd> or <kbd>↑</kbd> jump · <kbd>E</kbd> or <kbd>↓</kbd> talk, read and use · walk + <kbd>↓</kbd> belly slide · <kbd>Esc</kbd> menu.<br><br>
+        With a controller (PlayStation, Stadia, Xbox): stick or D-pad walk · <kbd>R1</kbd>/<kbd>L1</kbd> run · <kbd>✕</kbd>/<kbd>A</kbd> jump · <kbd>□</kbd>/<kbd>X</kbd> or <kbd>○</kbd>/<kbd>B</kbd> talk · <kbd>Start</kbd> menu. Press a button first so the browser sees it.<br><br>
+        Jump on most animals to knock them over. Read the clues for the code locks. Each trip has eight days.
+      </p>
+      <div class="cta"><button type="button" class="btn ghost" id="helpBack" data-nl="Terug">Back</button></div>
     </div>
   </div>
 

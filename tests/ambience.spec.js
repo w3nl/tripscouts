@@ -40,11 +40,13 @@ test('off by default; the button turns it on and it plays in a level, not in the
   expect(await page.evaluate(() => AMB)).toBeNull();
 
   await page.locator('#hud button', { hasText: 'Menu' }).click();
+  await page.locator('#settingsOpen').click();
   await page.locator('#ambBtn').click();
   await expect(page.locator('#ambBtn')).toHaveText('🌲 Ambience on');
   await expect(page.locator('#ambBtn')).toHaveAttribute('aria-pressed', 'true');
   expect(await page.evaluate(() => localStorage.getItem('cabin-week-ambience'))).toBe('1');
 
+  await page.locator('#settingsBack').click();
   await startDay(page, 0);
   await expect.poll(() => page.evaluate(() => AMB && AMB.k.beds.join())).toBe('wind');
   // every little sound plays without errors
