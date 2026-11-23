@@ -2673,7 +2673,7 @@ function drawCanoe(cx, y, face, pace) {
   g.fillStyle = "#f2c42a"; g.beginPath(); g.moveTo(cx - 31, y - 4); g.quadraticCurveTo(cx, y + 2, cx + 31, y - 4); g.lineTo(cx + 30, y - 1); g.quadraticCurveTo(cx, y + 5, cx - 30, y - 1); g.closePath(); g.fill();
   g.restore();
 }
-/* ---------- Rides (genLevel(): `ride`): skis, a sledge, skates, a bike ----------
+/* ---------- Rides (genLevel(): `ride`): skis, a sledge, skates, a bike, a kicksled ----------
    Drawn around the player: cx is the middle, y the feet, k the size of the character. The person is drawn by render();
    on a sledge and a bike only the part above the seat (rideClip()), with the legs drawn here. */
 /** Two skis with turned-up tips and two poles. */
@@ -2711,6 +2711,17 @@ function drawSkates(cx, y, face, k) {
   g.save(); g.translate(cx, y); g.scale(face, 1); g.lineCap = "round";
   [-4, 4].forEach(x => { g.strokeStyle = "#dfe8f2"; g.lineWidth = 2; g.beginPath(); g.moveTo(x - 6 * k, 1); g.lineTo(x + 6 * k, 1); g.quadraticCurveTo(x + 8 * k, 1, x + 7.5 * k, -1); g.stroke();
     g.strokeStyle = "#8a96a8"; g.lineWidth = 1.5; g.beginPath(); g.moveTo(x - 3 * k, 0); g.lineTo(x - 3 * k, -1.5); g.moveTo(x + 3 * k, 0); g.lineTo(x + 3 * k, -1.5); g.stroke(); });
+  g.restore();
+}
+/** A kicksled: long runners, a seat ahead and handles for the standing rider. */
+function drawKicksled(cx, y, face) {
+  g.save(); g.translate(cx, y); g.scale(face, 1); g.lineCap = "round"; g.lineJoin = "round";
+  g.strokeStyle = "#324456"; g.lineWidth = 3;
+  g.beginPath(); g.moveTo(-26, 0); g.lineTo(22, 0); g.quadraticCurveTo(29, 0, 27, -6);
+  g.moveTo(-8, 0); g.lineTo(-8, -31); g.lineTo(-14, -31);
+  g.moveTo(16, 0); g.lineTo(16, -18); g.lineTo(-8, -18); g.stroke();
+  g.fillStyle = "#b8743a"; g.strokeStyle = OUT; g.lineWidth = 1.5;
+  g.beginPath(); rp(-7, -21, 27, 5, 2); g.fill(); g.stroke();
   g.restore();
 }
 /** A white bike (the free bikes of the Hoge Veluwe), behind the rider; pedal = how far the wheels have turned. */
@@ -3010,13 +3021,14 @@ function render() {
       const rx = P.x + P.w / 2, feet = P.y + P.h, rk = ch.size || 1, rd = P.ride, seat = rd && rideSeat(rd, feet, ch), pedal = P.x / 10;
       if (P.onGround && !P.canoe) shadowAt(rx, feet, rd ? 24 : 11);
       if (rd === "bike") drawBike(rx, feet, P.face, rk, pedal);
+      if (rd === "kicksled") drawKicksled(rx, feet, P.face);
       // in a canoe you sit inside it: only draw what sticks out above the edge (no legs under the boat, also mid-jump);
       // on a sledge or a bike you sit too, and the legs are drawn with it
       if (P.canoe) { g.save(); g.beginPath(); g.rect(P.x - 80, P.y - 120, P.w + 160, 120 + P.h * .45 + 4); g.clip(); }
       if (seat) { g.save(); g.beginPath(); g.rect(P.x - 80, seat.clip - 140, P.w + 160, 140); g.clip(); }
-      // on skis you glide (no steps); on skates you stride
-      drawPerson(ch, rx, seat ? seat.by : feet, 1, P.face, rd === "skates" ? P.anim * .55 : P.anim, !P.onGround, pHat,
-        { t: frame * 16, moving: Math.abs(P.vx) > .3 && !P.canoe && (!rd || rd === "skates"), scarf, summer, indoor: theme === "huis" });
+      // on skis you glide (no steps); on skates and a kicksled you stride
+      drawPerson(ch, rx, seat ? seat.by : feet, 1, P.face, rd === "skates" || rd === "kicksled" ? P.anim * .55 : P.anim, !P.onGround, pHat,
+        { t: frame * 16, moving: Math.abs(P.vx) > .3 && !P.canoe && (!rd || rd === "skates" || rd === "kicksled"), scarf, summer, indoor: theme === "huis" });
       if (P.canoe || seat) g.restore();
       if (rd === "ski") drawSkis(rx, feet, P.face, rk);
       if (rd === "skates") drawSkates(rx, feet, P.face, rk);

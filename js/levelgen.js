@@ -12,7 +12,9 @@ const RIDE_SIGNS = {
   skates: [T("Skates on! On the ice you glide a long way. It takes a while to get going, and a while to stop.", "Schaatsen aan! Op het ijs glij je een heel eind. Op gang komen duurt even, en stoppen ook."),
     T("Jump over the snow banks. Arms on your back, like a real Dutch skater.", "Spring over de sneeuwhopen. Handen op je rug, als een echte schaatser.")],
   bike: [T("A white bike! Free to ride in the park. Pedal with → and jump over what lies on the path.", "Een witte fiets! Gratis te gebruiken in het park. Trap met → en spring over wat er op het pad ligt."),
-    T("Leave it at the rack at the end, for the next one.", "Zet hem aan het eind terug in het rek, voor de volgende.")]
+    T("Leave it at the rack at the end, for the next one.", "Zet hem aan het eind terug in het rek, voor de volgende.")],
+  kicksled: [T("One foot on the kicksled, one foot to push. Hold → to go and jump over the obstacles.", "Eén voet op de schopslee, met de andere afzetten. Houd → vast en spring over de hindernissen."),
+    T("Kick, glide, kick, glide!", "Afzetten, glijden, afzetten, glijden!")]
 };
 function genLevel(o) {
   // Options that make a region play differently (see AGENTS.md, "Region gameplay"):
@@ -24,8 +26,8 @@ function genLevel(o) {
   //     carries you, rocks stick out of the water to jump over, and the river drops down two small waterfalls,
   //     each followed by rapids. Gives the level a `river` ({ x0, x1, surf, rapids }) and `rocks`.
   //   ride: { kind, len } – a stretch near the start where you don't walk but ride: "ski" or "sled" down a slope (the
-  //     ground starts at row 9 and drops a row three times), "skates" on a frozen canal or a "bike" on a path (flat).
-  //     Logs or snow banks (blocks of 1) to jump over, with coins above them; one of the three things hangs above it.
+  //     ground starts at row 9 and drops a row three times), "skates", a "bike" or a "kicksled" on flat ground.
+  //     Small blocks and tall rocks to jump over, with coins above them; one of the three things hangs above it.
   //     Gives the level a `ride` ({ kind, x0, x1 }); game.js changes how you move there, world.js draws what you ride.
   //   ice, dark, water, interior – used by the game and the drawing code, not by the generator.
   // The gate halfway (see AGENTS.md, "Gates and locks"): quest (bring something), or task: { kind: "levers" | "lights" |
@@ -96,12 +98,15 @@ function genLevel(o) {
       // the stretch itself, a piece of ground per row
       for (let i = 0, a = 0; i <= len; i++) if (i === len || rowAt(i) !== rowAt(a)) { ground.push([x0 + a, x0 + i - 1, rowAt(a)]); a = i; }
       for (let i = 0; i < len; i++) bad.add(x0 + i);
-      // logs (or snow banks) to jump over, about every 7 to 10 tiles, never right at a drop or at either end
+      // Alternating small blocks and tall rocks, never right at a drop or at either end.
       const isDrop = i => i > 0 && rowAt(i) !== rowAt(i - 1);
+      let obstacle = 0;
       for (let i = 7; i < len - 5; i += 7 + Math.floor(R() * 4)) {
         if ([-2, -1, 0, 1, 2].some(dd => isDrop(i + dd))) continue;
-        const r = rowAt(i); blocks.push([x0 + i, r - 1, 1]);
-        [-1, 0, 1].forEach(dd => coin(x0 + i + dd, r - 3 - (dd ? 0 : 1)));
+        const r = rowAt(i), tall = ++obstacle % 2 === 0;
+        if (tall) rocks.push([x0 + i, r - 2, 2]);
+        else blocks.push([x0 + i, r - 1, 1]);
+        [-1, 0, 1].forEach(dd => coin(x0 + i + dd, r - (tall ? 4 : 3) - (dd ? 0 : 1)));
       }
       // one of the things to find hangs above the ride, halfway (marked like the river: placed first, always one)
       const mid = Math.floor(len / 2) + 4;
@@ -208,7 +213,8 @@ function genLevel(o) {
   } else if (ride) {
     // a ride gets a sign at the start that says how it works, and a flag where you get off again
     const c = free(ride.x0 - 6, 3, ride.x0 - 2);
-    ents.push(["sign", c, yAt(c), RIDE_SIGNS[ride.kind]]);
+    ents.push(["sign", c, yAt(c), [...RIDE_SIGNS[ride.kind],
+      T("Small bumps stop you. Hit a tall rock and you fall: back to the last flag!", "Kleine hindernissen stoppen je. Raak je een hoge rots, dan val je: terug naar de laatste vlag!")]]);
     const f = free(ride.x1 + 5, ride.x1 + 3); ents.push(["check", f, yAt(f)]);
   } else { const c = free(w * .3); ents.push(["check", c, yAt(c)]); }
   if (!gated) { const c = free(w * .62); ents.push(["check", c, yAt(c)]); } // a gate already has a flag right behind it

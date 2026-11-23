@@ -26,7 +26,7 @@ const NORWAY_LEVELS = [
     doneMsg: T("Keys found, stove lit, candles in every window. Very koselig.", "Sleutels gevonden, kachel aan, kaarsjes in elk raam. Heel koselig.")
   }),
   genLevel({
-    seed: 5202, ice: true, hills: [12, 11], water: true, w: 200, day: dayLabel(1), name: T("Kicksled to the Shop", "Met de schopslee naar de winkel"), theme: "sneeuw", scene: "fjord",
+    seed: 5202, ice: true, hills: [12, 11], water: true, w: 280, ride: { kind: "kicksled", len: 70 }, day: dayLabel(1), name: T("Kicksled to the Shop", "Met de schopslee naar de winkel"), theme: "sneeuw", scene: "fjord",
     sub: T("Shopping, the Norwegian way: on a kicksled. Find three blocks of brown cheese, and the kicksled itself.",
       "Boodschappen doen op z'n Noors: met een schopslee. Vind drie blokken bruine kaas, en de schopslee zelf."),
     keyType: "🧀", keyHud: "🧀", keyName: T("blocks of brown cheese", "blokken bruine kaas"),

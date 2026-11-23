@@ -64,14 +64,15 @@ function isSolid(tx, ty) {
   const c = L.grid[ty][tx];
   return c === "#" || c === "S" || c === "R" || (c === "G" && !L.gateOpen) || (c === "H" && !L.codeOpen);
 }
-/** A ride (genLevel(): `ride`): on skis, a sledge, skates or a bike you don't walk. Per kind: the top speed with →,
+/** A ride (genLevel(): `ride`): on skis, a sledge, skates, a bike or a kicksled you don't walk. Per kind: the top speed with →,
     how fast you can go back with ←, how fast it rolls by itself without a key (downhill), how quickly you speed up,
     and how quickly you slow down. Skates glide a long way; a bike stops sooner; skis and a sledge keep going downhill. */
 const RIDE_FEEL = {
   ski: { top: 7, back: 1.6, coast: 4.2, acc: .12, brake: .22 },
   sled: { top: 7.4, back: 1.3, coast: 5.2, acc: .14, brake: .18 },
   skates: { top: 6.6, back: 4, coast: 0, acc: .14, brake: .02 },
-  bike: { top: 6.8, back: 2.2, coast: 0, acc: .3, brake: .08 }
+  bike: { top: 6.8, back: 2.2, coast: 0, acc: .3, brake: .08 },
+  kicksled: { top: 6.6, back: 2.5, coast: 0, acc: .2, brake: .035 }
 };
 function rideAt(col) { const r = L.d.ride; return r && col >= r.x0 && col <= r.x1 ? r.kind : null; }
 /** The river you canoe down (the Ardèche): is this column part of it, and where is the water there? */
@@ -374,7 +375,7 @@ function step() {
   // Buikglijden: even sneller dan lopen, en langzaam uitglijden (in de sneeuw het verst). Springen stopt het glijden;
   // daarna geldt weer de gewone snelheid, dus je springt niet verder dan normaal.
   if (P.slide && wantJump) P.slide = 0;
-  // On a ride (skis, a sledge, skates, a bike) you move the way that thing moves (RIDE_FEEL).
+  // On a ride you move the way that thing moves (RIDE_FEEL).
   P.ride = rideAt(Math.floor((P.x + P.w / 2) / TS));
   if (P.ride) {
     const r = RIDE_FEEL[P.ride], want = ax > 0 ? r.top : ax < 0 ? -r.back : r.coast, d = want - P.vx;
@@ -455,6 +456,7 @@ function step() {
     else if (dxMove < 0) { const tx = Math.floor(P.x / TS); for (let ty = y0; ty <= y1; ty++) if (isSolid(tx, ty)) { P.x = (tx + 1) * TS; P.vx = 0; hit = cell(tx, ty); break; } }
     // bumping into a block on a ride: oops, no harm done
     if (hit === "S" && P.ride && L.time - (P.bonk || -99) > 45) { P.bonk = L.time; pop(P.x + P.w / 2, P.y - 8, T("Oops!", "Oeps!"), "#fff"); tone(160, .12, "triangle", .05); }
+    if (hit === "R" && P.ride) { P.inv = 0; hurt(T("Crash!", "Boem!")); respawn(); return; }
     // bumping into a rock in the canoe: you capsize, and start again from the last flag
     if (hit === "R" && P.canoe) capsize();
     // You can't paddle up a waterfall: the water upstream is higher than you.
