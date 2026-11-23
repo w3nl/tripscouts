@@ -163,7 +163,7 @@ The Linux app is listed at https://snapcraft.io/tripscouts (currently edge: `sud
 | 1 | Landing at the North Pole (seed 3101) | backpacks 🎒 | no gate | symbols | **5180** | temperature −5 to 0, Arctic polar bears (option 1), two reindeer with four legs, freezing point of fresh water |
 | 2 | The Reindeer Stables (3202) | reindeer bells 🔔 | bring back 🦌 reindeer calf | melody | **1355** | questions at the bells: lichen (option 1), 2+1 pairs, 10÷2 carrots, 2+3 hours; answers choose do mi la la |
 | 3 | Santa's Workshop (3303, `huis`) | teddy bears 🧸 | bring screwdriver 🪛 | word | **ELVES** (NL **ELFEN**) | numbered nature and spelling questions on blocks |
-| 4 | Building an Igloo (3404) | ice blocks 🧊 | 3 levers 🔧 | count | **342** | igloos 3, piles of presents 4, candy canes 2 |
+| 4 | Building an Igloo (3404) | ice blocks 🧊 | 3 levers 🔧 | count | **342** | count igloos, insulation from trapped air (option 4), count candy canes |
 | 5 | The Post Office (3505, `huis`) | letters ✉️ | bell 🔔 6 s | colours | **RGBY** | red, green, blue, yellow |
 | 6 | Northern Lights Night (3606) | lanterns 🏮 | light 3 lamps 🏮 | arrows | **↑→→↓** | numbered signposts |
 | 7 | Christmas Eve (3707) | presents 🎁 | bring route map 🗺️ | clock | **2345** | signs with the time |

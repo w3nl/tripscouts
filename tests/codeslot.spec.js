@@ -139,6 +139,22 @@ for (const lang of ['en', 'nl']) test(`werkplaats: vragen op de blokken geven de
   await expect(page.locator('#dialog')).toContainText(info.question);
 });
 
+for (const [lang, insulated, question] of [
+  ['en', 'Snow holds pockets of air', '4: trapped air'],
+  ['nl', 'Sneeuw houdt lucht vast', '4: vastgehouden lucht']
+]) test(`iglo: een natuurvraag zit tussen de telvragen (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region: 'pole', unlocked: 8 });
+  const info = await page.evaluate(() => {
+    const d = LEVELS[3];
+    return { answer: d.code.answer, riddle: d.code.riddle, npcs: d.ents.filter(e => e[0] === 'npc' && e[3].lines).flatMap(e => e[3].lines).join(' '),
+      igloos: d.deco.filter(d => d[0] === 'igloo').length, canes: d.deco.filter(d => d[0] === 'candycane').length };
+  });
+  expect(info.answer).toBe('342');
+  expect(info.riddle).toContain(question);
+  expect(info.npcs).toContain(insulated);
+  expect([info.igloos, info.canes]).toEqual([3, 2]);
+});
+
 test('elke dag met een codeslot heeft bordjes met de cijfers of een raadsel', async ({ page }) => {
   await seed(page, { unlocked: 8 });
   const r = await page.evaluate(() => LEVELS.map(d => {
