@@ -386,3 +386,19 @@ for (const [lang, question, explanation] of [
   await expect(page.locator('#dialog')).toBeVisible();
   await expect(page.locator('#dialog')).toContainText(explanation);
 });
+
+for (const [lang, question, explanation] of [
+  ['en', '5: excess water', 'water level is managed'],
+  ['nl', '5: overtollig water', 'waterstand wordt geregeld']
+]) test(`kinderdijk: waterbeheer tussen de telvragen (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region: 'netherlands', unlocked: 8 });
+  const info = await page.evaluate(() => {
+    const d = LEVELS[1];
+    return { answer: d.code.answer, riddle: d.code.riddle, npcs: d.ents.filter(e => e[0] === 'npc' && e[3].lines).flatMap(e => e[3].lines).join(' '),
+      mills: d.deco.filter(d => d[0] === 'windmill').length, tulips: d.deco.filter(d => d[0] === 'tulips').length };
+  });
+  expect(info.answer).toBe('453');
+  expect(info.riddle).toContain(question);
+  expect(info.npcs).toContain(explanation);
+  expect([info.mills, info.tulips]).toEqual([4, 3]);
+});
