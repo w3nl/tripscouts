@@ -171,7 +171,20 @@ const NORWAY_LEVELS = [
            T(["Trolls turn to stone in sunlight. Good thing the sun hardly comes up in winter. For them."], ["Trollen veranderen in steen in het zonlicht. Gelukkig komt de zon in de winter amper op. Voor hen dan."]),
            T(["I said hello to a troll. It said 'hmpf'. That's practically a conversation."], ["Ik zei hallo tegen een trol. Hij zei 'hmpf'. Dat is bijna een gesprek."])],
     code: { kind: "word", answer: "TROLL", extra: "ABEN", title: T("Forest gate", "Hek van het bos"),
-      riddle: T("Five letters are carved into stones in the forest. Together they spell who lives here.", "In het bos zijn vijf letters in stenen gekrast. Samen vormen ze wie hier woont.") },
+      riddle: T("Solve the five questions on the stones. Their letters spell who lives here.", "Los de vijf vragen op de stenen op. Hun letters vormen wie hier woont."),
+      questions: T([
+        ["A torch needs energy to shine. T: true; A: false.", "A torch changes energy, often from a battery, into light."],
+        ["Which part of a tree takes in water from the soil? R: roots; B: leaves.", "Roots absorb water from the soil."],
+        ["Which gas do people need to breathe? O: oxygen; A: carbon dioxide.", "People need oxygen from the air."],
+        ["Which animal is usually active at night? L: owl; B: butterfly.", "Many owls hunt at night."],
+        ["What does a shadow need? L: light blocked by something; E: complete darkness.", "A shadow forms where something blocks light."]
+      ], [
+        ["Een zaklamp heeft energie nodig om licht te geven. T: waar; A: niet waar.", "Een zaklamp zet energie, vaak uit een batterij, om in licht."],
+        ["Welk deel van een boom neemt water uit de grond op? R: wortels; B: bladeren.", "Wortels nemen water uit de grond op."],
+        ["Welk gas hebben mensen nodig om te ademen? O: zuurstof; A: koolstofdioxide.", "Mensen hebben zuurstof uit de lucht nodig."],
+        ["Welk dier is meestal 's nachts actief? L: uil; B: vlinder.", "Veel uilen jagen 's nachts."],
+        ["Wat is nodig voor een schaduw? L: licht dat wordt tegengehouden; E: volledige duisternis.", "Een schaduw ontstaat waar iets het licht tegenhoudt."]
+      ]) },
     task: { kind: "lights", hud: "🔥", look: "torch", name: T("torches", "fakkels"),
       need: T(["It's pitch dark in the troll forest. The trolls like it that way.", "Light the three torches along the path. Trolls don't like light. Then I'll open the gate."],
         ["Het is pikdonker in het trollenbos. Zo vinden de trollen het fijn.", "Steek de drie fakkels langs het pad aan. Trollen houden niet van licht. Dan doe ik het hek open."]),

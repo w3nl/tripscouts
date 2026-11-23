@@ -150,7 +150,7 @@ for (const lang of ['en', 'nl']) for (const [region, day, answer] of [
 });
 
 for (const lang of ['en', 'nl']) for (const [region, day, answer, count] of [
-  ['pole', 2, lang === 'nl' ? 'ELFEN' : 'ELVES', 5], ['tirol', 6, 'FONDUE', 6]
+  ['pole', 2, lang === 'nl' ? 'ELFEN' : 'ELVES', 5], ['tirol', 6, 'FONDUE', 6], ['norway', 5, 'TROLL', 5]
 ]) test(`${region} dag ${day + 1}: vragen op de blokken geven de letters (${lang})`, async ({ page }) => {
   await seed(page, { lang, region, unlocked: 8 });
   await startDay(page, day);
