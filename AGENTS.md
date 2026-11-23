@@ -212,7 +212,7 @@ The Linux app is listed at https://snapcraft.io/tripscouts (currently edge: `sud
 
 | Day | Level | 3 things | Gate | Lock | Answer | Clues | Gameplay |
 |---|---|---|---|---|---|---|---|
-| 1 | Arrival at the Zaanse Schans (6101) | house keys 🔑 | bring back 🐑 lamb | symbols | **3164** | 🌬️=3 🧀=1 🌷=6 🚲=4 | wind, canals |
+| 1 | Arrival at the Zaanse Schans (6101) | house keys 🔑 | bring back 🐑 lamb | symbols | **3164** | millers, wind power (option 1), bicycle wheels and seasons | wind, canals |
 | 2 | The Windmills of Kinderdijk (6202) | tulip bulbs 🌷 | 3 levers 🔧 | count | **453** | windmills 4, cows 5, tulip beds 3 | dikes (hills), strong wind |
 | 3 | Amsterdam by Canal Boat (6303, `stad`) | bike bells 🔔 | bell 🔔 6 s | colours | **GBRG** | green, blue, red, green | canal boats carry you, city pigeons |
 | 4 | Gouda by Candlelight (6404, `stad`, no enemies) | cheeses 🧀 | bring big candle 🕯️ | word | **GOUDA** | numbered letters | dark, light grows with the candle |

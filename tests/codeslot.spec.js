@@ -105,6 +105,7 @@ for (const lang of ['en', 'nl']) test(`noordpool: de klimaat- en natuurvragen ge
 for (const lang of ['en', 'nl']) for (const [region, day, answer, symbols] of [
   ['tirol', 0, '4718', ['🏔️', '🔑', '🐐', '⛪']],
   ['norway', 0, '6273', ['🌊', '⛰️', '🏠', '⭐']],
+  ['netherlands', 0, '3164', ['🌬️', '🧀', '🌷', '🚲']],
   ['ardennes', 1, '3817', ['🍄', '🌲', '🦔', '🍂']]
 ]) test(`${region} dag ${day + 1}: vragen op symbolenbordjes geven de slotcijfers (${lang})`, async ({ page }) => {
   await seed(page, { lang, region, unlocked: 8 });
