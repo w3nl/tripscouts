@@ -196,7 +196,22 @@ const TIROL_LEVELS = [
            T(["Uno after the fondue? Same rules as always: nobody agrees on the rules."], ["Uno na de fondue? Zelfde regels als altijd: niemand is het eens over de regels."]),
            T(["The sauna is warm. The snow outside is cold. Some people go from one to the other. Brave."], ["De sauna is warm. De sneeuw buiten is koud. Sommigen gaan van de een naar de ander. Dapper."])],
     code: { kind: "word", answer: "FONDUE", extra: "ACKS", title: T("Door to the sauna", "Deur naar de sauna"),
-      riddle: T("Six letters are carved into the beams. Together they spell tonight's dinner.", "In de balken zijn zes letters gesneden. Samen vormen ze het eten van vanavond.") },
+      riddle: T("Solve the six questions on the blocks. Their letters spell tonight's dinner.", "Los de zes vragen op de blokken op. Hun letters vormen het eten van vanavond."),
+      questions: T([
+        ["Cheese melts when it gets warmer or colder? F: warmer; C: colder.", "Heat can turn solid cheese into a liquid."],
+        ["Ten pieces of bread shared equally between two people: how many each? O: 5; A: 2.", "Ten divided by two is five."],
+        ["Which compass letter stands for north? N: N; S: S.", "N stands for north."],
+        ["Water vapour forms droplets when it cools. What is this called? D: condensation; K: evaporation.", "Condensation turns water vapour into liquid droplets."],
+        ["How many sides does a triangle have? U: 3; K: 4.", "A triangle has three sides."],
+        ["Seven plus how many makes ten? E: 3; C: 4.", "Seven and three make ten."]
+      ], [
+        ["Smelt kaas als hij warmer of kouder wordt? F: warmer; C: kouder.", "Door warmte kan vaste kaas vloeibaar worden."],
+        ["Tien stukjes brood eerlijk verdeeld over twee mensen: hoeveel per persoon? O: 5; A: 2.", "Tien gedeeld door twee is vijf."],
+        ["Welke kompasletter staat voor het noorden? N: N; S: S.", "N staat voor noord."],
+        ["Waterdamp vormt druppels als hij afkoelt. Hoe heet dat? D: condensatie; K: verdamping.", "Bij condensatie verandert waterdamp in vloeibare druppels."],
+        ["Hoeveel zijden heeft een driehoek? U: 3; K: 4.", "Een driehoek heeft drie zijden."],
+        ["Zeven plus hoeveel is tien? E: 3; C: 4.", "Zeven en drie zijn tien."]
+      ]) },
     decoKinds: ["sofa", "table", "fire", "lamp", "sauna"],
     doneMsg: T("Fondue gone, Uno played, rules argued about. Goodnight, mountains.", "Fondue op, Uno gespeeld, over de regels gediscussieerd. Welterusten, bergen.")
   }),

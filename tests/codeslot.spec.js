@@ -133,17 +133,19 @@ for (const lang of ['en', 'nl']) for (const [region, day, answer] of [
   await expect(page.locator('#dialog')).toContainText(info.question);
 });
 
-for (const lang of ['en', 'nl']) test(`werkplaats: vragen op de blokken geven de letters (${lang})`, async ({ page }) => {
-  await seed(page, { lang, region: 'pole', unlocked: 8 });
-  await startDay(page, 2);
+for (const lang of ['en', 'nl']) for (const [region, day, answer, count] of [
+  ['pole', 2, lang === 'nl' ? 'ELFEN' : 'ELVES', 5], ['tirol', 6, 'FONDUE', 6]
+]) test(`${region} dag ${day + 1}: vragen op de blokken geven de letters (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region, unlocked: 8 });
+  await startDay(page, day);
   const info = await page.evaluate(() => {
     const c = L.clues[0], draw = g.fillText, text = [];
     try { g.fillText = (...args) => { text.push(args[0]); return draw.apply(g, args); }; drawClue(c); }
     finally { g.fillText = draw; }
     return { x: c.x, y: c.y, question: c.question[0], text, answer: L.d.code.answer, count: L.clues.filter(x => x.question).length };
   });
-  expect(info.answer).toBe(lang === 'nl' ? 'ELFEN' : 'ELVES');
-  expect(info.count).toBe(5);
+  expect(info.answer).toBe(answer);
+  expect(info.count).toBe(count);
   expect(info.text).toContain('?');
   expect(info.text).not.toContain('E');
   await put(page, info.x + 5, info.y + 32);
