@@ -130,7 +130,18 @@ const TIROL_LEVELS = [
            T(["There's a hut halfway down with soup. Halfway is a very good place for soup."], ["Halverwege is een hut met soep. Halverwege is een heel goede plek voor soep."]),
            T(["I'm not scared. I'm just being careful. Very, very careful."], ["Ik ben niet bang. Ik ben gewoon voorzichtig. Heel, heel voorzichtig."])],
     code: { kind: "arrows", answer: "↓←↓→", title: T("Start of the toboggan run", "Start van de rodelbaan"),
-      riddle: T("The toboggan run zigzags. Four signs show the bends. Enter their arrows in order.", "De rodelbaan zigzagt. Vier bordjes wijzen de bochten. Voer hun pijlen in, op volgorde.") },
+      riddle: T("Solve the questions on the four signs. Enter each answer as an arrow.", "Los de vragen op de vier bordjes op. Voer elk antwoord in als pijl."),
+      questions: T([
+        ["On a map with north at the top, which arrow points south?", "South is opposite north."],
+        ["Which way does a clock hand point when it points at 9?", "The 9 is on the left of the clock face."],
+        ["On a thermometer, which way does the liquid move when it cools down?", "A lower temperature is lower on the scale."],
+        ["On a map with north at the top, which arrow points towards the east, where the sun rises?", "East is to the right of north."]
+      ], [
+        ["Op een kaart met het noorden boven, welke pijl wijst naar het zuiden?", "Het zuiden ligt tegenover het noorden."],
+        ["Welke kant wijst een wijzer op als hij naar de 9 op de klok wijst?", "De 9 staat links op de klok."],
+        ["Welke kant beweegt de vloeistof in een thermometer op als het kouder wordt?", "Een lagere temperatuur staat lager op de schaal."],
+        ["Op een kaart met het noorden boven, welke pijl wijst naar het oosten, waar de zon opkomt?", "Het oosten ligt rechts van het noorden."]
+      ]) },
     task: { kind: "timer", hud: "🔔", secs: 7, name: T("bell", "bel"),
       need: T(["Ring the start bell back there. Then the gate opens, but only for a moment.", "Toboggan rule: whoever hesitates, waits."],
         ["Luid daar achter de startbel. Dan gaat het hek open, maar maar heel even.", "Rodelregel: wie twijfelt, wacht."]),

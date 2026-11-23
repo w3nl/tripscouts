@@ -177,7 +177,7 @@ The Linux app is listed at https://snapcraft.io/tripscouts (currently edge: `sud
 | 2 | Ski School (4202, 292 wide, skis down a slope) | pairs of skis 🎿 | bell 🔔 7 s | arrows | **→↓→↓** | map directions, gravity and downhill diagrams |
 | 3 | The Cable Car (4303) | lift passes 🎫 | no gate | count | **324** | chalets 3, metres per kilometre (option 2), chamois 4 |
 | 4 | Christmas Market in Innsbruck (4404, `stad`, snowmen) | candles 🕯️ | bring trumpet 🎺 | melody | **5315** | bell questions about Austria, triangles, gilding and halves: la mi do la |
-| 5 | The Toboggan Run (4505, 313 wide, a sledge down the run) | sledges 🛷 | bell 🔔 7 s | arrows | **↓←↓→** | numbered signposts |
+| 5 | The Toboggan Run (4505, 313 wide, a sledge down the run) | sledges 🛷 | bell 🔔 7 s | arrows | **↓←↓→** | directions, a clock face and a thermometer |
 | 6 | The Mountain Hut (4606, `huis`) | eggs 🥚 | light 3 lamps 🪔 | clock | **1930** | signs with the time |
 | 7 | Fondue Night (4707, `huis`) | fondue forks 🍴 | bring bread 🥖 | word | **FONDUE** | numbered letters |
 | 8 | Going Home (4808) | ski boots 🥾 | 3 levers 🔧 | colours | **RWRG** | red, white, red, green |

@@ -188,7 +188,7 @@ for (const lang of ['en', 'nl']) test(`postkantoor: lampvragen bepalen de kleure
 });
 
 for (const lang of ['en', 'nl']) for (const [region, day, answer] of [
-  ['pole', 5, '↑→→↓'], ['tirol', 1, '→↓→↓']
+  ['pole', 5, '↑→→↓'], ['tirol', 1, '→↓→↓'], ['tirol', 4, '↓←↓→']
 ]) test(`${region} dag ${day + 1}: vragen bepalen de pijlen (${lang})`, async ({ page }) => {
   await seed(page, { lang, region, unlocked: 8 });
   await startDay(page, day);
