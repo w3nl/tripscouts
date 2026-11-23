@@ -226,10 +226,12 @@ const POLE_LEVELS = [
     pits: true, enemies: true, spikes: true, exitStyle: "arch", exitLabel: T("To the plane ✈️", "Naar het vliegtuig ✈️"),
     intro: T(["Last day at the North Pole. The elves are already waving.", "Somehow everyone has one scarf fewer than when we arrived."],
       ["Laatste dag op de Noordpool. De elfjes zwaaien al.", "Op de een of andere manier heeft iedereen één sjaal minder dan bij aankomst."]),
-    npcs: [T(["Remember the lost penguin? Santa is flying it home to the South Pole tonight. First class."], ["Weet je nog, die verdwaalde pinguïn? De Kerstman vliegt hem vannacht terug naar de Zuidpool. Eerste klas."]),
+    npcs: [T(["Wild penguins live in the Southern Hemisphere, including on Antarctica's coast. Polar bears live in the Arctic."], ["Wilde pinguïns leven op het zuidelijk halfrond, onder meer aan de kust van Antarctica. IJsberen leven in het noordpoolgebied."]),
            T(["Santa gave everyone a candy cane. And a wink."], ["De Kerstman gaf iedereen een zuurstok. En een knipoog."]),
            T(["Next year again? I'll bring thicker socks."], ["Volgend jaar weer? Dan neem ik dikkere sokken mee."])],
     code: { kind: "count", answer: "253", title: T("Gate to the airstrip", "Hek naar de landingsbaan"),
+      riddle: T("Count the reindeer. Which animal lives on Antarctica's coast? 5: penguins; 4: polar bears. Then count the piles of presents.",
+        "Tel de rendieren. Welk dier leeft aan de kust van Antarctica? 5: pinguïns; 4: ijsberen. Tel daarna de stapels cadeautjes."),
       count: [["deer", T("reindeer", "rendieren")], ["sleigh", T("sleighs", "sleeën")], ["presents", T("piles of presents", "stapels cadeautjes")]] },
     decoKinds: ["pine", "walrus", "igloo", "polarbear"],
     doneMsg: ""

@@ -206,6 +206,22 @@ for (const [lang, starting, explanation] of [
   expect(info.signs).toContain(explanation);
 });
 
+for (const [lang, location, question] of [
+  ['en', "Antarctica's coast", '5: penguins'],
+  ['nl', 'kust van Antarctica', '5: pinguïns']
+]) test(`noordpool naar huis: telvragen en leefgebieden (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region: 'pole', unlocked: 8 });
+  const info = await page.evaluate(() => {
+    const d = LEVELS[7];
+    return { answer: d.code.answer, riddle: d.code.riddle, npcs: d.ents.filter(e => e[0] === 'npc' && e[3].lines).flatMap(e => e[3].lines).join(' '),
+      reindeer: d.deco.filter(d => d[0] === 'deer').length, presents: d.deco.filter(d => d[0] === 'presents').length };
+  });
+  expect(info.answer).toBe('253');
+  expect(info.riddle).toContain(question);
+  expect(info.npcs).toContain(location);
+  expect([info.reindeer, info.presents]).toEqual([2, 3]);
+});
+
 test('elke dag met een codeslot heeft bordjes met de cijfers of een raadsel', async ({ page }) => {
   await seed(page, { unlocked: 8 });
   const r = await page.evaluate(() => LEVELS.map(d => {
