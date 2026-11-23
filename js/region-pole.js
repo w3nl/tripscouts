@@ -135,8 +135,19 @@ const POLE_LEVELS = [
            T(["Someone wrote: 'Dear Santa, I've been good. Mostly. Sometimes.' Honest, at least."], ["Iemand schreef: 'Lieve Kerstman, ik ben lief geweest. Meestal. Soms.' Wel eerlijk."]),
            T(["The stamps here have a reindeer on them. Collectors' item!"], ["De postzegels hier hebben een rendier erop. Verzamelobject!"])],
     code: { kind: "colours", answer: "RGBY", title: T("Door to Santa's office", "Deur naar het kantoor van de Kerstman"),
-      riddle: T("Every stamp has its own colour. Four lamps in the post office shine them in order. Enter the colours.",
-        "Elke postzegel heeft zijn eigen kleur. Vier lampen in het postkantoor laten ze op volgorde zien. Voer de kleuren in.") },
+      riddle: T("Solve the questions at the four lamps. Choose the colour beside each correct answer.",
+        "Los de vragen bij de vier lampen op. Kies de kleur naast elk goed antwoord."),
+      questions: T([
+        ["Which traffic light means stop? Red or green?", "Red means stop; green means go when the way is clear."],
+        ["Which traffic light means you may go when the way is clear? Green or red?", "Check the way is clear, even when the light is green."],
+        ["What do reindeer eat? Blue: lichen. Red: stones.", "Lichen is a fungus living together with an alga."],
+        ["Which gives off its own light? Yellow: the Sun. Blue: the Moon.", "The Sun makes its own light. The Moon reflects sunlight."]
+      ], [
+        ["Welk verkeerslicht betekent stoppen? Rood of groen?", "Rood betekent stoppen; groen betekent rijden als de weg vrij is."],
+        ["Welk verkeerslicht betekent dat je mag rijden als de weg vrij is? Groen of rood?", "Kijk ook bij groen of de weg vrij is."],
+        ["Wat eten rendieren? Blauw: korstmos. Rood: stenen.", "Korstmos is een schimmel die samenleeft met een alg."],
+        ["Wat geeft zelf licht? Geel: de zon. Blauw: de maan.", "De zon maakt zelf licht. De maan weerkaatst zonlicht."]
+      ]) },
     task: { kind: "timer", hud: "🔔", secs: 6, name: T("bell", "bel"),
       need: T(["The sorting room door opens when you ring the bell back there.", "But it shuts again in a few seconds. Parcels only. Run!"],
         ["De deur van de sorteerzaal gaat open als je daar achter aan de bel trekt.", "Maar na een paar tellen gaat hij weer dicht. Alleen voor pakjes. Rennen!"]),

@@ -2540,7 +2540,7 @@ function drawClue(c) {
     numPlate(cx, by - 20, c.i + 1);
   } else if (c.kind === "colours") {
     // a lamp post with a coloured globe
-    const col = COLOURS[c.v][0];
+    const col = c.question ? "#d0c5ad" : COLOURS[c.v][0];
     g.fillStyle = "#2b2b30"; g.fillRect(cx - 2.5, by - 56, 5, 56); g.fillRect(cx - 8, by - 4, 16, 4);
     const glow = g.createRadialGradient(cx, by - 62, 3, cx, by - 62, 40); glow.addColorStop(0, col + "aa"); glow.addColorStop(1, col + "00");
     g.fillStyle = glow; g.fillRect(cx - 40, by - 102, 80, 80);
