@@ -136,8 +136,19 @@ const NORWAY_LEVELS = [
            T(["Christmas dinner: fish. Christmas pudding: more waffles. Fair deal."], ["Kerstdiner: vis. Toetje: nog meer wafels. Eerlijke ruil."]),
            T(["A seal popped up in the harbour. It looked at me like I was the strange one."], ["Er dook een zeehond op in de haven. Hij keek alsof ik de rare was."])],
     code: { kind: "colours", answer: "RYBR", title: T("Harbour gate", "Hek van de haven"),
-      riddle: T("The fishermen painted their boathouses in bright colours. Four lamps on the quay show them in order.",
-        "De vissers hebben hun boothuizen in felle kleuren geverfd. Vier lampen op de kade laten ze op volgorde zien.") },
+      riddle: T("Solve the questions at the four lamps. Choose the colour beside each correct answer.",
+        "Los de vragen bij de vier lampen op. Kies de kleur naast elk goed antwoord."),
+      questions: T([
+        ["Is a seal a mammal or a fish? Red: mammal; blue: fish.", "Seals breathe air and feed their young milk."],
+        ["How do most fish breathe underwater? Yellow: with gills; green: with lungs.", "Gills take oxygen from water."],
+        ["What carved many Norwegian fjords? Blue: glaciers; yellow: sand dunes.", "Glaciers cut valleys that were later filled by the sea."],
+        ["What covers the skin of most fish? Red: scales; white: feathers.", "Scales help protect a fish's skin."]
+      ], [
+        ["Is een zeehond een zoogdier of een vis? Rood: zoogdier; blauw: vis.", "Zeehonden ademen lucht en geven hun jongen melk."],
+        ["Hoe ademen de meeste vissen onder water? Geel: met kieuwen; groen: met longen.", "Kieuwen halen zuurstof uit het water."],
+        ["Wat sleet veel Noorse fjorden uit? Blauw: gletsjers; geel: zandduinen.", "Gletsjers sleten dalen uit die later door de zee werden gevuld."],
+        ["Wat bedekt de huid van de meeste vissen? Rood: schubben; wit: veren.", "Schubben helpen de huid van een vis beschermen."]
+      ]) },
     task: { kind: "levers", hud: "🔧", name: T("winches", "lieren"),
       need: T(["The nets are still in the water and the harbour gate is stuck.", "Turn the three winches along the quay. Then it opens."],
         ["De netten liggen nog in het water en het havenhek zit vast.", "Draai de drie lieren langs de kade om. Dan gaat het open."]),
