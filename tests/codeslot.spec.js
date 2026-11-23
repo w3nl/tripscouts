@@ -189,7 +189,7 @@ for (const [lang, insulated, question] of [
 });
 
 for (const lang of ['en', 'nl']) for (const [region, day, answer] of [
-  ['pole', 4, 'RGBY'], ['tirol', 7, 'RWRG'], ['norway', 4, 'RYBR'], ['netherlands', 2, 'GBRG']
+  ['pole', 4, 'RGBY'], ['tirol', 7, 'RWRG'], ['norway', 4, 'RYBR'], ['netherlands', 2, 'GBRG'], ['netherlands', 7, 'RWB']
 ]) test(`${region} dag ${day + 1}: lampvragen bepalen de kleuren zonder ze te verraden (${lang})`, async ({ page }) => {
   await seed(page, { lang, region, unlocked: 8 });
   await startDay(page, day);
@@ -200,7 +200,7 @@ for (const lang of ['en', 'nl']) for (const [region, day, answer] of [
     return { x: c.x, y: c.y, question: c.question[0], colours, answer: L.d.code.answer, count: L.clues.filter(x => x.question).length };
   });
   expect(info.answer).toBe(answer);
-  expect(info.count).toBe(4);
+  expect(info.count).toBe(answer.length);
   expect(info.colours).toContain('#d0c5ad');
   expect(info.colours).not.toContain('#e8423a');
   await put(page, info.x + 5, info.y + 32);

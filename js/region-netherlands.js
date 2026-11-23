@@ -237,7 +237,17 @@ const NL_LEVELS = [
            T(["Same little house next year? With the same goose?"], ["Volgend jaar hetzelfde huisje? Met dezelfde gans?"]),
            T(["Are we there yet? We haven't even crossed the dike."], ["Zijn we er al? We zijn de dijk nog niet eens over."])],
     code: { kind: "colours", answer: "RWB", title: T("Driveway gate", "Hek van de oprit"),
-      riddle: T("Three lamps by the drive, in the colours of the flag. Enter them in order.", "Drie lampen bij de oprit, in de kleuren van de vlag. Voer ze in, op volgorde.") },
+      riddle: T("Solve the questions at the three lamps. Choose the colour beside each correct answer.",
+        "Los de vragen bij de drie lampen op. Kies de kleur naast elk goed antwoord."),
+      questions: T([
+        ["How many clogs are in six pairs? Red: 12; green: 6.", "A pair is two, so six pairs are twelve."],
+        ["Which part of a tulip plant takes up water from the soil? White: roots; yellow: petals.", "Roots absorb water from the soil."],
+        ["What can a wind turbine make from wind? Blue: electricity; red: snow.", "Wind turns the blades, which drive a generator."]
+      ], [
+        ["Hoeveel klompen zitten er in zes paar? Rood: 12; groen: 6.", "Een paar is twee, dus zes paar is twaalf."],
+        ["Welk deel van een tulpenplant neemt water uit de grond op? Wit: wortels; geel: bloemblaadjes.", "Wortels nemen water uit de grond op."],
+        ["Wat kan een windmolen uit wind maken? Blauw: elektriciteit; rood: sneeuw.", "De wind draait de wieken, die een generator aandrijven."]
+      ]) },
     task: { kind: "levers", hud: "🔧", name: T("bridge levers", "bruglevers"),
       need: T(["The little bridges over the ditches are all up. Typical.", "Pull the three levers to lower them. Then we can drive home."],
         ["De bruggetjes over de sloten staan allemaal open. Typisch.", "Trek de drie hendels over om ze te laten zakken. Dan kunnen we naar huis rijden."]),
