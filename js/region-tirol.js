@@ -71,10 +71,12 @@ const TIROL_LEVELS = [
     pits: true, enemies: true, spikes: true, exitStyle: "arch", exitLabel: T("Summit station →", "Bergstation →"),
     intro: T(["The cable car goes up 1,000 metres in eight minutes.", "Don't look down. Or do. The view is amazing."],
       ["De kabelbaan gaat in acht minuten 1000 meter omhoog.", "Niet naar beneden kijken. Of juist wel. Het uitzicht is geweldig."]),
-    npcs: [T(["From the top you can see three countries. Or three clouds. Depends on the day."], ["Vanaf de top zie je drie landen. Of drie wolken. Hangt van de dag af."]),
+    npcs: [T(["A kilometre is 1,000 metres. The cable car climbs that far in eight minutes."], ["Een kilometer is 1000 meter. De kabelbaan stijgt zoveel in acht minuten."]),
            T(["My ears popped. Both of them. At the same time."], ["Mijn oren ploppen. Allebei. Tegelijk."]),
            T(["At the summit there's a restaurant with apple strudel. I'm just saying."], ["Op de top is een restaurant met appelstrudel. Ik zeg het maar even."])],
     code: { kind: "count", answer: "324", title: T("Summit gate", "Hek bij de top"),
+      riddle: T("Count the chalets. How many metres are in a kilometre? 2: 1,000; 5: 100. Then count the chamois.",
+        "Tel de chalets. Hoeveel meter is één kilometer? 2: 1000; 5: 100. Tel daarna de gemzen."),
       count: [["chalet", T("chalets", "chalets")], ["skis", T("pairs of skis", "paar ski's")], ["deer", T("chamois", "gemzen")]] },
     decoKinds: ["pine", "skis", "pine", "chalet"],
     doneMsg: T("Lunch above the clouds, apple strudel with cream. The way down was quick.", "Lunch boven de wolken, appelstrudel met slagroom. De weg naar beneden ging snel.")

@@ -276,3 +276,19 @@ test('question clues have room away from other interactions', async ({ page }) =
   )));
   expect(overlaps).toEqual([]);
 });
+
+for (const [lang, question, explanation] of [
+  ['en', '2: 1,000', 'A kilometre is 1,000 metres'],
+  ['nl', '2: 1000', 'Een kilometer is 1000 meter']
+]) test(`tirol kabelbaan: eenheden tussen de telvragen (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region: 'tirol', unlocked: 8 });
+  const info = await page.evaluate(() => {
+    const d = LEVELS[2];
+    return { answer: d.code.answer, riddle: d.code.riddle, npcs: d.ents.filter(e => e[0] === 'npc' && e[3].lines).flatMap(e => e[3].lines).join(' '),
+      chalets: d.deco.filter(d => d[0] === 'chalet').length, chamois: d.deco.filter(d => d[0] === 'deer').length };
+  });
+  expect(info.answer).toBe('324');
+  expect(info.riddle).toContain(question);
+  expect(info.npcs).toContain(explanation);
+  expect([info.chalets, info.chamois]).toEqual([3, 4]);
+});
