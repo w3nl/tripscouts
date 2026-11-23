@@ -293,6 +293,26 @@ test('elke dag met een codeslot heeft bordjes met de cijfers of een raadsel', as
   for (const c of r) { expect(c.digits).toBe(4); expect(c.clues).toBe(4); }
 });
 
+for (const [lang, starting, explanation] of [
+  ['en', '45 minutes after a quarter past nine', 'Add 12 to the hour'],
+  ['nl', "45 minuten na kwart over negen", 'Tel voor een avondtijd 12 op']
+]) test(`noorderlicht: kwartieren en de 24-uursklok (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region: 'norway', unlocked: 8 });
+  expect(await page.evaluate(() => LEVELS[6].code.answer)).toBe('2200');
+  await startDay(page, 6);
+  for (const text of [starting, explanation]) {
+    const sign = await page.evaluate(text => {
+      const s = L.signs.find(s => s.lines.some(line => line.includes(text)));
+      return { x: s.x, y: s.y, line: s.lines.find(line => line.includes(text)) };
+    }, text);
+    await put(page, sign.x + 5, sign.y + 32);
+    await page.keyboard.press('e');
+    await expect(page.locator('#dialog')).toBeVisible();
+    await expect(page.locator('#dialog')).toContainText(sign.line);
+    await page.evaluate(() => { while (dialog) advanceDialog(); });
+  }
+});
+
 test('every lock in every region can be solved from what is in the level', async ({ page }) => {
   await seed(page, { unlocked: 8 });
   const bad = await page.evaluate(() => REGIONS.flatMap(r => r.levels.map((d, i) => {

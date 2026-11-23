@@ -209,7 +209,7 @@ const POLE_LEVELS = [
     npcs: [T(["The reindeer have been stretching all afternoon. Professional athletes."], ["De rendieren doen al de hele middag rekoefeningen. Echte topsporters."]),
            T(["One present is shaped like a bike. I'm not saying anything."], ["Eén cadeau heeft de vorm van een fiets. Ik zeg niks."]),
            T(["Leave a biscuit out tonight. Santa notices these things."], ["Zet vanavond een koekje klaar. De Kerstman let op zulke dingen."])],
-    code: { kind: "clock", answer: "2345", title: T("Gate to the big tree", "Hek naar de grote boom"),
+    code: { kind: "clock", learning: true, answer: "2345", title: T("Gate to the big tree", "Hek naar de grote boom"),
       riddle: T("The gate opens at the time Santa's sleigh leaves. Set the clock (24 hours).", "Het hek gaat open op de tijd dat de slee van de Kerstman vertrekt. Zet de klok (24 uur)."),
       signs: [[.2, T(["The sleigh is ready at eleven in the evening and leaves 45 minutes later.", "What time does it leave?"], ["De slee is om elf uur 's avonds klaar en vertrekt 45 minuten later.", "Hoe laat vertrekt hij?"])],
         [.5, T(["An hour has 60 minutes. For an evening time, add 12 to the hour on a 24-hour clock.", "Midnight is 00:00."], ["Een uur heeft 60 minuten. Tel bij een avondtijd 12 op bij het uur op een 24-uursklok.", "Middernacht is 00:00."])]] },

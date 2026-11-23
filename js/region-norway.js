@@ -206,10 +206,10 @@ const NORWAY_LEVELS = [
     npcs: [T(["Green, then purple, then green again. It's like the sky is dancing."], ["Groen, dan paars, dan weer groen. Alsof de lucht danst."]),
            T(["I'm lying in the snow to watch. It's cold. I'm not moving."], ["Ik lig in de sneeuw om te kijken. Het is koud. Ik ga niet weg."]),
            T(["This is the best last evening ever. Better than Uno. Don't tell anyone."], ["Dit is de beste laatste avond ooit. Beter dan Uno. Niet doorvertellen."])],
-    code: { kind: "clock", answer: "2200", title: T("Lookout point gate", "Hek van het uitkijkpunt"),
+    code: { kind: "clock", learning: true, answer: "2200", title: T("Lookout point gate", "Hek van het uitkijkpunt"),
       riddle: T("The gate opens when the northern lights are brightest. Set the clock (24 hours).", "Het hek gaat open als het noorderlicht het felst is. Zet de klok (24 uur)."),
-      signs: [[.2, T(["Northern lights forecast: brightest two hours before midnight.", "Bring a flask of hot chocolate."], ["Noorderlichtverwachting: het felst twee uur voor middernacht.", "Neem een thermoskan warme chocolademelk mee."])],
-        [.5, T(["The gate clock counts 24 hours. Midnight is 00:00."], ["De klok van het hek telt 24 uur. Middernacht is 00:00."])]] },
+      signs: [[.2, T(["Northern lights forecast: brightest 45 minutes after a quarter past nine in the evening.", "A quarter of an hour is 15 minutes."], ["Noorderlichtverwachting: het felst 45 minuten na kwart over negen 's avonds.", "Een kwartier is 15 minuten."])],
+        [.5, T(["The gate clock counts 24 hours. Add 12 to the hour for evening times.", "For example, nine in the evening is 21:00."], ["De klok van het hek telt 24 uur. Tel voor een avondtijd 12 op bij het uur.", "Bijvoorbeeld: negen uur 's avonds is 21:00."])]] },
     decoKinds: ["pine", "rorbu", "pine", "kicksled"],
     doneMsg: T("The sky danced for an hour. Nobody said a word. Then everyone said 'wow' at the same time.", "De lucht danste een uur lang. Niemand zei iets. Toen zei iedereen tegelijk 'wauw'.")
   }),

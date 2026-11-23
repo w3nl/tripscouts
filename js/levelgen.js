@@ -302,7 +302,7 @@ function genLevel(o) {
       const n = ans.length, end = (codeX - 4) / w;
       ans.forEach((v, i) => { const at = w * (.12 + i * (end - .16) / (n - 1)), c = o.code.questions ? questionPlace(at) : free(at); ents.push(["clue", room(c), yAt(c), { kind, i, n, v, look: o.code.look, question: o.code.questions && o.code.questions[i] }]); });
     } else if (kind === "clock") {
-      (o.code.signs || []).forEach(([f, lines]) => { const c = free(w * f); ents.push(["sign", c, yAt(c), lines]); });
+      (o.code.signs || []).forEach(([f, lines]) => { const c = o.code.learning ? room(questionPlace(w * f)) : free(w * f); ents.push(["sign", c, yAt(c), lines]); });
     }
   }
   let lanternX = null;

@@ -164,7 +164,7 @@ const TIROL_LEVELS = [
     npcs: [T(["The hut is 300 years old. The wifi is 3 days old. Neither works very well."], ["De hut is 300 jaar oud. De wifi is 3 dagen oud. Ze werken allebei niet zo goed."]),
            T(["Laura and Anna are on the sun terrace. With chocolate. Don't disturb."], ["Laura en Anna zitten op het zonneterras. Met chocolade. Niet storen."]),
            T(["Tea for Paul and Laura, as always. The landlord knows by now."], ["Thee voor Paul en Laura, zoals altijd. De waard weet het inmiddels."])],
-    code: { kind: "clock", answer: "1930", title: T("Door to the sun terrace", "Deur naar het zonneterras"),
+    code: { kind: "clock", learning: true, answer: "1930", title: T("Door to the sun terrace", "Deur naar het zonneterras"),
       riddle: T("The door opens at dinner time. Set the clock (24 hours).", "De deur gaat open bij etenstijd. Zet de klok (24 uur)."),
       signs: [[.2, T(["Dinner starts 45 minutes after a quarter to seven in the evening.", "A quarter of an hour is 15 minutes."], ["Het eten begint 45 minuten na kwart voor zeven 's avonds.", "Een kwartier is 15 minuten."])],
         [.5, T(["For an evening time on a 24-hour clock, add 12 to the hour.", "For example, six in the evening is 18:00."], ["Tel voor een avondtijd op een 24-uursklok 12 op bij het uur.", "Bijvoorbeeld: zes uur 's avonds is 18:00."])]] },
