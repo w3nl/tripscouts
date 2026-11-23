@@ -217,7 +217,7 @@ function genLevel(o) {
   const room = c => { for (let d = -2; d <= 2; d++) used.add(c + d); return c; };
   const questionPlace = t => {
     t = Math.round(t);
-    for (let d = 0; d < 80; d++) for (const c of [t + d, t - d]) {
+    for (let d = 0; d < w; d++) for (const c of [t + d, t - d]) {
       if (c < 3 || c > codeX - 4 || bad.has(c) || used.has(c) || topAt[c] >= ROWS_GEN) continue;
       if (ents.some(([kind, x]) => ["npc", "sign", "switch", "bell", "animal", "clue"].includes(kind) && Math.abs(x - c) < 3)) continue;
       used.add(c);
@@ -293,7 +293,7 @@ function genLevel(o) {
         : T(`Four symbols: ${syms.join("  ")}. Signs along the way tell you which digit goes with which symbol.`,
           `Vier symbolen: ${syms.join("  ")}. Onderweg staan bordjes die vertellen welk cijfer bij welk symbool hoort.`);
       [.14, .37, .56, .74].forEach((f, i) => {
-        const k = [2, 0, 3, 1][i], c = free(w * f);
+        const k = [2, 0, 3, 1][i], c = o.code.questions ? room(questionPlace(w * f)) : free(w * f);
         const clue = o.code.questions ? `${syms[k]}: ${o.code.questions[k]}` : T(`Someone scratched something on this sign: ${syms[k]} = ${ans[k]}`, `Op dit bordje is iets gekrast: ${syms[k]} = ${ans[k]}`);
         ents.push(["sign", c, yAt(c), [clue, o.code.flavor[k]]]);
       });

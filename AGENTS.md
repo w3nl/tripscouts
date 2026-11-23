@@ -186,7 +186,7 @@ The Linux app is listed at https://snapcraft.io/tripscouts (currently edge: `sud
 
 | Day | Level | 3 things | Gate | Lock | Answer | Clues |
 |---|---|---|---|---|---|---|
-| 1 | Arrival at the Fjord (5101) | cabin keys 🔑 | 3 levers 🔧 | symbols | **6273** | 🌊=6 ⛰️=2 🏠=7 ⭐=3 |
+| 1 | Arrival at the Fjord (5101) | cabin keys 🔑 | 3 levers 🔧 | symbols | **6273** | glaciers (option 6), legs, days in a week, states of water |
 | 2 | Kicksled to the Shop (5202, 280 wide, a kicksled ride) | blocks of brown cheese 🧀 | bring kicksled 🛷 | count | **432** | red cabins 4, kicksleds 3, elks 2 |
 | 3 | Husky Safari (5303, 335 wide, a 120-tile husky sledge ride) | bags of dog biscuits 🦴 | bring back 🐶 husky pup | arrows | **→↑←→** | numbered signposts |
 | 4 | The Stave Church (5404, `stad`, no enemies, pits or spikes) | paper stars ⭐ | light 3 lamps 🕯️ | melody | **5432** | la sol mi re |

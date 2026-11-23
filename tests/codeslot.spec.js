@@ -102,15 +102,31 @@ for (const lang of ['en', 'nl']) test(`noordpool: de klimaat- en natuurvragen ge
     expect(info.signs).toContain(`${symbol}: ${info.questions[i]}`);
 });
 
-for (const lang of ['en', 'nl']) test(`tirol: vragen over kaart, tijd en dieren geven de slotcijfers (${lang})`, async ({ page }) => {
-  await seed(page, { lang, region: 'tirol' });
-  const info = await page.evaluate(() => ({
-    answer: LEVELS[0].code.answer, questions: LEVELS[0].code.questions,
-    signs: LEVELS[0].ents.filter(e => e[0] === 'sign').map(e => e[3][0])
-  }));
-  expect(info.answer).toBe('4718');
-  for (const [i, symbol] of ['🏔️', '🔑', '🐐', '⛪'].entries())
+for (const lang of ['en', 'nl']) for (const [region, day, answer, symbols] of [
+  ['tirol', 0, '4718', ['🏔️', '🔑', '🐐', '⛪']],
+  ['norway', 0, '6273', ['🌊', '⛰️', '🏠', '⭐']],
+  ['ardennes', 1, '3817', ['🍄', '🌲', '🦔', '🍂']]
+]) test(`${region} dag ${day + 1}: vragen op symbolenbordjes geven de slotcijfers (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region, unlocked: 8 });
+  const info = await page.evaluate(day => ({
+    answer: LEVELS[day].code.answer, questions: LEVELS[day].code.questions,
+    signs: LEVELS[day].ents.filter(e => e[0] === 'sign').map(e => e[3][0])
+  }), day);
+  expect(info.answer).toBe(answer);
+  for (const [i, symbol] of symbols.entries())
     expect(info.signs).toContain(`${symbol}: ${info.questions[i]}`);
+  await startDay(page, day);
+  for (const question of info.questions) {
+    const sign = await page.evaluate(question => {
+      const s = L.signs.find(s => s.lines[0].endsWith(question));
+      return { x: s.x, y: s.y, line: s.lines[0] };
+    }, question);
+    await put(page, sign.x + 5, sign.y + 32);
+    await page.keyboard.press('e');
+    await expect(page.locator('#dialog')).toBeVisible();
+    await expect(page.locator('#dialog')).toContainText(sign.line);
+    await page.evaluate(() => { while (dialog) advanceDialog(); });
+  }
 });
 
 for (const lang of ['en', 'nl']) for (const [region, day, answer] of [
