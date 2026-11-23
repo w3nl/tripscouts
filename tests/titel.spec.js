@@ -65,6 +65,59 @@ test('English by default; Dutch with ?lang=nl and with the language button, and 
   await expect(page.locator('#title h2').first()).toContainText('Choose your hero');
 });
 
+test.describe('Dutch browser language', () => {
+  test.use({ locale: 'nl-BE' });
+
+  test('starts in Dutch until a language is chosen, and link choices still take precedence', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'nl');
+    await expect(page.locator('#title h2').first()).toContainText('Kies je held');
+    expect(await page.evaluate(() => localStorage.getItem('cabin-week-lang'))).toBeNull();
+    await page.locator('#settingsOpen').click();
+    await page.locator('button[data-lang="en"]').click();
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en-GB');
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en-GB');
+    await page.goto('/?lang=nl');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'nl');
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'nl');
+  });
+
+  test('detects Dutch even when local storage is unavailable', async ({ page }) => {
+    await page.addInitScript(() => { Object.defineProperty(window, 'localStorage', { get() { throw new Error('blocked'); } }); });
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'nl');
+    await expect(page.locator('#title h2').first()).toContainText('Kies je held');
+  });
+});
+
+test.describe('other browser languages', () => {
+  test.use({ locale: 'fr-FR' });
+
+  test('fall back to English', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en-GB');
+    expect(await page.evaluate(() => localStorage.getItem('cabin-week-lang'))).toBeNull();
+  });
+});
+
+test('an automatic language follows a change in the browser language until the player chooses', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'language', { get: () => sessionStorage.getItem('test-browser-language') || 'nl-NL' });
+  });
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'nl');
+  await page.evaluate(() => sessionStorage.setItem('test-browser-language', 'en-GB'));
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en-GB');
+  await page.locator('#settingsOpen').click();
+  await page.locator('button[data-lang="nl"]').click();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'nl');
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'nl');
+});
+
 test('trip choice is explicit and settings and help return to the title with Escape or TV Back', async ({ page }) => {
   await seed(page, { lang: 'nl' });
   await expect(page.locator('#regionBtn')).toContainText('Andere reis');
