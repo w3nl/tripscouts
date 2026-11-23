@@ -102,6 +102,17 @@ for (const lang of ['en', 'nl']) test(`noordpool: de klimaat- en natuurvragen ge
     expect(info.signs).toContain(`${symbol}: ${info.questions[i]}`);
 });
 
+for (const lang of ['en', 'nl']) test(`tirol: vragen over kaart, tijd en dieren geven de slotcijfers (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region: 'tirol' });
+  const info = await page.evaluate(() => ({
+    answer: LEVELS[0].code.answer, questions: LEVELS[0].code.questions,
+    signs: LEVELS[0].ents.filter(e => e[0] === 'sign').map(e => e[3][0])
+  }));
+  expect(info.answer).toBe('4718');
+  for (const [i, symbol] of ['🏔️', '🔑', '🐐', '⛪'].entries())
+    expect(info.signs).toContain(`${symbol}: ${info.questions[i]}`);
+});
+
 for (const lang of ['en', 'nl']) test(`rendierstallen: bellenvragen geven de tonen zonder ze voor te spelen (${lang})`, async ({ page }) => {
   await seed(page, { lang, region: 'pole', unlocked: 8 });
   await startDay(page, 1);

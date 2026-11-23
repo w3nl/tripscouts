@@ -173,7 +173,7 @@ The Linux app is listed at https://snapcraft.io/tripscouts (currently edge: `sud
 
 | Day | Level | 3 things | Gate | Lock | Answer | Clues |
 |---|---|---|---|---|---|---|
-| 1 | Arrival in Lindenalm (4101) | chalet keys 🔑 | bring back 🐐 goat kid | symbols | **4718** | 🏔️=4 🔑=7 🐐=1 ⛪=8 |
+| 1 | Arrival in Lindenalm (4101) | chalet keys 🔑 | bring back 🐐 goat kid | symbols | **4718** | compass directions, 5+2 days, Tirol in Austria (option 1), two goats' legs |
 | 2 | Ski School (4202, 292 wide, skis down a slope) | pairs of skis 🎿 | bell 🔔 7 s | arrows | **→↓→↓** | numbered signposts |
 | 3 | The Cable Car (4303) | lift passes 🎫 | no gate | count | **324** | chalets 3, pairs of skis 2, chamois 4 |
 | 4 | Christmas Market in Innsbruck (4404, `stad`, snowmen) | candles 🕯️ | bring trumpet 🎺 | melody | **5315** | la mi do la |
