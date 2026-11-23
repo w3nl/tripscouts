@@ -210,7 +210,7 @@ for (const lang of ['en', 'nl']) for (const [region, day, answer] of [
 });
 
 for (const lang of ['en', 'nl']) for (const [region, day, answer] of [
-  ['pole', 5, '↑→→↓'], ['tirol', 1, '→↓→↓'], ['tirol', 4, '↓←↓→'], ['norway', 2, '→↑←→']
+  ['pole', 5, '↑→→↓'], ['tirol', 1, '→↓→↓'], ['tirol', 4, '↓←↓→'], ['norway', 2, '→↑←→'], ['netherlands', 5, '→→↑←']
 ]) test(`${region} dag ${day + 1}: vragen bepalen de pijlen (${lang})`, async ({ page }) => {
   await seed(page, { lang, region, unlocked: 8 });
   await startDay(page, day);

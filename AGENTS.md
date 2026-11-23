@@ -217,7 +217,7 @@ The Linux app is listed at https://snapcraft.io/tripscouts (currently edge: `sud
 | 3 | Amsterdam by Canal Boat (6303, `stad`) | bike bells 🔔 | bell 🔔 6 s | colours | **GBRG** | buoyancy, canal banks, time and evaporation | canal boats carry you, city pigeons |
 | 4 | Gouda by Candlelight (6404, `stad`, no enemies) | cheeses 🧀 | bring big candle 🕯️ | word | **GOUDA** | questions about Gouda, sound, candles, halves and plants | dark, light grows with the candle |
 | 5 | Skating in Giethoorn (6505) | pairs of skates ⛸️ | no gate | clock | **1415** | adding 45 minutes and the 24-hour clock | ice, holes in the ice, **skating** on a frozen canal (307 wide) |
-| 6 | The Hoge Veluwe (6606) | white bikes 🚲 | bring museum ticket 🖼️ | arrows | **→→↑←** | numbered signposts | drifting-sand hills, wild boar, **a white bike** (367 wide, 140 tiles cycling) |
+| 6 | The Hoge Veluwe (6606) | white bikes 🚲 | bring museum ticket 🖼️ | arrows | **→→↑←** | map directions, a clock face and rising warm air | drifting-sand hills, wild boar, **a white bike** (367 wide, 140 tiles cycling) |
 | 7 | A Wadden Island (6707) | shells 🐚 | light 3 lamps 🏮 | melody | **1324** | do mi re sol | strongest wind, ferry, seagulls, dunes |
 | 8 | Going Home (6808) | pairs of clogs 👞 | 3 levers 🔧 | colours | **RWB** | red, white, blue | dikes, wind |
 

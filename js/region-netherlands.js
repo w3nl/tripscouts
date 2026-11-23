@@ -171,7 +171,18 @@ const NL_LEVELS = [
            T(["A wild boar crossed the path. It didn't even look left and right."], ["Er stak een wild zwijn het pad over. Hij keek niet eens naar links en rechts."]),
            T(["Three hours of cycling and my legs are jelly. Dutch jelly."], ["Drie uur gefietst en mijn benen zijn pudding. Nederlandse pudding."])],
     code: { kind: "arrows", answer: "→→↑←", title: T("Gate of the park", "Poort van het park"),
-      riddle: T("Four cycle-route signs show the way to the museum. Enter their arrows in order.", "Vier fietsrouteborden wijzen de weg naar het museum. Voer hun pijlen in, op volgorde.") },
+      riddle: T("Solve the questions on the four cycle-route signs. Enter each answer as an arrow.", "Los de vragen op de vier fietsrouteborden op. Voer elk antwoord in als pijl."),
+      questions: T([
+        ["On a map with north at the top, which way is east?", "East is to the right of north."],
+        ["Which way does a clock hand point when it points at 3?", "The 3 is on the right of the clock face."],
+        ["Warm air rises. Which arrow shows the direction it goes?", "Rising means moving up."],
+        ["On a map with north at the top, which way is west?", "West is to the left of north."]
+      ], [
+        ["Op een kaart met het noorden boven, welke kant is het oosten?", "Het oosten ligt rechts van het noorden."],
+        ["Welke kant wijst een wijzer op als hij naar de 3 op de klok wijst?", "De 3 staat rechts op de klok."],
+        ["Warme lucht stijgt op. Welke pijl laat zien welke kant die opgaat?", "Stijgen betekent omhooggaan."],
+        ["Op een kaart met het noorden boven, welke kant is het westen?", "Het westen ligt links van het noorden."]
+      ]) },
     decoKinds: ["pine", "bike", "pine", "deer"],
     doneMsg: T("Cycled across the whole park, saw the sunflowers and spotted one very surprised wild boar.", "Het hele park doorgefietst, de zonnebloemen gezien en één heel verbaasd wild zwijn gespot.")
   }),
