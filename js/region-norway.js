@@ -66,7 +66,19 @@ const NORWAY_LEVELS = [
            T(["The huskies have blue eyes. Some have one blue and one brown. Fancy."], ["De husky's hebben blauwe ogen. Sommigen één blauw en één bruin. Chic."]),
            T(["After the ride: hot chocolate by the fire in a big tent."], ["Na de rit: warme chocolademelk bij het vuur in een grote tent."])],
     code: { kind: "arrows", answer: "→↑←→", title: T("Husky camp gate", "Hek van het huskykamp"),
-      riddle: T("Four trail markers show the husky route. Enter their arrows in order.", "Vier routepaaltjes wijzen de huskyroute. Voer hun pijlen in, op volgorde.") },
+      riddle: T("Solve the questions on the four trail markers. Enter each answer as an arrow.",
+        "Los de vragen op de vier routepaaltjes op. Voer elk antwoord in als pijl."),
+      questions: T([
+        ["A map has north at the top. Which way is east?", "East is to the right of north."],
+        ["A compass points north. On a map with north at the top, which way is that?", "North is at the top of this map."],
+        ["Face north on the map and turn left. Which way is west?", "West is left when north is at the top."],
+        ["The sun rises roughly in the east. Which way is east on a map with north at the top?", "East is on the right when north is at the top."]
+      ], [
+        ["Op een kaart staat het noorden boven. Welke kant is het oosten?", "Het oosten ligt rechts van het noorden."],
+        ["Een kompas wijst naar het noorden. Welke kant is dat op een kaart met het noorden boven?", "Op deze kaart staat het noorden boven."],
+        ["Kijk op de kaart naar het noorden en draai linksaf. Welke kant is het westen?", "Het westen ligt links als het noorden boven staat."],
+        ["De zon komt ongeveer op in het oosten. Welke kant is het oosten op een kaart met het noorden boven?", "Het oosten ligt rechts als het noorden boven staat."]
+      ]) },
     task: { kind: "follow", hud: "🐶", animal: "🐶", name: T("husky pup", "huskypup"),
       need: T(["One of the pups ran after a snowball and didn't come back.", "Find her and walk her back to me. She's the fluffy one. They're all fluffy."],
         ["Een van de pups rende achter een sneeuwbal aan en kwam niet terug.", "Zoek haar en loop met haar terug naar mij. Het is de pluizige. Ze zijn allemaal pluizig."]),

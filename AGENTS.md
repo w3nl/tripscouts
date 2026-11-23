@@ -188,7 +188,7 @@ The Linux app is listed at https://snapcraft.io/tripscouts (currently edge: `sud
 |---|---|---|---|---|---|---|
 | 1 | Arrival at the Fjord (5101) | cabin keys 🔑 | 3 levers 🔧 | symbols | **6273** | glaciers (option 6), legs, days in a week, states of water |
 | 2 | Kicksled to the Shop (5202, 280 wide, a kicksled ride) | blocks of brown cheese 🧀 | bring kicksled 🛷 | count | **432** | red cabins 4, brown cheese made with whey (option 3), elks 2 |
-| 3 | Husky Safari (5303, 335 wide, a 120-tile husky sledge ride) | bags of dog biscuits 🦴 | bring back 🐶 husky pup | arrows | **→↑←→** | numbered signposts |
+| 3 | Husky Safari (5303, 335 wide, a 120-tile husky sledge ride) | bags of dog biscuits 🦴 | bring back 🐶 husky pup | arrows | **→↑←→** | map directions and sunrise |
 | 4 | The Stave Church (5404, `stad`, no enemies, pits or spikes) | paper stars ⭐ | light 3 lamps 🕯️ | melody | **5432** | la sol mi re |
 | 5 | The Fishing Village (5505) | fish 🐟 | 3 levers 🔧 | colours | **RYBR** | red, yellow, blue, red |
 | 6 | The Troll Forest (5606) | bells 🔔 | light 3 lamps 🔥 | word | **TROLL** | numbered letters |
