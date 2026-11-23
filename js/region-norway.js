@@ -49,9 +49,9 @@ const NORWAY_LEVELS = [
     doneMsg: T("Shopping done, by kicksled. The brown cheese is... interesting. The kids love it.", "Boodschappen gedaan, met de schopslee. De bruine kaas is... bijzonder. De kinderen vinden het heerlijk.")
   }),
   genLevel({
-    seed: 5303, hills: [12, 9], water: true, w: 215, day: dayLabel(2), name: T("Husky Safari", "Huskysafari"), theme: "sneeuw", scene: "fjord",
-    sub: T("Twelve huskies, one sledge, lots of noise. Find three bags of dog biscuits, and a puppy that ran off.",
-      "Twaalf husky's, één slee, heel veel herrie. Vind drie zakken hondenkoekjes, en een pup die is weggelopen."),
+    seed: 5303, hills: [12, 9], water: true, w: 335, ride: { kind: "husky", len: 120 }, day: dayLabel(2), name: T("Husky Safari", "Huskysafari"), theme: "sneeuw", scene: "fjord",
+    sub: T("A husky team, one sledge, lots of noise. Find three bags of dog biscuits, and a puppy that ran off.",
+      "Een team husky's, één slee, heel veel herrie. Vind drie zakken hondenkoekjes, en een pup die is weggelopen."),
     keyType: "🦴", keyHud: "🦴", keyName: T("bags of dog biscuits", "zakken hondenkoekjes"),
     questType: "🧭", questHud: "🧭", questName: T("compass", "kompas"),
     coin: "🧇", coinName: T("heart waffles", "hartjeswafels"), enemy: "troll", spikeMsg: T("Ouch, sharp ice!", "Au, scherp ijs!"),

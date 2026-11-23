@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { seed, skip } = require('./helpers');
+const { seed, startDay, skip } = require('./helpers');
 
 // Een nagebootste PlayStation-controller (standaardindeling): de test zet knoppen en de stick, het spel leest ze elke frame.
 async function fakePad(page) {
@@ -21,6 +21,22 @@ async function press(page, b, ms = 90) {
   await page.evaluate(b => { window.__pad.buttons[b] = 0; }, b);
   await page.waitForTimeout(60);
 }
+
+for (const [region, day, kind] of [['ardennes', 1, 'railbike'], ['netherlands', 5, 'bike']]) test(`op de ${kind} buk je met de controller zolang je omlaag of X vasthoudt`, async ({ page }) => {
+  await fakePad(page);
+  await seed(page, { unlocked: 8, region });
+  await startDay(page, day);
+  await page.evaluate(() => {
+    const r = L.d.ride; L.enemies = []; P.x = (r.x0 + 2) * TS; P.y = r.row * TS - P.h; P.vx = 0;
+  });
+  await page.waitForFunction(kind => P.ride === kind && P.onGround, kind);
+  for (const b of [BTN.DOWN, BTN.X, BTN.B]) {
+    await page.evaluate(b => { window.__pad.buttons[b] = 1; }, b);
+    await expect.poll(() => page.evaluate(() => P.railDuck)).toBe(true);
+    await page.evaluate(b => { window.__pad.buttons[b] = 0; }, b);
+    await expect.poll(() => page.evaluate(() => P.railDuck)).toBe(false);
+  }
+});
 
 test('de controller wordt herkend, en met ✕ kies je een dag en begin je', async ({ page }) => {
   await fakePad(page);

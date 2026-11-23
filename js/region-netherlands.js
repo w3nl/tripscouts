@@ -124,7 +124,7 @@ const NL_LEVELS = [
     doneMsg: T("Skating on Christmas Day, pea soup on the ice, and nobody fell through. A real Dutch winter fairy tale.", "Schaatsen op eerste kerstdag, erwtensoep op het ijs, en niemand erdoor gezakt. Een echt Hollands wintersprookje.")
   }),
   genLevel({
-    seed: 6606, w: 307, ride: { kind: "bike", len: 80 }, day: dayLabel(5), name: T("The Hoge Veluwe", "De Hoge Veluwe"), theme: "sneeuw", scene: "duinen",
+    seed: 6606, w: 367, ride: { kind: "bike", len: 140 }, day: dayLabel(5), name: T("The Hoge Veluwe", "De Hoge Veluwe"), theme: "sneeuw", scene: "duinen",
     hills: [12, 10],
     sub: T("Boxing Day in the national park: heath, drifting sand and forest. Find three white bikes for the family, and the museum ticket.",
       "Tweede kerstdag in het nationaal park: heide, stuifzand en bos. Vind drie witte fietsen voor de familie, en het museumkaartje."),

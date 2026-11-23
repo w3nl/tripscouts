@@ -1,5 +1,6 @@
 "use strict";
 // The level generator and the days made with it (days 2, 3, 6, 7 and 8).
+const RAIL_CANOPY_HEIGHT = 160;
 /* =====================================================================
    LEVEL GENERATOR (for the days that are not built by hand)
    ===================================================================== */
@@ -11,10 +12,18 @@ const RIDE_SIGNS = {
     T("Steering a sledge is mostly hoping for the best.", "Een slee sturen is vooral hopen op het beste.")],
   skates: [T("Skates on! On the ice you glide a long way. It takes a while to get going, and a while to stop.", "Schaatsen aan! Op het ijs glij je een heel eind. Op gang komen duurt even, en stoppen ook."),
     T("Jump over the snow banks. Arms on your back, like a real Dutch skater.", "Spring over de sneeuwhopen. Handen op je rug, als een echte schaatser.")],
-  bike: [T("A white bike! Free to ride in the park. Pedal with → and jump over what lies on the path.", "Een witte fiets! Gratis te gebruiken in het park. Trap met → en spring over wat er op het pad ligt."),
+  bike: [T("A white bike! Pedal with ← and →, and jump over the obstacles.", "Een witte fiets! Trap met ← en → en spring over de hindernissen."),
+    T("Hold ↓, 💬 or X/B on a controller to duck under branches.", "Houd ↓, 💬 of X/B op een controller vast om onder takken te bukken."),
     T("Leave it at the rack at the end, for the next one.", "Zet hem aan het eind terug in het rek, voor de volgende.")],
   kicksled: [T("One foot on the kicksled, one foot to push. Hold → to go and jump over the obstacles.", "Eén voet op de schopslee, met de andere afzetten. Houd → vast en spring over de hindernissen."),
-    T("Kick, glide, kick, glide!", "Afzetten, glijden, afzetten, glijden!")]
+    T("Kick, glide, kick, glide!", "Afzetten, glijden, afzetten, glijden!")],
+  husky: [T("A husky team! Hold → to follow the trail, ← to slow down or go back.", "Een hondenslee! Houd → vast om het spoor te volgen, ← om te remmen of terug te gaan."),
+    T("Jump together over the snow banks. The dogs are in front, so jump in good time!", "Spring samen over de sneeuwhopen. De honden lopen voorop, dus spring op tijd!")],
+  railbike: [T("A rail bike! Pedal with ← and →. The bike stays on the rails.", "Een spoorfiets! Trap met ← en →. De fiets blijft op de rails."),
+    T("Jump over the low ribbons; hold ↓, 💬 or X/B on a controller to duck under branches.", "Spring over de lage linten; houd ↓, 💬 of X/B op een controller vast om onder takken te bukken."),
+    T("Some branches are high enough for a small rider to pass without ducking.", "Onder sommige takken passen kleine rijders zonder te bukken."),
+    T("A thick curtain of leaves is too high to jump over: duck underneath it.", "Over een dicht bladergordijn kun je niet springen: buk eronderdoor."),
+    T("Hit one and you lose a heart and go back to the last flag.", "Raak je er een, dan verlies je een hartje en ga je terug naar de laatste vlag.")]
 };
 function genLevel(o) {
   // Options that make a region play differently (see AGENTS.md, "Region gameplay"):
@@ -26,7 +35,7 @@ function genLevel(o) {
   //     carries you, rocks stick out of the water to jump over, and the river drops down two small waterfalls,
   //     each followed by rapids. Gives the level a `river` ({ x0, x1, surf, rapids }) and `rocks`.
   //   ride: { kind, len } – a stretch near the start where you don't walk but ride: "ski" or "sled" down a slope (the
-  //     ground starts at row 9 and drops a row three times), "skates", a "bike" or a "kicksled" on flat ground.
+  //     ground starts at row 9 and drops a row three times), "skates", "bike", "kicksled", "husky" or "railbike" on flat ground.
   //     Small blocks and tall rocks to jump over, with coins above them; one of the three things hangs above it.
   //     Gives the level a `ride` ({ kind, x0, x1 }); game.js changes how you move there, world.js draws what you ride.
   //   ice, dark, water, interior – used by the game and the drawing code, not by the generator.
@@ -94,24 +103,63 @@ function genLevel(o) {
       if (down) while (gy > 9) { ground.push([cur, sx, gy]); cur = sx + 1; bad.add(sx); bad.add(sx + 1); gy = Math.max(9, gy - 2); sx += 2; }
       const x0 = sx + 3, x1 = x0 + len - 1, drops = down ? 12 - gy : 0, top = gy;
       ground.push([cur, x0 - 1, gy]);
+      if (kind === "railbike") bad.add(x0 - 1);
       const rowAt = i => top + Math.min(drops, Math.floor(i * (drops + 1) / len));
       // the stretch itself, a piece of ground per row
       for (let i = 0, a = 0; i <= len; i++) if (i === len || rowAt(i) !== rowAt(a)) { ground.push([x0 + a, x0 + i - 1, rowAt(a)]); a = i; }
       for (let i = 0; i < len; i++) bad.add(x0 + i);
-      // Alternating small blocks and tall rocks, never right at a drop or at either end.
+      // Other rides alternate small blocks and tall rocks, never right at a drop or at either end.
       const isDrop = i => i > 0 && rowAt(i) !== rowAt(i - 1);
-      let obstacle = 0;
-      for (let i = 7; i < len - 5; i += 7 + Math.floor(R() * 4)) {
-        if ([-2, -1, 0, 1, 2].some(dd => isDrop(i + dd))) continue;
-        const r = rowAt(i), tall = ++obstacle % 2 === 0;
-        if (tall) rocks.push([x0 + i, r - 2, 2]);
-        else blocks.push([x0 + i, r - 1, 1]);
-        [-1, 0, 1].forEach(dd => coin(x0 + i + dd, r - (tall ? 4 : 3) - (dd ? 0 : 1)));
+      const hazards = [];
+      if (kind === "railbike") {
+        for (let i = 7; i < len - 5; i += 9 + Math.floor(R() * 6)) {
+          if (R() < .5) {
+            hazards.push({ x: x0 + i, kind: "ribbon" });
+            [-1, 0, 1].forEach(dd => coin(x0 + i + dd, top - 4 - (dd ? 0 : 1)));
+          } else {
+            const choice = R();
+            hazards.push({ x: x0 + i, kind: "branch", clearance: choice < .5 ? 55 : 58, canopy: choice < .25 || choice >= .75 });
+          }
+        }
+      } else if (kind === "bike") {
+        let bag = [];
+        for (let i = 9; i < len - 8; i += 12 + Math.floor(R() * 8)) {
+          if (!bag.length) {
+            bag = ["block", "rock", "branch"];
+            for (let j = bag.length - 1; j > 0; j--) { const k = Math.floor(R() * (j + 1)); [bag[j], bag[k]] = [bag[k], bag[j]]; }
+          }
+          const obstacle = bag.pop(), r = rowAt(i);
+          if (obstacle === "branch") {
+            const choice = R();
+            hazards.push({ x: x0 + i, kind: "branch", clearance: choice < .5 ? 64 : 67, canopy: choice < .25 || choice >= .75 });
+          } else {
+            const tall = obstacle === "rock";
+            if (tall) rocks.push([x0 + i, r - 2, 2]);
+            else blocks.push([x0 + i, r - 1, 1]);
+            [-1, 0, 1].forEach(dd => coin(x0 + i + dd, r - (tall ? 4 : 3) - (dd ? 0 : 1)));
+          }
+        }
+      } else if (kind === "husky") {
+        for (let i = 12; i < len - 10; i += 16 + Math.floor(R() * 5)) {
+          blocks.push([x0 + i, top - 1, 1]);
+          [-1, 0, 1].forEach(dd => coin(x0 + i + dd, top - 3 - (dd ? 0 : 1)));
+        }
+      } else {
+        let obstacle = 0;
+        for (let i = 7; i < len - 5; i += 7 + Math.floor(R() * 4)) {
+          if ([-2, -1, 0, 1, 2].some(dd => isDrop(i + dd))) continue;
+          const r = rowAt(i), tall = ++obstacle % 2 === 0;
+          if (tall) rocks.push([x0 + i, r - 2, 2]);
+          else blocks.push([x0 + i, r - 1, 1]);
+          [-1, 0, 1].forEach(dd => coin(x0 + i + dd, r - (tall ? 4 : 3) - (dd ? 0 : 1)));
+        }
       }
       // one of the things to find hangs above the ride, halfway (marked like the river: placed first, always one)
-      const mid = Math.floor(len / 2) + 4;
-      slots.push([x0 + mid, rowAt(mid) - 3, "river"]);
-      ride = { kind, x0, x1 };
+      if (kind !== "railbike") {
+        const mid = Math.floor(len / 2) + 4;
+        slots.push([x0 + mid, rowAt(mid) - 3, "river"]);
+      }
+      ride = { kind, x0, x1, ...(["railbike", "bike"].includes(kind) ? { hazards, row: top } : {}) };
       gy = rowAt(len - 1); cur = x1 + 1; bad.add(x1 + 1); bad.add(x1 + 2);
       rideDone = true;
       x = x1 + 3; continue;
@@ -213,8 +261,12 @@ function genLevel(o) {
   } else if (ride) {
     // a ride gets a sign at the start that says how it works, and a flag where you get off again
     const c = free(ride.x0 - 6, 3, ride.x0 - 2);
-    ents.push(["sign", c, yAt(c), [...RIDE_SIGNS[ride.kind],
-      T("Small bumps stop you. Hit a tall rock and you fall: back to the last flag!", "Kleine hindernissen stoppen je. Raak je een hoge rots, dan val je: terug naar de laatste vlag!")]]);
+    const lines = ride.kind === "railbike" || ride.kind === "husky" ? RIDE_SIGNS[ride.kind] : [...RIDE_SIGNS[ride.kind],
+      T("Small bumps stop you. Hit a tall rock and you fall: back to the last flag!", "Kleine hindernissen stoppen je. Raak je een hoge rots, dan val je: terug naar de laatste vlag!")];
+    ents.push(["sign", c, yAt(c), lines]);
+    if (ride.kind === "railbike" || ride.kind === "bike" || ride.kind === "husky") {
+      const start = free(ride.x0 - 2, 3, ride.x0 - 1); ents.push(["check", start, yAt(start)]);
+    }
     const f = free(ride.x1 + 5, ride.x1 + 3); ents.push(["check", f, yAt(f)]);
   } else { const c = free(w * .3); ents.push(["check", c, yAt(c)]); }
   if (!gated) { const c = free(w * .62); ents.push(["check", c, yAt(c)]); } // a gate already has a flag right behind it
@@ -324,15 +376,15 @@ const ROWS_GEN = 15, TS_GEN = 32;
 const BG_KINDS = new Set(["moosedeco", "polarbear", "walrus", "muskox", "deer", "cow", "flamingo"]);
 
 const DAY22 = genLevel({
-  seed: 2212, w: 150, day: dayLabel(1), name: T("Forest & Old Railway", "Bos & oude spoorlijn"), theme: "bos",
+  seed: 2212, w: 280, ride: { kind: "railbike", len: 120 }, day: dayLabel(1), name: T("Forest & Old Railway", "Bos & oude spoorlijn"), theme: "bos",
   sub: T("The walking map has blown away in three pieces. Without the map we'll never find the old railway path.",
     "De wandelkaart is in drie stukken gewaaid. Zonder kaart vinden we het oude spoorpad nooit terug."),
   keyType: "🗺️", keyHud: "🗺️", keyName: T("map pieces", "kaartstukjes"),
   questType: "🩹", questHud: "🩹", questName: T("plaster", "pleister"),
   coin: "🍟", coinName: T("chips", "frietjes"), enemy: "zwijn", spikeMsg: T("Ouch, brambles!", "Au, bramen!"),
   pits: true, enemies: true, spikes: true, exitStyle: "arch", exitLabel: T("Trail → cabin", "Spoorpad → huis"),
-  intro: T(["The old railway: once a train line, now a path for walking and cycling.", "Flat as a pancake, they say. We call it a challenge."],
-    ["De oude spoorlijn: ooit een treinspoor, nu een fiets- en wandelpad.", "Plat als een pannenkoek, zeggen ze. Wij noemen het een uitdaging."]),
+  intro: T(["The old railway: part is a walking path, part still has rails for a rail bike.", "Flat as a pancake, they say. We call it a challenge."],
+    ["De oude spoorlijn: deels een wandelpad, deels rails voor een spoorfiets.", "Plat als een pannenkoek, zeggen ze. Wij noemen het een uitdaging."]),
   quest: {
     need: T(["Ouch! I fell over and grazed my knee.", "The first aid bag with plasters is hanging somewhere high up in the trees. Don't ask how it got there."],
       ["Au! Ik ben gevallen en heb mijn knie geschaafd.", "Ergens hoog in de bomen hangt de EHBO-tas met pleisters. Vraag niet hoe die daar komt."]),
