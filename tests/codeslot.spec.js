@@ -90,6 +90,18 @@ for (const lang of ['en', 'nl']) for (const [day, answer, symbols] of [
   }
 });
 
+for (const lang of ['en', 'nl']) test(`noordpool: de klimaat- en natuurvragen geven de slotcijfers (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region: 'pole' });
+  const info = await page.evaluate(() => ({
+    answer: LEVELS[0].code.answer,
+    questions: LEVELS[0].code.questions,
+    signs: LEVELS[0].ents.filter(e => e[0] === 'sign').map(e => e[3][0])
+  }));
+  expect(info.answer).toBe('5180');
+  for (const [i, symbol] of ['❄️', '🦌', '🎅', '⭐'].entries())
+    expect(info.signs).toContain(`${symbol}: ${info.questions[i]}`);
+});
+
 test('elke dag met een codeslot heeft bordjes met de cijfers of een raadsel', async ({ page }) => {
   await seed(page, { unlocked: 8 });
   const r = await page.evaluate(() => LEVELS.map(d => {

@@ -15,8 +15,10 @@ const POLE_LEVELS = [
            T(["A penguin just waved at me. Penguins live at the South Pole. This one is very lost."], ["Er zwaaide net een pinguïn naar me. Pinguïns wonen op de Zuidpool. Deze is flink verdwaald."]),
            T(["Is that Santa's house? The one with all the lights? Of course it is."], ["Is dat het huis van de Kerstman? Dat met al die lampjes? Natuurlijk is dat het."])],
     code: { answer: "5180", title: T("Gate of Santa's village", "Poort van het kerstdorp"), syms: ["❄️", "🦌", "🎅", "⭐"],
-      flavor: T(["No two snowflakes are the same. This one is extra special.", "Reindeer: the only taxi that flies.", "Ho ho ho. That's all he said.", "The North Star is right above your head here."],
-        ["Geen twee sneeuwvlokken zijn hetzelfde. Deze is extra bijzonder.", "Rendieren: de enige taxi die vliegt.", "Ho ho ho. Meer zei hij niet.", "De Poolster staat hier recht boven je hoofd."]) },
+      questions: T(["The temperature rises from −5 °C to 0 °C. How many degrees does it rise?", "Where do wild polar bears live? 1: the Arctic around the North Pole. 2: Antarctica at the South Pole.", "Two reindeer each have 4 legs. How many legs altogether?", "At what temperature in °C does fresh water normally freeze?"],
+        ["De temperatuur stijgt van −5 °C naar 0 °C. Hoeveel graden stijgt hij?", "Waar leven ijsberen in het wild? 1: het noordpoolgebied. 2: Antarctica bij de Zuidpool.", "Twee rendieren hebben elk 4 poten. Hoeveel poten samen?", "Bij hoeveel graden Celsius bevriest zoet water normaal?"]),
+      flavor: T(["Count from minus five to zero.", "Polar bears live in the Arctic; wild penguins live in the Southern Hemisphere.", "Two times four legs.", "Fresh water normally freezes at zero degrees Celsius."],
+        ["Tel van min vijf tot nul.", "IJsberen leven in het noordpoolgebied; wilde pinguïns op het zuidelijk halfrond.", "Twee keer vier poten.", "Zoet water bevriest normaal bij nul graden Celsius."]) },
     decoKinds: ["pine", "candycane", "polarbear", "presents", "walrus"], decoExtra: [["igloo", .05]],
     doneMsg: T("Everyone is in Santa's village, with all the backpacks. The elves made hot chocolate.", "Iedereen is in het dorp van de Kerstman, met alle rugzakken. De elfjes hebben warme chocolademelk gemaakt.")
   }),
