@@ -2673,7 +2673,7 @@ function drawCanoe(cx, y, face, pace) {
   g.fillStyle = "#f2c42a"; g.beginPath(); g.moveTo(cx - 31, y - 4); g.quadraticCurveTo(cx, y + 2, cx + 31, y - 4); g.lineTo(cx + 30, y - 1); g.quadraticCurveTo(cx, y + 5, cx - 30, y - 1); g.closePath(); g.fill();
   g.restore();
 }
-/* ---------- Rides (genLevel(): `ride`): skis, a sledge, skates, a bike ----------
+/* ---------- Rides (genLevel(): `ride`): skis, a sledge, skates, bikes, a kicksled, a husky sledge ----------
    Drawn around the player: cx is the middle, y the feet, k the size of the character. The person is drawn by render();
    on a sledge and a bike only the part above the seat (rideClip()), with the legs drawn here. */
 /** Two skis with turned-up tips and two poles. */
@@ -2692,11 +2692,13 @@ function drawSkis(cx, y, face, k) {
   g.restore();
 }
 /** A wooden sledge you sit in: slats, a curled front and two runners. Your legs go along the top, forwards. */
-function drawSled(cx, y, face, k, pants) {
+function drawSled(cx, y, face, k, pants, overturned = false) {
   g.save(); g.translate(cx, y); g.scale(face, 1); g.lineJoin = "round"; g.lineCap = "round"; g.strokeStyle = OUT;
   // legs stretched forwards, feet on the front
-  g.lineWidth = 6 * k; g.strokeStyle = shade(pants, -.15); g.beginPath(); g.moveTo(-2, -11); g.lineTo(15, -12); g.stroke();
-  g.fillStyle = "#3a2a22"; g.beginPath(); g.ellipse(17, -13, 3.2 * k, 4 * k, 0, 0, 7); g.fill();
+  if (!overturned) {
+    g.lineWidth = 6 * k; g.strokeStyle = shade(pants, -.15); g.beginPath(); g.moveTo(-2, -11); g.lineTo(15, -12); g.stroke();
+    g.fillStyle = "#3a2a22"; g.beginPath(); g.ellipse(17, -13, 3.2 * k, 4 * k, 0, 0, 7); g.fill();
+  }
   // the runners, curling up at the front
   g.strokeStyle = "#5a3a20"; g.lineWidth = 2.5; g.beginPath(); g.moveTo(-24, 0); g.lineTo(18, 0); g.quadraticCurveTo(28, 0, 26, -10); g.stroke();
   // the body of the sledge
@@ -2713,13 +2715,123 @@ function drawSkates(cx, y, face, k) {
     g.strokeStyle = "#8a96a8"; g.lineWidth = 1.5; g.beginPath(); g.moveTo(x - 3 * k, 0); g.lineTo(x - 3 * k, -1.5); g.moveTo(x + 3 * k, 0); g.lineTo(x + 3 * k, -1.5); g.stroke(); });
   g.restore();
 }
+/** A kicksled: long runners, a seat ahead and handles for the standing rider. */
+function drawKicksled(cx, y, face) {
+  g.save(); g.translate(cx, y); g.scale(face, 1); g.lineCap = "round"; g.lineJoin = "round";
+  g.strokeStyle = "#324456"; g.lineWidth = 3;
+  g.beginPath(); g.moveTo(-26, 0); g.lineTo(22, 0); g.quadraticCurveTo(29, 0, 27, -6);
+  g.moveTo(-8, 0); g.lineTo(-8, -31); g.lineTo(-14, -31);
+  g.moveTo(16, 0); g.lineTo(16, -18); g.lineTo(-8, -18); g.stroke();
+  g.fillStyle = "#b8743a"; g.strokeStyle = OUT; g.lineWidth = 1.5;
+  g.beginPath(); rp(-7, -21, 27, 5, 2); g.fill(); g.stroke();
+  g.restore();
+}
+/** A husky team pulls a traditional standing sledge. */
+function drawHuskySled(cx, y, face, phase) {
+  g.save(); g.translate(cx, y); g.scale(face, 1); g.lineCap = "round"; g.lineJoin = "round";
+  g.strokeStyle = "#795c45"; g.lineWidth = 1.5;
+  g.beginPath(); g.moveTo(20, -8); g.lineTo(42, -12); g.lineTo(75, -12); g.stroke();
+  for (const [x, colour] of [[48, "#7b8998"], [HUSKY_LEAD - 20, "#515d6a"]]) {
+    g.save(); g.translate(x, 0); g.lineWidth = 1.3; g.strokeStyle = OUT;
+    trotLegs(phase, [[-9, -8, 8, 3], [-5, -8, 8, 3], [5, -8, 8, 3], [9, -8, 8, 3]], .6, "#a2aab4", "#e7ebee", "#59636a");
+    g.translate(0, stepBob(phase));
+    blob(colour, () => { g.moveTo(-12, -12); g.quadraticCurveTo(-22, -18, -15, -23); g.quadraticCurveTo(-16, -17, -10, -17); g.closePath(); });
+    blob(colour, () => g.ellipse(0, -13, 14, 8, 0, 0, 7));
+    g.fillStyle = "#e7ebee"; g.beginPath(); g.ellipse(1, -9, 10, 4, 0, 0, 7); g.fill();
+    blob(colour, () => g.ellipse(12, -19, 7, 6, 0, 0, 7));
+    blob(colour, () => { g.moveTo(8, -23); g.lineTo(9, -30); g.lineTo(13, -24); g.closePath(); });
+    blob("#e7ebee", () => g.ellipse(16, -17, 5, 3, 0, 0, 7));
+    g.fillStyle = "#25313c"; g.beginPath(); g.arc(20, -18, 1.4, 0, 7); g.fill();
+    g.fillStyle = "#83c9e8"; g.beginPath(); g.arc(13, -20, 1.5, 0, 7); g.fill();
+    g.strokeStyle = "#b53c32"; g.lineWidth = 2; g.beginPath(); g.moveTo(-4, -19); g.lineTo(2, -8); g.stroke();
+    g.restore();
+  }
+  g.strokeStyle = "#4d3324"; g.lineWidth = 3; g.beginPath();
+  g.moveTo(-24, 0); g.lineTo(18, 0); g.quadraticCurveTo(25, 0, 24, -6);
+  g.moveTo(-15, 0); g.lineTo(-15, -14); g.lineTo(12, -14); g.lineTo(17, 0);
+  g.moveTo(10, -14); g.lineTo(12, -30); g.lineTo(16, -30); g.stroke();
+  g.fillStyle = "#b8743a"; g.strokeStyle = OUT; g.lineWidth = 1.5;
+  g.beginPath(); rp(-16, -13, 31, 8, 3); g.fill(); g.stroke();
+  g.fillStyle = "#d89a5a"; g.fillRect(-12, -11, 23, 2);
+  g.restore();
+}
+const RAILBIKE_GRIP = [19, -31], BIKE_GRIP = [13, -30];
+/** A pedal trolley whose wheels stay on the rail. */
+function drawRailbike(cx, y, face, k, pedal, damaged = false) {
+  g.save(); g.translate(cx, y); g.scale(face * k, k); g.lineCap = "round"; g.lineJoin = "round";
+  for (const x of [-18, 18]) {
+    g.save(); g.translate(x, -6);
+    if (damaged && x > 0) { g.rotate(-.5); g.scale(.55, 1); }
+    g.fillStyle = "#344252"; g.strokeStyle = OUT; g.lineWidth = 2;
+    g.beginPath(); g.arc(0, 0, 6, 0, 7); g.fill(); g.stroke();
+    g.strokeStyle = "#c9ced8"; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(-Math.cos(pedal) * 4, -Math.sin(pedal) * 4); g.lineTo(Math.cos(pedal) * 4, Math.sin(pedal) * 4); g.stroke(); g.restore();
+  }
+  g.strokeStyle = OUT; g.lineWidth = 5; g.beginPath(); g.moveTo(-22, -13); g.lineTo(22, -13); g.moveTo(-5, -13); g.lineTo(-5, -26); g.moveTo(14, -13); g.lineTo(14, -30); g.lineTo(...RAILBIKE_GRIP); g.stroke();
+  g.strokeStyle = "#d99b37"; g.lineWidth = 3; g.beginPath(); g.moveTo(-22, -13); g.lineTo(22, -13); g.moveTo(-5, -13); g.lineTo(-5, -26); g.moveTo(14, -13); g.lineTo(14, -30); g.stroke();
+  g.fillStyle = "#633c28"; g.beginPath(); g.ellipse(-5, -27, 8, 2.5, 0, 0, 7); g.fill();
+  g.restore();
+}
+/** The rail and the two kinds of obstacle for the rail bike. */
+function drawRailTrack(c0, c1) {
+  const r = L.d.ride, y = r.row * TS;
+  for (let c = Math.max(c0, r.x0); c <= Math.min(c1, r.x1); c++) {
+    const x = c * TS;
+    g.fillStyle = "#63452f"; g.fillRect(x + 2, y - 4, 12, 4); g.fillRect(x + 19, y - 4, 11, 4);
+    g.fillStyle = "#9caab5"; g.fillRect(x, y - 5, TS + 1, 2);
+  }
+  for (const c of [r.x0 - 1, r.x1 + 1]) {
+    if (c < c0 || c > c1) continue;
+    const x = c * TS;
+    g.fillStyle = "#343d45"; g.fillRect(x, y - 5, TS, 9);
+    g.fillStyle = "#a9b5b8";
+    for (let i = 3; i < TS; i += 6) g.fillRect(x + i, y - 4, 2, 7);
+    g.fillRect(x, y - 5, TS, 1); g.fillRect(x, y + 3, TS, 1);
+  }
+}
+/** Branches and ribbons along a ride. */
+function drawRideHazards(c0, c1) {
+  const r = L.d.ride, y = r.row * TS;
+  for (const h of r.hazards) {
+    if (h.x < c0 - 1 || h.x > c1 + (h.canopy ? 3 : 1)) continue;
+    const x = h.x * TS + 16;
+    g.save(); g.lineCap = "round"; g.lineJoin = "round";
+    if (h.kind === "branch") {
+      const by = y - h.clearance - 3;
+      if (h.canopy) {
+        g.strokeStyle = "#67442b"; g.lineWidth = 8; g.beginPath();
+        g.moveTo(x - 64, y); g.lineTo(x - 64, y - RAIL_CANOPY_HEIGHT); g.stroke();
+        g.lineWidth = 5; g.beginPath(); g.moveTo(x - 64, y - RAIL_CANOPY_HEIGHT);
+        g.quadraticCurveTo(x, y - RAIL_CANOPY_HEIGHT - 8, x, y - RAIL_CANOPY_HEIGHT + 10); g.lineTo(x, by); g.stroke();
+        g.fillStyle = "#285f34"; g.beginPath();
+        g.ellipse(x - 76, y - RAIL_CANOPY_HEIGHT, 18, 14, -.3, 0, 7);
+        g.ellipse(x - 57, y - RAIL_CANOPY_HEIGHT - 7, 18, 15, .2, 0, 7);
+        g.ellipse(x - 47, y - RAIL_CANOPY_HEIGHT + 2, 15, 11, .3, 0, 7); g.fill();
+        for (let ly = y - RAIL_CANOPY_HEIGHT + 5; ly < by - 3; ly += 12) {
+          g.fillStyle = "#285f34"; g.beginPath(); g.ellipse(x - 7, ly, 9, 7, -.4, 0, 7); g.ellipse(x + 7, ly + 5, 9, 7, .4, 0, 7); g.fill();
+          g.fillStyle = "#438148"; g.beginPath(); g.ellipse(x - 7, ly - 1, 5, 3, -.4, 0, 7); g.ellipse(x + 7, ly + 4, 5, 3, .4, 0, 7); g.fill();
+        }
+      }
+      g.strokeStyle = "#67442b"; g.lineWidth = 6; g.beginPath(); g.moveTo(x - 13, by); g.lineTo(x + 13, by); g.moveTo(x + 2, by); g.lineTo(x + 11, by - 18); g.stroke();
+      g.fillStyle = "#3e793e"; for (const [dx, dy] of [[-12, -4], [11, -18], [13, -4]]) { g.beginPath(); g.ellipse(x + dx, by + dy, 7, 4, -.4, 0, 7); g.fill(); }
+    } else {
+      g.strokeStyle = "#b9a58a"; g.lineWidth = 1.5; g.beginPath(); g.moveTo(x - 15, y - 90); g.lineTo(x - 15, y - 40); g.moveTo(x + 15, y - 90); g.lineTo(x + 15, y - 40); g.stroke();
+      g.fillStyle = "#dc4b37"; g.strokeStyle = OUT; g.lineWidth = 1.5; g.beginPath(); rp(x - 16, y - 43, 32, 9, 2); g.fill(); g.stroke();
+      g.fillStyle = "#f8d768"; g.fillRect(x - 12, y - 40, 24, 3);
+    }
+    g.restore();
+  }
+}
 /** A white bike (the free bikes of the Hoge Veluwe), behind the rider; pedal = how far the wheels have turned. */
-function drawBike(cx, y, face, k, pedal) {
+function drawBike(cx, y, face, k, pedal, damaged = false) {
   g.save(); g.translate(cx, y); g.scale(face, 1); g.lineJoin = "round"; g.lineCap = "round";
-  const r = 10, wy = -r, back = -17, front = 18, crank = [0, -10], seat = [-4, -26], bar = [13, -30];
+  const r = 10, wy = -r, back = -17, front = 18, crank = [0, -10], seat = [-4, -26], bar = BIKE_GRIP;
   for (const wx of [back, front]) {
-    g.strokeStyle = "#2a2f3c"; g.lineWidth = 3; g.beginPath(); g.arc(wx, wy, r, 0, 7); g.stroke();
-    g.strokeStyle = "#c9ced8"; g.lineWidth = 1; for (let i = 0; i < 3; i++) { const a = pedal + i * Math.PI / 3; g.beginPath(); g.moveTo(wx - Math.cos(a) * r, wy - Math.sin(a) * r); g.lineTo(wx + Math.cos(a) * r, wy + Math.sin(a) * r); g.stroke(); }
+    g.save(); g.translate(wx, wy);
+    if (damaged && wx === front) { g.rotate(-.5); g.scale(.5, 1); }
+    g.strokeStyle = "#2a2f3c"; g.lineWidth = 3; g.beginPath(); g.arc(0, 0, r, 0, 7); g.stroke();
+    g.strokeStyle = "#c9ced8"; g.lineWidth = 1; for (let i = 0; i < 3; i++) { const a = pedal + i * Math.PI / 3; g.beginPath(); g.moveTo(-Math.cos(a) * r, -Math.sin(a) * r); g.lineTo(Math.cos(a) * r, Math.sin(a) * r); g.stroke(); }
+    g.restore();
   }
   g.strokeStyle = OUT; g.lineWidth = 4.5;
   const tubes = () => { g.beginPath(); g.moveTo(back, wy); g.lineTo(...crank); g.lineTo(...seat); g.lineTo(back, wy); g.moveTo(...seat); g.lineTo(bar[0] - 2, bar[1] + 6); g.lineTo(...crank); g.moveTo(bar[0] - 2, bar[1] + 6); g.lineTo(front, wy); g.stroke(); };
@@ -2738,6 +2850,17 @@ function drawBikeLegs(cx, y, face, k, pedal, pants, seatY = -26) {
   }
   g.restore();
 }
+/** A rider sitting on the ground after falling off a ride. */
+function drawFallenRider(ch, x, feet, face, hat, theme, summer) {
+  const k = ch.size || 1, hip = ch.kid ? 12 : 13;
+  shadowAt(x, feet, 14 * k);
+  drawPerson(ch, x, feet + (hip - 5) * k, 1, face, 0, false, hat,
+    { t: frame * 16, scarf: theme === "sneeuw" || theme === "stad", summer, hideLegs: true });
+  g.save(); g.translate(x, feet); g.scale(face * k, k); g.lineCap = "round"; g.lineJoin = "round";
+  g.strokeStyle = ch.pants; g.lineWidth = 5; g.beginPath(); g.moveTo(-2, -5); g.lineTo(7, -6); g.lineTo(13, -2); g.stroke();
+  g.fillStyle = ch.shoes || "#3a2a22"; g.beginPath(); g.ellipse(14, -2, 4, 2.5, 0, 0, 7); g.fill();
+  g.restore();
+}
 /** The frozen canal of a skating ride: smooth, pale blue ice over the ground, with white scratches from the skates. */
 function drawRideIce(c0, c1) {
   const r = L.d.ride;
@@ -2754,9 +2877,9 @@ function drawRideIce(c0, c1) {
 /** On a sledge or a bike you sit: the rider is moved so the hip is on the seat, and cut off just below the hem of the
     coat (so the whole body shows, for a kid as well as a grown-up); the legs are drawn with the sledge or the bike. */
 function rideSeat(kind, feet, ch) {
-  if (kind !== "sled" && kind !== "bike") return null;
+  if (kind !== "sled" && kind !== "bike" && kind !== "railbike") return null;
   const sz = ch.size || 1, hip = (ch.kid ? 12 : 13) * sz, hem = (ch.coat === "long" ? 8 : 3) * sz;
-  const seat = kind === "sled" ? feet - 9 : feet - 26;
+  const seat = kind === "sled" ? feet - 9 : feet - 26 * (kind === "railbike" ? sz : 1);
   return { by: seat + hip, clip: seat + hem, seat: seat - feet };
 }
 /** An ice floe, a gondola of the cable car, or a little boat: you stand on top of it. */
@@ -2941,6 +3064,8 @@ function render() {
 
   if (L.d.water) drawWater(cx);
   if (L.d.ride && L.d.ride.kind === "skates") drawRideIce(x0, x1);
+  if (L.d.ride && L.d.ride.kind === "railbike") drawRailTrack(x0, x1);
+  if (L.d.ride && L.d.ride.hazards) drawRideHazards(x0, x1);
   for (const m of L.movers) drawMover(m);
   if (!L.groundDecor) L.groundDecor = buildGroundDecor();
   for (const d of L.groundDecor) if (d.x > cx - 20 && d.x < cx + viewW + 20) drawGroundDecor(d, theme);
@@ -2993,7 +3118,24 @@ function render() {
     const ch = heroChar();
     // On the birthday level the birthday boy wears a party hat.
     const pHat = L.d.birthday === ch.name ? "party" : hat;
-    if (P.slide) {
+    if (P.rideCrash) {
+      const crash = P.rideCrash, cx = P.x + P.w / 2, feet = crash.feet, k = ch.size || 1, face = P.face;
+      if (crash.kind === "bike") drawBike(cx, feet, face, k, P.x / 10, true);
+      if (crash.kind === "railbike") drawRailbike(cx, feet, face, k, P.x / 10, true);
+      if (crash.kind === "kicksled") drawKicksled(cx, feet, face);
+      if (crash.kind === "sled") {
+        g.save(); g.translate(cx, feet - 12); g.scale(1, -1); drawSled(0, 0, face, k, ch.pants, true); g.restore();
+      }
+      const px = cx - face * (["bike", "railbike", "sled", "kicksled"].includes(crash.kind) ? 34 : 0);
+      if (crash.kind === "ski") drawSkis(px + face * 8 * k, feet, face, k);
+      if (crash.kind === "skates") drawSkates(px + face * 13 * k, feet, face, k);
+      drawFallenRider(ch, px, feet, face, pHat, theme, summer);
+    } else if (P.capsize) {
+      // capsized: only the bottom of the canoe shows, rocking in the water (you are underneath it)
+      const cx = P.x + P.w / 2, wt = waterTop(fl(cx / TS));
+      g.save(); g.translate(cx, wt + 2); g.rotate(Math.sin(frame / 5) * .08); g.scale(1, -1); drawCanoe(0, 0, P.face, 0); g.restore();
+      drawWater(cx, [fl(P.x / TS) - 1, fl((P.x + P.w) / TS) + 1]);
+    } else if (P.slide) {
       // Op de buik: het staande poppetje een kwartslag gedraaid, hoofd vooruit, buik naar beneden, midden op de plek.
       const cx = P.x + P.w / 2, gy = P.y + P.h;
       shadowAt(cx, gy, 20);
@@ -3002,21 +3144,38 @@ function render() {
       drawPerson(ch, 0, 0, 1, P.face, 0, false, pHat, { t: frame * 16, scarf, summer, indoor: theme === "huis", slide: true });
       g.setTransform(m0);
     } else {
-      const rx = P.x + P.w / 2, feet = P.y + P.h, rk = ch.size || 1, rd = P.ride, seat = rd && rideSeat(rd, feet, ch), pedal = P.x / 10;
+      const rx = P.x + P.w / 2, rd = P.ride, feet = rd === "railbike" ? L.d.ride.row * TS : P.y + P.h, rk = ch.size || 1, railJump = rd === "railbike" && P.railJump > 0;
+      const seat = rd && !railJump && rideSeat(rd, feet, ch), pedal = P.x / 10;
+      let handle = null;
+      if (seat && (rd === "bike" || rd === "railbike")) {
+        const rail = rd === "railbike", grip = rail ? RAILBIKE_GRIP : BIKE_GRIP, k = rail ? 1 : 1 / rk;
+        const dx = grip[0] * k, dy = grip[1] * k - seat.seat / rk, a = P.railDuck ? RAIL_DUCK_ANGLE : 0;
+        handle = { x: dx * Math.cos(a) + dy * Math.sin(a), y: -dx * Math.sin(a) + dy * Math.cos(a) - (ch.kid ? 12 : 13) };
+      }
+      if (rd === "husky") handle = { x: 14 / rk, y: -30 / rk };
       if (P.onGround && !P.canoe) shadowAt(rx, feet, rd ? 24 : 11);
       if (rd === "bike") drawBike(rx, feet, P.face, rk, pedal);
+      if (rd === "kicksled") drawKicksled(rx, feet, P.face);
+      if (rd === "husky") drawHuskySled(rx, feet, P.face, P.x * .25);
+      if (rd === "railbike") drawRailbike(rx, feet, P.face, rk, pedal);
       // in a canoe you sit inside it: only draw what sticks out above the edge (no legs under the boat, also mid-jump);
       // on a sledge or a bike you sit too, and the legs are drawn with it
       if (P.canoe) { g.save(); g.beginPath(); g.rect(P.x - 80, P.y - 120, P.w + 160, 120 + P.h * .45 + 4); g.clip(); }
       if (seat) { g.save(); g.beginPath(); g.rect(P.x - 80, seat.clip - 140, P.w + 160, 140); g.clip(); }
-      // on skis you glide (no steps); on skates you stride
-      drawPerson(ch, rx, seat ? seat.by : feet, 1, P.face, rd === "skates" ? P.anim * .55 : P.anim, !P.onGround, pHat,
-        { t: frame * 16, moving: Math.abs(P.vx) > .3 && !P.canoe && (!rd || rd === "skates"), scarf, summer, indoor: theme === "huis" });
+      const bikeDuck = seat && (rd === "bike" || rd === "railbike") && P.railDuck;
+      if (bikeDuck) { g.save(); g.translate(rx, feet + seat.seat); g.rotate(P.face * RAIL_DUCK_ANGLE); g.translate(-rx, -feet - seat.seat); }
+      // on skis you glide (no steps); on skates and a kicksled you stride
+      drawPerson(ch, rx, seat ? seat.by : railJump ? feet - 26 * rk - P.railJump : feet, 1, P.face, rd === "skates" || rd === "kicksled" ? P.anim * .55 : P.anim, railJump || !P.onGround, pHat,
+        { t: frame * 16, moving: Math.abs(P.vx) > .3 && !P.canoe && (!rd || rd === "skates" || rd === "kicksled"), scarf, summer, indoor: theme === "huis", duck: !!bikeDuck, hideLegs: rd === "railbike" && !!seat, handle });
+      if (bikeDuck) g.restore();
       if (P.canoe || seat) g.restore();
       if (rd === "ski") drawSkis(rx, feet, P.face, rk);
       if (rd === "skates") drawSkates(rx, feet, P.face, rk);
       if (rd === "sled") drawSled(rx, feet, P.face, rk, ch.pants);
       if (rd === "bike") drawBikeLegs(rx, feet, P.face, rk, pedal, ch.pants, seat.seat);
+      if (rd === "railbike" && seat) {
+        g.save(); g.translate(rx, feet); g.scale(rk, rk); drawBikeLegs(0, 0, P.face, 1, pedal, ch.pants); g.restore();
+      }
       // swimming: the water covers you up to your chest
       if (P.swim) {
         drawWater(cx, [fl(P.x / TS), fl((P.x + P.w) / TS)]);

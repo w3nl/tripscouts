@@ -26,7 +26,7 @@ const TIROL_LEVELS = [
     doneMsg: T("Keys found, chalet open, fire lit. The view from the balcony: mountains, mountains, mountains.", "Sleutels gevonden, chalet open, kachel aan. Uitzicht vanaf het balkon: bergen, bergen, bergen.")
   }),
   genLevel({
-    seed: 4202, hills: [12, 10], ice: true, w: 262, ride: { kind: "ski", len: 50 }, day: dayLabel(1), name: T("Ski School", "Skiles"), theme: "sneeuw", scene: "alps",
+    seed: 4202, hills: [12, 10], ice: true, w: 292, ride: { kind: "ski", len: 80 }, day: dayLabel(1), name: T("Ski School", "Skiles"), theme: "sneeuw", scene: "alps",
     sub: T("First day of ski school. Three pairs of skis are missing, and the start gate is very strict.",
       "Eerste dag skiles. Er missen drie paar ski's, en het starthek is heel streng."),
     keyType: "🎿", keyHud: "🎿", keyName: T("pairs of skis", "paar ski's"),
@@ -91,7 +91,7 @@ const TIROL_LEVELS = [
     doneMsg: T("Candles bought, chestnuts eaten, the band played. Back up the mountain.", "Kaarsjes gekocht, kastanjes gegeten, de kapel speelde. Terug de berg op.")
   }),
   genLevel({
-    seed: 4505, hills: [12, 10], ice: true, w: 283, ride: { kind: "sled", len: 56 }, day: dayLabel(4), name: T("The Toboggan Run", "De rodelbaan"), theme: "sneeuw", scene: "alps",
+    seed: 4505, hills: [12, 10], ice: true, w: 313, ride: { kind: "sled", len: 86 }, day: dayLabel(4), name: T("The Toboggan Run", "De rodelbaan"), theme: "sneeuw", scene: "alps",
     sub: T("Christmas Day on the toboggan run! Find three sledges, ring the start bell and race through the gate.",
       "Eerste kerstdag op de rodelbaan! Vind drie sleeën, luid de startbel en race door het hek."),
     keyType: "🛷", keyHud: "🛷", keyName: T("sledges", "sleeën"),

@@ -1,6 +1,7 @@
 "use strict";
 // Poppetjes, vijanden en voorwerpen.
 /* ---------- Poppetje ---------- */
+const RAIL_DUCK_ANGLE = 1.1;
 function drawPerson(c, cx, by, s, face, phase, air, hat, opts = {}) {
   const t = opts.t || 0, moving = !!opts.moving, kid = !!c.kid, sz = c.size || 1;
   const skin = c.skin || "#f4caa6", skinD = c.skin ? shade(c.skin, -.14) : "#d9a07c", shoe = c.shoes || "#3a2a22";
@@ -17,9 +18,8 @@ function drawPerson(c, cx, by, s, face, phase, air, hat, opts = {}) {
   // Kinderen hebben een iets grotere kop en een korter lijf.
   const hr = kid ? 9.4 : 8.6, hip = kid ? -12 : -13, top = (kid ? -26 : -28) + bob, hy = top - hr + .6;
   const longCoat = c.coat === "long" && !opts.indoor && !opts.summer;
-  // Buikglijden (opts.slide): het hoofd kijkt omhoog-vooruit (gekanteld rond de nek) en de armen gaan gestrekt naar voren.
-  // De wereld draait het hele poppetje een kwartslag (world.js); hier draaien hoofd en armen terug.
-  const tilt = opts.slide ? -1.3 : 0;
+  // When sliding or ducking the body turns; keep the head facing forwards.
+  const tilt = opts.slide ? -1.3 : opts.duck ? -RAIL_DUCK_ANGLE : 0;
   const tiltOn = () => { if (tilt) { g.save(); g.translate(0, top); g.rotate(tilt); g.translate(0, -top); } };
   const tiltOff = () => { if (tilt) g.restore(); };
   g.save(); g.translate(cx, by); g.scale(face * s * sz, s * sz);
@@ -65,12 +65,26 @@ function drawPerson(c, cx, by, s, face, phase, air, hat, opts = {}) {
     g.fillStyle = "rgba(255,255,255,.25)"; g.fillRect(-2, -hip - 3, 4, 1);
     g.restore();
   };
-  leg(-3, sw, pantsD);
+  const handleArm = (x, col, handCol) => {
+    const hx = opts.handle.x, hy = opts.handle.y, sy = top + 2;
+    const ex = (x + hx) / 2 - 1, ey = (sy + hy) / 2 + 3;
+    const path = () => { g.beginPath(); g.moveTo(x, sy); g.lineTo(ex, ey); g.lineTo(hx, hy); g.stroke(); };
+    g.strokeStyle = OUT; g.lineWidth = 7; path();
+    g.strokeStyle = summer ? handCol : col; g.lineWidth = 5; path();
+    if (summer) {
+      g.strokeStyle = col; g.beginPath(); g.moveTo(x, sy); g.lineTo((x + ex) / 2, (sy + ey) / 2); g.stroke();
+    }
+    g.strokeStyle = OUT; g.lineWidth = 1.5; blob(handCol, () => g.arc(hx, hy, 2.3, 0, 7));
+  };
+  if (!opts.hideLegs) leg(-3, sw, pantsD);
   // achterste arm
-  g.save(); g.translate(-3, top + 2); g.rotate(opts.slide ? Math.PI - .3 : air ? 2.3 : sw * .8);
-  if (summer) { blob(skinD, () => rp(-2, 0, 4, 11, 2)); blob(coatD, () => rp(-2.5, 0, 5, 4.5, 2)); } else blob(coatD, () => rp(-2.3, 0, 4.6, 11, 2));
-  blob(skinD, () => g.arc(0, 11.6, 2.3, 0, 7)); g.restore();
-  leg(3, -sw, pants);
+  if (opts.handle) handleArm(-3, coatD, skinD);
+  else {
+    g.save(); g.translate(-3, top + 2); g.rotate(opts.slide ? Math.PI - .3 : air ? 2.3 : sw * .8);
+    if (summer) { blob(skinD, () => rp(-2, 0, 4, 11, 2)); blob(coatD, () => rp(-2.5, 0, 5, 4.5, 2)); } else blob(coatD, () => rp(-2.3, 0, 4.6, 11, 2));
+    blob(skinD, () => g.arc(0, 11.6, 2.3, 0, 7)); g.restore();
+  }
+  if (!opts.hideLegs) leg(3, -sw, pants);
 
   // rokje over de maillot
   if (c.skirt) {
@@ -169,9 +183,12 @@ function drawPerson(c, cx, by, s, face, phase, air, hat, opts = {}) {
   tiltOff();
 
   // voorste arm
-  g.save(); g.translate(3, top + 2); g.rotate(opts.slide ? Math.PI + .15 : air ? -2.5 : -sw * .8);
-  if (summer) { blob(skin, () => rp(-2, 0, 4, 11, 2)); blob(coat, () => rp(-2.5, 0, 5, 4.5, 2)); } else blob(coat, () => rp(-2.3, 0, 4.6, 11, 2));
-  blob(skin, () => g.arc(0, 11.6, 2.3, 0, 7)); g.restore();
+  if (opts.handle) handleArm(3, coat, skin);
+  else {
+    g.save(); g.translate(3, top + 2); g.rotate(opts.slide ? Math.PI + .15 : air ? -2.5 : -sw * .8);
+    if (summer) { blob(skin, () => rp(-2, 0, 4, 11, 2)); blob(coat, () => rp(-2.5, 0, 5, 4.5, 2)); } else blob(coat, () => rp(-2.3, 0, 4.6, 11, 2));
+    blob(skin, () => g.arc(0, 11.6, 2.3, 0, 7)); g.restore();
+  }
   if (c.backpack && !sweater) { g.strokeStyle = shade(c.backpack, -.2); g.lineWidth = 1.8; g.beginPath(); g.moveTo(-2, top + .5); g.lineTo(-3, top + 11); g.stroke(); g.strokeStyle = OUT; g.lineWidth = 1.5; }
 
   // haarband, muts en hoedjes

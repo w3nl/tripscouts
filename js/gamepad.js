@@ -155,7 +155,7 @@ function pollGamepads() {
       if (!(GP.tvDir && p.id === "Google TV controller")) { padHeld.left = padHeld.left || L; padHeld.right = padHeld.right || R; }
       padHeld.jump = padHeld.jump || b(BTN.A) || b(BTN.UP);
       padHeld.run = padHeld.run || b(BTN.L1) || b(BTN.R1) || b(BTN.L2) || b(BTN.R2);
-      padHeld.down = padHeld.down || D; // down on a ladder
+      padHeld.down = padHeld.down || D || (P && ["railbike", "bike"].includes(rideAt(Math.floor((P.x + P.w / 2) / TS))) && (b(BTN.X) || b(BTN.B) || b(BTN.Y)));
       if (down(BTN.A) || down(BTN.UP)) edges.push("jump");
       if (down(BTN.X) || down(BTN.B) || down(BTN.Y) || down(BTN.DOWN)) edges.push("act");
       if (down(BTN.START)) toTitle();

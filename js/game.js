@@ -64,16 +64,33 @@ function isSolid(tx, ty) {
   const c = L.grid[ty][tx];
   return c === "#" || c === "S" || c === "R" || (c === "G" && !L.gateOpen) || (c === "H" && !L.codeOpen);
 }
-/** A ride (genLevel(): `ride`): on skis, a sledge, skates or a bike you don't walk. Per kind: the top speed with →,
+/** A ride (genLevel(): `ride`): on skis, a sledge, skates, a bike, a kicksled or a husky sledge you don't walk. Per kind: the top speed with →,
     how fast you can go back with ←, how fast it rolls by itself without a key (downhill), how quickly you speed up,
     and how quickly you slow down. Skates glide a long way; a bike stops sooner; skis and a sledge keep going downhill. */
 const RIDE_FEEL = {
   ski: { top: 7, back: 1.6, coast: 4.2, acc: .12, brake: .22 },
   sled: { top: 7.4, back: 1.3, coast: 5.2, acc: .14, brake: .18 },
   skates: { top: 6.6, back: 4, coast: 0, acc: .14, brake: .02 },
-  bike: { top: 6.8, back: 2.2, coast: 0, acc: .3, brake: .08 }
+  bike: { top: 6.8, back: 2.2, coast: 0, acc: .3, brake: .08 },
+  kicksled: { top: 6.6, back: 2.5, coast: 0, acc: .2, brake: .035 },
+  husky: { top: 6.2, back: 6.2, coast: 0, acc: .25, brake: .16 },
+  railbike: { top: 5.4, back: 3, coast: 0, acc: .25, brake: .1 }
 };
+const HUSKY_LEAD = 100;
 function rideAt(col) { const r = L.d.ride; return r && col >= r.x0 && col <= r.x1 ? r.kind : null; }
+/** The rider's bounds on either bike, including the lean and the height of a jump. */
+function bikeRiderBounds(ch, rail) {
+  const k = ch.size || 1, kid = !!ch.kid, top = kid ? -26 : -28, hip = kid ? -12 : -13, hr = kid ? 9.4 : 8.6;
+  const head = 2 * hr - .6 + (L.d.theme === "sneeuw" ? 13.5 : ch.bun ? 5 : ch.beanie && !ch.beanieCold ? 2 : 1.5);
+  const feet = rail ? L.d.ride.row * TS : P.y + P.h, jump = rail ? P.railJump || 0 : 0;
+  if (jump) return { left: P.x, right: P.x + P.w, top: feet - (26 - top + head) * k - jump, bottom: feet - 26 * k - jump };
+  const lean = P.railDuck ? Math.cos(RAIL_DUCK_ANGLE) : 1;
+  const headX = P.x + P.w / 2 - (top - hip) * k * (P.railDuck ? Math.sin(RAIL_DUCK_ANGLE) * P.face : 0);
+  const seat = feet - 26 * (rail ? k : 1);
+  return { left: Math.min(P.x, headX - hr * k), right: Math.max(P.x + P.w, headX + hr * k),
+    top: seat + ((top - hip) * lean - head) * k, bottom: seat + 8 * k };
+}
+function railRiderBounds(ch) { return bikeRiderBounds(ch, true); }
 /** The river you canoe down (the Ardèche): is this column part of it, and where is the water there? */
 function inRiver(col) { const r = L.d.river; return !!r && col >= r.x0 && col <= r.x1; }
 function waterTop(col) { return inRiver(col) ? L.d.river.surf[col - L.d.river.x0] * TS + 14 : SWIM_Y; }
@@ -203,7 +220,22 @@ function hurt(msg) {
   }
   updateHud();
 }
-function respawn() { P.x = L.respawn.x; P.y = L.respawn.y; P.vx = P.vy = 0; P.inv = 60; P.slide = 0; P.climb = false; P.drop = 0; }
+function respawn() { P.x = L.respawn.x; P.y = L.respawn.y; P.vx = P.vy = 0; P.inv = 60; P.slide = 0; P.climb = false; P.drop = 0; P.capsize = 0; P.rideCrash = null; P.railJump = P.railV = 0; P.railDuck = P.railActive = false; }
+/** A ride crash pauses at the obstacle before costing a heart and returning to the flag. */
+function crashRide() {
+  P.rideCrash = { kind: P.ride, time: 45, feet: P.y + P.h };
+  P.vx = P.vy = 0; P.slide = 0; P.inv = 0;
+  pop(P.x + P.w / 2, P.y - 10, T("Crash!", "Boem!"), "#ff8a8a"); SFX.hurt(); gpRumble();
+}
+/** The canoe hits a rock and turns upside down: a big splash, and step() sends you back to the last flag. */
+function capsize() {
+  if (P.capsize) return;
+  const cx = P.x + P.w / 2, wt = waterTop(Math.floor(cx / TS));
+  P.capsize = 45; P.vx = P.vy = 0; P.slide = 0;
+  P.y = wt - P.h * .45; P.swim = true; P.onGround = true;
+  pop(cx, P.y - 8, T("Capsized!", "Omgeslagen!"), "#fff"); SFX.hurt(); gpRumble();
+  for (let i = 0; i < 16; i++) particles.push({ x: cx + (Math.random() - .5) * 50, y: wt, vx: (Math.random() - .5) * 4, vy: -2 - Math.random() * 3, life: 28, c: "#e8fbff", s: 3 });
+}
 
 function nearest(list, range = 44) {
   const pc = P.x + P.w / 2;
@@ -327,9 +359,31 @@ function step() {
   if (dialog && !walkAway()) { while (edges.length) { const e = edges.shift(); if (e === "act" || e === "jump") { advanceDialog(); break; } } edges.length = 0; return; }
 
   L.time++;
+  if (P.rideCrash) {
+    edges.length = 0;
+    if (--P.rideCrash.time <= 0) { P.inv = 0; hurt(T("Crash!", "Boem!")); respawn(); }
+    return;
+  }
+  // Capsized in the canoe (the Ardèche): upside down in the water for a moment, then, like after a fall into a pit,
+  // a heart less and back to the last flag.
+  if (P.capsize) {
+    edges.length = 0;
+    if (--P.capsize <= 0) { P.inv = 0; hurt(T("Splash!", "Plons!")); respawn(); }
+    return;
+  }
   let wantJump = false, wantAct = false;
   while (edges.length) { const e = edges.shift(); if (e === "jump") wantJump = true; if (e === "act") wantAct = true; }
-  if (wantAct) {
+  P.ride = rideAt(Math.floor((P.x + P.w / 2) / TS));
+  const railbike = P.ride === "railbike";
+  if (railbike && !P.railActive) {
+    P.railJump = Math.max(0, L.d.ride.row * TS - (P.y + P.h));
+    P.railV = P.railJump ? -P.vy : 0;
+    P.y = L.d.ride.row * TS - P.h; P.vy = 0; P.onGround = true; P.railActive = true;
+  } else if (!railbike && P.railActive) {
+    P.y -= P.railJump; P.vy = -P.railV; if (P.railJump) P.onGround = false;
+    P.railJump = P.railV = 0; P.railDuck = P.railActive = false;
+  }
+  if (wantAct && !railbike && !(P.ride === "bike" && (held.down || padHeld.down))) {
     interact();
     if (dialog || state !== "play") return;
     // Niets om mee te praten of te gebruiken, en je loopt? Dan ga je op je buik glijden (↓, E, □/○ of 💬).
@@ -358,8 +412,7 @@ function step() {
   // Buikglijden: even sneller dan lopen, en langzaam uitglijden (in de sneeuw het verst). Springen stopt het glijden;
   // daarna geldt weer de gewone snelheid, dus je springt niet verder dan normaal.
   if (P.slide && wantJump) P.slide = 0;
-  // On a ride (skis, a sledge, skates, a bike) you move the way that thing moves (RIDE_FEEL).
-  P.ride = rideAt(Math.floor((P.x + P.w / 2) / TS));
+  // On a ride you move the way that thing moves (RIDE_FEEL).
   if (P.ride) {
     const r = RIDE_FEEL[P.ride], want = ax > 0 ? r.top : ax < 0 ? -r.back : r.coast, d = want - P.vx;
     if (P.onGround) P.vx += Math.sign(d) * Math.min(Math.abs(d), d * (P.vx || d) > 0 ? r.acc : r.brake);
@@ -396,6 +449,16 @@ function step() {
 
   // Ladders: hold ↑ to climb up, ↓ to climb down. At the top you step onto the plank; from the plank ↓ takes you down.
   const goDown = held.down || padHeld.down, lc = Math.floor((P.x + P.w / 2) / TS);
+  if (railbike) {
+    P.railDuck = goDown && !(P.railJump > 0);
+    if (wantJump && !P.railDuck && !(P.railJump > 0)) { P.railV = 7.5; SFX.jump(); }
+    wantJump = false;
+    if (P.railV || P.railJump) {
+      P.railJump = Math.max(0, (P.railJump || 0) + P.railV);
+      P.railV -= jumpHeld || P.railV < 0 ? .4 : .8;
+      if (!P.railJump) P.railV = 0;
+    }
+  } else P.railDuck = P.ride === "bike" && goDown && P.onGround && !wantJump;
   const ladderCell = ty => cell(lc, ty) === "|" || (cell(lc, ty) === "=" && cell(lc, ty + 1) === "|");
   const feetRow = Math.floor((P.y + P.h - 1) / TS);
   let onLadder = false; for (let ty = Math.floor(P.y / TS); ty <= feetRow; ty++) if (ladderCell(ty)) onLadder = true;
@@ -437,11 +500,32 @@ function step() {
     let hit = null;
     if (dxMove > 0) { const tx = Math.floor((P.x + P.w - .01) / TS); for (let ty = y0; ty <= y1; ty++) if (isSolid(tx, ty)) { P.x = tx * TS - P.w; P.vx = 0; hit = cell(tx, ty); break; } }
     else if (dxMove < 0) { const tx = Math.floor(P.x / TS); for (let ty = y0; ty <= y1; ty++) if (isSolid(tx, ty)) { P.x = (tx + 1) * TS; P.vx = 0; hit = cell(tx, ty); break; } }
-    // bumping into a rock in the canoe: a bonk, no harm done
+    if (!hit && P.ride === "husky" && dxMove * P.face > 0) {
+      const tx = Math.floor((P.x + P.w / 2 + P.face * (HUSKY_LEAD - .01)) / TS);
+      const dogTop = Math.floor((P.y + P.h - 18) / TS), dogBottom = Math.floor((P.y + P.h - .01) / TS);
+      for (let ty = dogTop; ty <= dogBottom; ty++) if (cell(tx, ty) === "S") {
+        P.x = (P.face > 0 ? tx * TS - HUSKY_LEAD : (tx + 1) * TS + HUSKY_LEAD) - P.w / 2;
+        P.vx = 0; hit = "S"; break;
+      }
+    }
+    // bumping into a block on a ride: oops, no harm done
     if (hit === "S" && P.ride && L.time - (P.bonk || -99) > 45) { P.bonk = L.time; pop(P.x + P.w / 2, P.y - 8, T("Oops!", "Oeps!"), "#fff"); tone(160, .12, "triangle", .05); }
-    if (hit === "R" && P.canoe && L.time - (P.bonk || -99) > 45) { P.bonk = L.time; pop(P.x + P.w / 2, P.y - 8, T("Bonk!", "Bonk!"), "#fff"); tone(140, .12, "triangle", .05); }
+    if (hit === "R" && P.ride) {
+      if (["bike", "ski", "skates", "sled", "kicksled"].includes(P.ride)) crashRide();
+      else { P.inv = 0; hurt(T("Crash!", "Boem!")); respawn(); }
+      return;
+    }
+    // bumping into a rock in the canoe: you capsize, and start again from the last flag
+    if (hit === "R" && P.canoe) capsize();
     // You can't paddle up a waterfall: the water upstream is higher than you.
     if (P.canoe && P.swim && dxMove < 0) { const nc = Math.floor((P.x + P.w / 2) / TS); if (inRiver(nc) && waterTop(nc) < waterTop(pcol) - 8) P.x = prevX; }
+  }
+  const rider = railbike ? railRiderBounds(heroChar()) : P.ride === "bike" ? bikeRiderBounds(heroChar(), false) : null;
+  if (rider && L.d.ride.hazards.some(h =>
+    (h.kind === "branch"
+      ? rider.right > h.x * TS && rider.left < (h.x + 1) * TS && rider.top < L.d.ride.row * TS - h.clearance && rider.bottom > L.d.ride.row * TS - (h.canopy ? RAIL_CANOPY_HEIGHT : h.clearance + 6)
+      : P.x + P.w > h.x * TS && P.x < (h.x + 1) * TS && !(P.railJump >= 22)))) {
+    crashRide(); return;
   }
   // move Y
   const prevBottom = P.y + P.h;
@@ -488,8 +572,9 @@ function step() {
   }
 
   // items
+  const collector = railbike ? { x: rider.left, y: rider.top, w: rider.right - rider.left, h: rider.bottom - rider.top } : P;
   for (const it of L.items) {
-    if (it.taken || !overlap(P, { x: it.x + 6, y: it.y + 6, w: 20, h: 20 })) continue;
+    if (it.taken || !overlap(collector, { x: it.x + 6, y: it.y + 6, w: 20, h: 20 })) continue;
     it.taken = true;
     const cx = it.x + 16, cy = it.y + 16;
     if (it.type === "coin") { L.coins++; SFX.coin(); burst(cx, cy, "#ffd25e", 6); if (L.coins % 10 === 0) pop(cx, cy - 10, `${L.coins} ${L.d.coinName}!`, "#ffd25e"); }
@@ -505,6 +590,7 @@ function step() {
   }
 
   // enemies
+  const rail = L.d.ride && L.d.ride.kind === "railbike" ? L.d.ride : null;
   for (const e of L.enemies) {
     if (e.dead) { e.dead++; continue; }
     animalCall(e);
@@ -512,8 +598,9 @@ function step() {
     const nx = e.x + e.vx, front = e.vx > 0 ? nx + e.w : nx;
     const ftx = Math.floor(front / TS), fty = Math.floor((e.y + e.h - 1) / TS);
     const below = cell(ftx, fty + 1);
+    const railGrate = rail && nx < (rail.x1 + 2) * TS && nx + e.w > (rail.x0 - 1) * TS;
     // at a wall or an edge it turns around; an animal coming for you waits there instead (it won't jump after you)
-    if (isSolid(ftx, fty) || !(isSolid(ftx, fty + 1) || below === "=")) { if (!e.chase) e.vx = -e.vx; } else e.x = nx;
+    if (railGrate || isSolid(ftx, fty) || !(isSolid(ftx, fty + 1) || below === "=")) { if (!e.chase) e.vx = -e.vx; } else e.x = nx;
     if (overlap(P, e) && e.kind === "alg") {
       // the moose: land on its back and you fly up high; bump into it and it gently pushes you away
       if (P.vy > 0 && prevBottom <= e.y + 16) { P.y = e.y - P.h; P.vy = -15.5; P.slide = 0; tone(220, .18, "triangle", .06); tone(330, .2, "triangle", .04); animalSound("alg", .6); pop(e.x + e.w / 2, e.y - 14, T("Boing!", "Boing!"), "#fff"); }

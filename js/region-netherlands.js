@@ -102,7 +102,7 @@ const NL_LEVELS = [
     doneMsg: T("The tree is lit, the square is full of candles and everyone has a warm stroopwafel. A beautiful Christmas Eve.", "De boom is aan, het plein staat vol kaarsjes en iedereen heeft een warme stroopwafel. Een mooie kerstavond.")
   }),
   genLevel({
-    seed: 6505, w: 277, ride: { kind: "skates", len: 50 }, day: dayLabel(4), name: T("Skating in Giethoorn", "Schaatsen in Giethoorn"), theme: "sneeuw", scene: "polder",
+    seed: 6505, w: 307, ride: { kind: "skates", len: 80 }, day: dayLabel(4), name: T("Skating in Giethoorn", "Schaatsen in Giethoorn"), theme: "sneeuw", scene: "polder",
     ice: true, water: true,
     sub: T("Christmas Day, and the canals are frozen! Find three pairs of skates. Watch out for holes in the ice.",
       "Eerste kerstdag, en de grachten zijn bevroren! Vind drie paar schaatsen. Pas op voor wakken."),
@@ -124,7 +124,7 @@ const NL_LEVELS = [
     doneMsg: T("Skating on Christmas Day, pea soup on the ice, and nobody fell through. A real Dutch winter fairy tale.", "Schaatsen op eerste kerstdag, erwtensoep op het ijs, en niemand erdoor gezakt. Een echt Hollands wintersprookje.")
   }),
   genLevel({
-    seed: 6606, w: 277, ride: { kind: "bike", len: 50 }, day: dayLabel(5), name: T("The Hoge Veluwe", "De Hoge Veluwe"), theme: "sneeuw", scene: "duinen",
+    seed: 6606, w: 367, ride: { kind: "bike", len: 140 }, day: dayLabel(5), name: T("The Hoge Veluwe", "De Hoge Veluwe"), theme: "sneeuw", scene: "duinen",
     hills: [12, 10],
     sub: T("Boxing Day in the national park: heath, drifting sand and forest. Find three white bikes for the family, and the museum ticket.",
       "Tweede kerstdag in het nationaal park: heide, stuifzand en bos. Vind drie witte fietsen voor de familie, en het museumkaartje."),
