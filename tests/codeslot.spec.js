@@ -221,6 +221,31 @@ for (const [lang, starting, explanation] of [
   expect(info.signs).toContain(explanation);
 });
 
+for (const [lang, starting, explanation] of [
+  ['en', '45 minutes after a quarter to seven', 'add 12 to the hour'],
+  ['nl', "45 minuten na kwart voor zeven", '12 op bij het uur']
+]) test(`berghut: kwartieren en de 24-uursklok (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region: 'tirol', unlocked: 8 });
+  const info = await page.evaluate(() => ({
+    answer: LEVELS[5].code.answer,
+    signs: LEVELS[5].ents.filter(e => e[0] === 'sign').flatMap(e => e[3]).join(' ')
+  }));
+  expect(info.answer).toBe('1930');
+  expect(info.signs).toContain(starting);
+  expect(info.signs).toContain(explanation);
+  await startDay(page, 5);
+  for (const text of [starting, explanation]) {
+    const sign = await page.evaluate(text => {
+      const s = L.signs.find(s => s.lines.some(line => line.includes(text)));
+      return { x: s.x, y: s.y, line: s.lines.find(line => line.includes(text)) };
+    }, text);
+    await put(page, sign.x + 5, sign.y + 32);
+    await page.keyboard.press('e');
+    await expect(page.locator('#dialog')).toContainText(sign.line);
+    await page.evaluate(() => { while (dialog) advanceDialog(); });
+  }
+});
+
 for (const [lang, location, question] of [
   ['en', "Antarctica's coast", '5: penguins'],
   ['nl', 'kust van Antarctica', '5: pinguïns']
