@@ -2560,7 +2560,7 @@ function drawClue(c) {
     if (L.d.theme === "huis") { g.fillStyle = "#e0b070"; g.beginPath(); rp(cx - 16, by - 32, 32, 32, 4); g.fill(); g.stroke(); g.fillStyle = "#c8955a"; g.fillRect(cx - 12, by - 28, 24, 2); }
     else { g.fillStyle = "#8a8f98"; g.beginPath(); g.ellipse(cx, by - 16, 18, 17, 0, Math.PI, 0); g.lineTo(cx + 18, by); g.lineTo(cx - 18, by); g.closePath(); g.fill(); g.stroke(); }
     if (L.d.theme === "sneeuw") { g.fillStyle = "#f4f8ff"; g.beginPath(); g.ellipse(cx, by - 31, 12, 4, 0, 0, 7); g.fill(); }
-    g.fillStyle = "#3a3f4a"; g.font = "700 18px Fredoka, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(c.v, cx, by - 15);
+    g.fillStyle = "#3a3f4a"; g.font = "700 18px Fredoka, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(c.question ? "?" : c.v, cx, by - 15);
     numPlate(cx + 17, by - 30, c.i + 1);
   }
 }

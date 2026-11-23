@@ -120,6 +120,25 @@ for (const lang of ['en', 'nl']) test(`rendierstallen: bellenvragen geven de ton
   await expect(page.locator('#dialog')).toContainText(info.question);
 });
 
+for (const lang of ['en', 'nl']) test(`werkplaats: vragen op de blokken geven de letters (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region: 'pole', unlocked: 8 });
+  await startDay(page, 2);
+  const info = await page.evaluate(() => {
+    const c = L.clues[0], draw = g.fillText, text = [];
+    try { g.fillText = (...args) => { text.push(args[0]); return draw.apply(g, args); }; drawClue(c); }
+    finally { g.fillText = draw; }
+    return { x: c.x, y: c.y, question: c.question[0], text, answer: L.d.code.answer, count: L.clues.filter(x => x.question).length };
+  });
+  expect(info.answer).toBe(lang === 'nl' ? 'ELFEN' : 'ELVES');
+  expect(info.count).toBe(5);
+  expect(info.text).toContain('?');
+  expect(info.text).not.toContain('E');
+  await put(page, info.x + 5, info.y + 32);
+  await page.keyboard.press('e');
+  await expect(page.locator('#dialog')).toBeVisible();
+  await expect(page.locator('#dialog')).toContainText(info.question);
+});
+
 test('elke dag met een codeslot heeft bordjes met de cijfers of een raadsel', async ({ page }) => {
   await seed(page, { unlocked: 8 });
   const r = await page.evaluate(() => LEVELS.map(d => {

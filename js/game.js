@@ -331,7 +331,10 @@ function ringBell() {
 function clueTalk(c) {
   c.heard = true;
   const nr = T(`${c.i + 1} of ${c.n}`, `${c.i + 1} van ${c.n}`);
-  if (c.question) return say(T("Bell", "Belletje"), [T(`Bell ${nr}: ${c.question[0]}`, `Belletje ${nr}: ${c.question[0]}`), c.question[1]]);
+  if (c.question) {
+    const name = c.kind === "melody" ? T("Bell", "Belletje") : T("Letter", "Letter");
+    return say(name, [`${nr}: ${c.question[0]}`, c.question[1]]);
+  }
   if (c.kind === "melody") { const nt = NOTES[+c.v - 1]; ringClue(c); return say(T("Bell", "Belletje"), [T(`Bell ${nr} plays a note: ${nt[1]}.`, `Belletje ${nr} speelt een toon: ${nt[1]}.`)]); }
   if (c.kind === "colours") return say(T("Lamp", "Lamp"), [T(`Lamp ${nr} shines ${COLOURS[c.v][1]}.`, `Lamp ${nr} brandt ${COLOURS[c.v][1]}.`)]);
   if (c.kind === "arrows") return say(T("Signpost", "Wegwijzer"), [T(`Signpost ${nr} points ${ARROWS[c.v]}.`, `Wegwijzer ${nr} wijst ${ARROWS[c.v]}.`)]);

@@ -77,8 +77,21 @@ const POLE_LEVELS = [
            T(["The wish lists are getting longer every year. Someone asked for a real dragon."], ["De verlanglijstjes worden elk jaar langer. Iemand vroeg om een echte draak."]),
            T(["Wrapping paper: 4,000 rolls. Sticky tape: always one roll too few."], ["Inpakpapier: 4000 rollen. Plakband: altijd één rol te weinig."])],
     code: { kind: "word", answer: T("ELVES", "ELFEN"), extra: T("AKRT", "AKRT"), title: T("Door to the wrapping room", "Deur naar de inpakkamer"),
-      riddle: T("Five carved letters are hidden in the workshop. Together they spell who works here.",
-        "In de werkplaats zijn vijf letters uitgesneden. Samen vormen ze wie hier werken.") },
+      riddle: T("Solve the five questions on the blocks. Their letters spell who works here.",
+        "Los de vijf vragen op de blokken op. De letters vormen samen wie hier werken."),
+      questions: T([
+        ["What happens when ice gets warm? E: it melts. A: it freezes.", "Melting turns ice into liquid water."],
+        ["What do reindeer eat? L: lichen. A: stones.", "Lichen grows slowly and is food for reindeer."],
+        ["Which part of a plant takes up water? V: roots. A: flowers.", "Roots take up water from the soil."],
+        ["Complete the word: fr_eze. Which letter is missing?", "Water can freeze into ice."],
+        ["Complete the word: _now. Which letter is missing?", "Snow is made of ice crystals."]
+      ], [
+        ["Wat gebeurt er als ijs warmer wordt? E: het smelt. A: het bevriest.", "Bij smelten wordt ijs vloeibaar water."],
+        ["Wat eten rendieren? L: korstmos. A: stenen.", "Korstmos groeit langzaam en is voedsel voor rendieren."],
+        ["Welk deel van een plant neemt water op? F: wortels. A: bloemen.", "Wortels nemen water uit de grond op."],
+        ["Maak het woord af: b_vriezen. Welke letter ontbreekt?", "Water kan bevriezen tot ijs."],
+        ["Maak het woord af: s_eeuw. Welke letter ontbreekt?", "Sneeuw bestaat uit ijskristallen."]
+      ]) },
     decoKinds: ["table", "presents", "lamp", "garland", "presents", "stove"],
     doneMsg: T("Three teddy bears back on the belt, the train runs and the toy robot is in its box. Back to work!", "Drie teddyberen terug op de band, de trein rijdt en de speelgoedrobot zit in zijn doos. Aan het werk!")
   }),
