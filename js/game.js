@@ -203,7 +203,16 @@ function hurt(msg) {
   }
   updateHud();
 }
-function respawn() { P.x = L.respawn.x; P.y = L.respawn.y; P.vx = P.vy = 0; P.inv = 60; P.slide = 0; P.climb = false; P.drop = 0; }
+function respawn() { P.x = L.respawn.x; P.y = L.respawn.y; P.vx = P.vy = 0; P.inv = 60; P.slide = 0; P.climb = false; P.drop = 0; P.capsize = 0; }
+/** The canoe hits a rock and turns upside down: a big splash, and step() sends you back to the last flag. */
+function capsize() {
+  if (P.capsize) return;
+  const cx = P.x + P.w / 2, wt = waterTop(Math.floor(cx / TS));
+  P.capsize = 45; P.vx = P.vy = 0; P.slide = 0;
+  P.y = wt - P.h * .45; P.swim = true; P.onGround = true;
+  pop(cx, P.y - 8, T("Capsized!", "Omgeslagen!"), "#fff"); SFX.hurt(); gpRumble();
+  for (let i = 0; i < 16; i++) particles.push({ x: cx + (Math.random() - .5) * 50, y: wt, vx: (Math.random() - .5) * 4, vy: -2 - Math.random() * 3, life: 28, c: "#e8fbff", s: 3 });
+}
 
 function nearest(list, range = 44) {
   const pc = P.x + P.w / 2;
@@ -327,6 +336,13 @@ function step() {
   if (dialog && !walkAway()) { while (edges.length) { const e = edges.shift(); if (e === "act" || e === "jump") { advanceDialog(); break; } } edges.length = 0; return; }
 
   L.time++;
+  // Capsized in the canoe (the Ardèche): upside down in the water for a moment, then, like after a fall into a pit,
+  // a heart less and back to the last flag.
+  if (P.capsize) {
+    edges.length = 0;
+    if (--P.capsize <= 0) { P.inv = 0; hurt(T("Splash!", "Plons!")); respawn(); }
+    return;
+  }
   let wantJump = false, wantAct = false;
   while (edges.length) { const e = edges.shift(); if (e === "jump") wantJump = true; if (e === "act") wantAct = true; }
   if (wantAct) {
@@ -437,9 +453,10 @@ function step() {
     let hit = null;
     if (dxMove > 0) { const tx = Math.floor((P.x + P.w - .01) / TS); for (let ty = y0; ty <= y1; ty++) if (isSolid(tx, ty)) { P.x = tx * TS - P.w; P.vx = 0; hit = cell(tx, ty); break; } }
     else if (dxMove < 0) { const tx = Math.floor(P.x / TS); for (let ty = y0; ty <= y1; ty++) if (isSolid(tx, ty)) { P.x = (tx + 1) * TS; P.vx = 0; hit = cell(tx, ty); break; } }
-    // bumping into a rock in the canoe: a bonk, no harm done
+    // bumping into a block on a ride: oops, no harm done
     if (hit === "S" && P.ride && L.time - (P.bonk || -99) > 45) { P.bonk = L.time; pop(P.x + P.w / 2, P.y - 8, T("Oops!", "Oeps!"), "#fff"); tone(160, .12, "triangle", .05); }
-    if (hit === "R" && P.canoe && L.time - (P.bonk || -99) > 45) { P.bonk = L.time; pop(P.x + P.w / 2, P.y - 8, T("Bonk!", "Bonk!"), "#fff"); tone(140, .12, "triangle", .05); }
+    // bumping into a rock in the canoe: you capsize, and start again from the last flag
+    if (hit === "R" && P.canoe) capsize();
     // You can't paddle up a waterfall: the water upstream is higher than you.
     if (P.canoe && P.swim && dxMove < 0) { const nc = Math.floor((P.x + P.w / 2) / TS); if (inRiver(nc) && waterTop(nc) < waterTop(pcol) - 8) P.x = prevX; }
   }

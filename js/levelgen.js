@@ -69,10 +69,12 @@ function genLevel(o) {
       for (let i = 0; i < len; i++) { surf.push(gy + (i >= third ? 1 : 0) + (i >= 2 * third ? 1 : 0)); bad.add(x0 + i); }
       // rapids right below each waterfall: the current is stronger there
       rapids.push([x0 + third, x0 + third + 7], [x0 + 2 * third, x0 + 2 * third + 7]);
-      // rocks: never right at a waterfall or a bank, about every 6 to 9 tiles, now low, then tall
-      for (let i = 6; i < len - 4; i += 6 + Math.floor(R() * 4)) {
-        if (Math.abs(i - third) < 3 || Math.abs(i - 2 * third) < 3) continue;
-        const r = surf[i], tall = R() < .4;
+      // rocks: never right at a waterfall or a bank, now low, then tall. They are spread as on a river of 60 tiles
+      // (about every 6 to 9 tiles there): a longer river has more water between the rocks, not more rocks.
+      const k = len / 60;
+      for (let j = 6; j < 56; j += 6 + Math.floor(R() * 4)) {
+        if (Math.abs(j - 20) < 3 || Math.abs(j - 40) < 3) continue;
+        const i = Math.round(j * k), r = surf[i], tall = R() < .4;
         rocks.push([x0 + i, tall ? r - 1 : r, tall ? 2 : 1]);
         // peaches in an arc over the rock, to catch while you jump
         [-1, 0, 1].forEach(dd => coin(x0 + i + dd, r - (tall ? 4 : 3) + (dd ? 1 : 0)));
@@ -197,10 +199,10 @@ function genLevel(o) {
     const n = rs ? 2 : 3;
     for (let i = 0; i < n; i++) { const s = slots[Math.floor(slots.length * (i + .5) / n)]; ents.push(["key", s[0], s[1]]); }
   }
-  // A river gets a sign at the start and a flag right after the far bank, so a bump later on never sends you back upstream.
+  // A river gets a sign at the start and a flag right after the far bank, so a capsize later on never sends you back upstream.
   if (river) {
     const c = free(river.x0 - 5, 3, river.x0 - 2);
-    ents.push(["sign", c, yAt(c), [T("Into the canoe! The river carries you along. Paddle with ← and →, and jump over the rocks.", "In de kano! De rivier neemt je mee. Peddel met ← en →, en spring over de rotsen."),
+    ents.push(["sign", c, yAt(c), [T("Into the canoe! The river carries you along. Paddle with ← and →, and jump over the rocks: hit one and you capsize!", "In de kano! De rivier neemt je mee. Peddel met ← en →, en spring over de rotsen: raak je er een, dan sla je om!"),
       T("Two small waterfalls and some rapids on the way. Hold on to your hat!", "Onderweg twee kleine watervallen en een paar stroomversnellingen. Houd je hoed vast!")]]);
     const f = free(river.x1 + 5, river.x1 + 3); ents.push(["check", f, yAt(f)]);
   } else if (ride) {

@@ -30,8 +30,8 @@ const ARDECHE_LEVELS = [
     doneMsg: T("Awning out, fridge on, feet in the river. The summer holiday has started.", "Luifel uit, koelkast aan, voeten in de rivier. De zomervakantie is begonnen.")
   }),
   genLevel({ ...ARD,
-    seed: 10202, w: 285, day: dayLabel(1), name: T("Canoeing to the Pont d'Arc", "Kanoën naar de Pont d'Arc"),
-    hills: [12, 10], water: true, swim: true, movers: "boat", river: { len: 60 },
+    seed: 10202, w: 315, day: dayLabel(1), name: T("Canoeing to the Pont d'Arc", "Kanoën naar de Pont d'Arc"),
+    hills: [12, 10], water: true, swim: true, movers: "boat", river: { len: 90 },
     sub: T("Paddle down the gorge in a canoe: jump over the rocks, ride down two small waterfalls and through the rapids. Three sun hats blew into the water on the way.",
       "Peddel in een kano door de kloof: spring over de rotsen, glijd twee kleine watervallen af en vaar door de stroomversnellingen. Onderweg zijn drie zonnehoedjes in het water gewaaid."),
     keyType: "👒", keyHud: "👒", keyName: T("sun hats", "zonnehoedjes"),
@@ -45,7 +45,7 @@ const ARDECHE_LEVELS = [
     code: { kind: "arrows", answer: "↓↑→←", title: T("Canoe landing", "Kanosteiger"),
       riddle: T("The numbered river signs show the way to the arch. Enter the arrows in order.", "De genummerde rivierbordjes wijzen de weg naar de boog. Voer de pijlen op volgorde in.") },
     decoKinds: ["boatdeco", "cypress", "olive", "sunflowers"],
-    doneMsg: T("Three hats, two waterfalls, one stone arch and only a few bonks on the rocks. A good day on the river.", "Drie hoedjes, twee watervallen, één stenen boog en maar een paar keer bonk tegen de rotsen. Een goede dag op de rivier.")
+    doneMsg: T("Three hats, two waterfalls, one stone arch and hopefully dry clothes. A good day on the river.", "Drie hoedjes, twee watervallen, één stenen boog en hopelijk droge kleren. Een goede dag op de rivier.")
   }),
   genLevel({ ...ARD,
     seed: 10303, w: 200, day: dayLabel(2), name: T("Market Day", "Marktdag"), theme: "straat",

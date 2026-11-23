@@ -2993,7 +2993,12 @@ function render() {
     const ch = heroChar();
     // On the birthday level the birthday boy wears a party hat.
     const pHat = L.d.birthday === ch.name ? "party" : hat;
-    if (P.slide) {
+    if (P.capsize) {
+      // capsized: only the bottom of the canoe shows, rocking in the water (you are underneath it)
+      const cx = P.x + P.w / 2, wt = waterTop(fl(cx / TS));
+      g.save(); g.translate(cx, wt + 2); g.rotate(Math.sin(frame / 5) * .08); g.scale(1, -1); drawCanoe(0, 0, P.face, 0); g.restore();
+      drawWater(cx, [fl(P.x / TS) - 1, fl((P.x + P.w) / TS) + 1]);
+    } else if (P.slide) {
       // Op de buik: het staande poppetje een kwartslag gedraaid, hoofd vooruit, buik naar beneden, midden op de plek.
       const cx = P.x + P.w / 2, gy = P.y + P.h;
       shadowAt(cx, gy, 20);
