@@ -42,6 +42,20 @@ for (const [lang, seasons, parking, bedrooms] of [
   expect(clues.signs).toContain(bedrooms);
 });
 
+for (const [lang, decades, floors] of [
+  ['en', 'four decades old. A decade is ten years', 'level 1 and level 2'],
+  ['nl', 'vier decennia oud. Een decennium is tien jaar', 'niveau 1 en niveau 2']
+]) test(`verjaardag: de aanwijzingen leggen decennia en verdiepingen uit (${lang})`, async ({ page }) => {
+  await seed(page, { lang, unlocked: 8 });
+  const info = await page.evaluate(() => ({
+    answer: LEVELS[3].code.answer,
+    signs: LEVELS[3].ents.filter(e => e[0] === 'sign').flatMap(e => e[3]).join(' ')
+  }));
+  expect(info.answer).toBe('4022');
+  expect(info.signs).toContain(decades);
+  expect(info.signs).toContain(floors);
+});
+
 for (const lang of ['en', 'nl']) for (const [day, answer, symbols] of [
   [1, '3817', ['🍄', '🌲', '🦔', '🍂']],
   [2, '6382', ['⭐', '🔔', '🎠', '🥨']]
