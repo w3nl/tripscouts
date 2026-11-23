@@ -25,6 +25,23 @@ test('een foute code geeft een grapje, na drie keer een tip, de goede code opent
   await expect(page.locator('#hCode')).toHaveText('🔓 code');
 });
 
+for (const [lang, seasons, parking, bedrooms] of [
+  ['en', 'spring, summer, autumn and winter', '2 spaces have a car and 2 are empty', '2 bedrooms on the first floor and 2 on the second'],
+  ['nl', 'lente, zomer, herfst en winter', '2 auto’s en zijn 2 plekken leeg', '2 slaapkamers op de eerste verdieping en 2 op de tweede']
+]) test(`aankomst: de aanwijzingen voor het slot leren optellen en de seizoenen (${lang})`, async ({ page }) => {
+  await seed(page, { lang });
+  const clues = await page.evaluate(() => ({
+    answer: LEVELS[0].code.answer,
+    riddle: LEVELS[0].code.riddle,
+    signs: LEVELS[0].ents.filter(e => e[0] === 'sign').flatMap(e => e[3]).join(' ').replace(/'/g, '’')
+  }));
+  expect(clues.answer).toBe('4944');
+  expect(clues.riddle).toContain(lang === 'nl' ? 'seizoenen' : 'seasons');
+  expect(clues.signs).toContain(seasons);
+  expect(clues.signs).toContain(parking);
+  expect(clues.signs).toContain(bedrooms);
+});
+
 test('elke dag met een codeslot heeft bordjes met de cijfers of een raadsel', async ({ page }) => {
   await seed(page, { unlocked: 8 });
   const r = await page.evaluate(() => LEVELS.map(d => {
