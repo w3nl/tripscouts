@@ -259,7 +259,7 @@ test('Dalmatia is summer: no snow, summer clothes, and in the warm sea you swim 
   await startDay(page, 0);
   for (let n = 0; n < 12 && await page.locator('#dialog').isVisible(); n++) { await page.keyboard.press('Space'); await page.waitForTimeout(40); }
   const r = await page.evaluate(() => {
-    let hurts = 0; window.hurt = () => { hurts++; }; L.enemies.length = 0;
+    window.hurt = () => {}; L.enemies.length = 0;
     const col = L.grid[ROWS - 1].findIndex((c, x) => x > 5 && c !== '#');
     P.x = col * 32 + 4; P.y = 8 * 32; P.vy = 0; P.vx = 0;
     for (let i = 0; i < 90; i++) step();
@@ -308,7 +308,8 @@ test('the Ardèche, day 2: in the canoe the river carries you, a rock capsizes y
   await startDay(page, 1);
   await skip(page);
   const r = await page.evaluate(() => {
-    let hurts = 0; window.hurt = () => { hurts++; }; L.enemies.length = 0;
+    // the real hurt(): the capsize has to cost a heart for real
+    L.enemies.length = 0; const hearts0 = P.hearts;
     const rv = L.d.river, at = c => rv.surf[c - rv.x0];
     const float = c => { P.x = c * TS + 4; P.y = at(c) * TS + 14 - P.h * .45; P.vx = 0; P.vy = 0; for (let i = 0; i < 3; i++) step(); };
     // 1. the river carries you along, without touching a key
@@ -318,21 +319,21 @@ test('the Ardèche, day 2: in the canoe the river carries you, a rock capsizes y
     // 2. drifting into a rock capsizes you: upside down for a moment, then a heart less and back to the last flag
     const rock = L.d.rocks.find(k => k[2] === 2); float(rock[0] - 3);
     for (let i = 0; i < 120 && !P.capsize; i++) step();
-    const capsized = P.capsize > 0 && P.x + P.w <= rock[0] * TS + .5;
+    const capsized = P.capsize > 0 && P.x + P.w <= rock[0] * TS + .5 && P.hearts === hearts0;   // upside down, the heart goes at the end
     for (let i = 0; i < 60; i++) step();
-    const back = !P.capsize && hurts === 1 && P.x === L.respawn.x && P.x < rv.x0 * TS;
+    const back = !P.capsize && P.hearts === hearts0 - 1 && P.x === L.respawn.x && P.x < rv.x0 * TS;
     // a jump (held) takes you over it: paddle on (→), and back into the water on the other side
     float(rock[0] - 3); edges.push('jump'); held.jump = true; held.right = true; for (let i = 0; i < 18; i++) step(); held.jump = false; for (let i = 0; i < 30; i++) step(); held.right = false; for (let i = 0; i < 30; i++) step();
-    const over = P.x > (rock[0] + 1) * TS && P.swim && hurts === 1;
+    const over = P.x > (rock[0] + 1) * TS && P.swim && P.hearts === hearts0 - 1;   // no second heart for jumping over it
     // 3. down a waterfall: you land on the lower water, and can't paddle back up
     const fall = rv.surf.findIndex((v, i) => i && v > rv.surf[i - 1]) + rv.x0;
     float(fall - 2); for (let i = 0; i < 80 && P.x < (fall + 1) * TS; i++) step(); for (let i = 0; i < 20; i++) step();
     const down = P.swim && Math.abs(P.y + P.h * .45 - (at(fall) * TS + 14)) < 4;
     held.left = true; for (let i = 0; i < 120; i++) step(); held.left = false;
     const notUp = Math.floor((P.x + P.w / 2) / TS) >= fall;
-    return { canoe, swim, carried: carried > 20, capsized, back, over, down, notUp };
+    return { canoe, swim, carried: carried > 20, capsized, back, over, down, notUp, hearts: [hearts0, P.hearts] };
   });
-  expect(r).toEqual({ canoe: true, swim: true, carried: true, capsized: true, back: true, over: true, down: true, notUp: true });
+  expect(r).toEqual({ canoe: true, swim: true, carried: true, capsized: true, back: true, over: true, down: true, notUp: true, hearts: [3, 2] });
   // the canoe stretch makes the level longer (90 tiles of river), with the same 8 rocks as the old 60-tile river,
   // and the other days have no river
   expect(await page.evaluate(() => [L.w, L.d.river.x1 - L.d.river.x0 + 1, L.d.rocks.length, LEVELS.filter(l => l.river).length])).toEqual([315, 90, 8, 1]);
@@ -381,7 +382,7 @@ test('Tirol: the cable car goes up the mountain on a slanted cable, and takes yo
   expect(m0.y1).toBeLessThan(m0.y0); // the first gondola goes up
   // Stand in the gondola while it waits at the bottom station, and ride along to the top.
   await page.evaluate(() => {
-    let hurts = 0; window.hurt = () => { hurts++; }; L.enemies.length = 0;
+    window.hurt = () => {}; L.enemies.length = 0;
     const m = L.movers[0]; m.x = m.x0; m.y = m.y0; m.dir = 1; m.wait = 30;
     P.x = m.x + m.w / 2 - P.w / 2; P.y = m.y - P.h; P.vx = P.vy = 0;
   });
