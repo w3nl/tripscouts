@@ -151,7 +151,7 @@ The Linux app is listed at https://snapcraft.io/tripscouts (currently edge: `sud
 | 3 · Wed | Christmas Market in Luxembourg (`stad`, seed 2323, `quiet`) | mittens 🧤 | carousel ticket 🎟️ | **6382** | stars 3×2, Luxembourg's 3 neighbouring countries, carousel rides 2×4 minutes, 4 euros shared by 2; optional candle in the church |
 | 4 · Thu | Paul's Birthday (`huis`, by hand, Lego) | presents 🎁 | bath towel 🛁 for the door upstairs | **4022** | four decades of ten years, 1+1 cake layers, two floors above the ground floor |
 | 5 · Fri | Christmas Day (`sneeuw`, by hand) | baubles 🎄 | firewood 🪵 for the campfire | **5474** | 9 people minus 2×2 adults, 2×2 adults, 7 nights in a week, 2×2 sauna places |
-| 6 · Sat | The Wildlife Park (`sneeuw`, seed 2626) | animal photos 📸 | carrots 🥕 for the deer | **6254** | 🦌=6 🐗=2 🦉=5 🦊=4 |
+| 6 · Sat | The Wildlife Park (`sneeuw`, seed 2626) | animal photos 📸 | carrots 🥕 for the deer | **6254** | insect legs 4+2, pairs of boar legs, owls with 10 wings, fox paws |
 | 7 · Sun | The Last Evening (`huis`, seed 2727) | raclette cheeses 🧀 | Uno cards 🃏 | **7924** | 🌙 nights 7, 👨‍👩‍👧 people 9, 🛏️ people per bedroom 2, 🧖 sauna 4 |
 | 8 · Mon | Going Home (`bos`, seed 2828) | lost socks 🧦 | suitcase 🧳 with the presents | **2128** | 🚗=2 🧳=1 🎄=2 🏠=8 |
 

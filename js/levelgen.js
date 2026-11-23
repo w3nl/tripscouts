@@ -456,8 +456,10 @@ const DAY26 = genLevel({
          T(["The owls here only wake up when we've gone. Typical."], ["De uilen hier worden pas wakker als wij weg zijn. Typisch."]),
          T(["Hot chocolate at the exit. That's the real reason we're here."], ["Warme chocolademelk bij de uitgang. Dat is de echte reden dat we hier zijn."])],
   code: { answer: "6254", title: T("Wildlife park gate", "Poort van het wildpark"), syms: ["🦌", "🐗", "🦉", "🦊"],
-    flavor: T(["The deer has antlers. Or a coat rack.", "Wild boar: don't stroke.", "The owl is looking at you. It knows the code.", "The fox is too clever for this sign."],
-      ["Het hert heeft een gewei. Of een kapstok.", "Wild zwijn: niet aaien.", "De uil kijkt je aan. Hij weet de code.", "De vos is te slim voor dit bordje."]) },
+    questions: T(["A deer has 4 legs. An insect has 2 more. How many legs does the insect have?", "A wild boar has 4 legs. How many pairs of legs is that?", "Each owl has 2 wings. How many owls have 10 wings altogether?", "A fox has one paw on each leg. How many paws does a fox have?"],
+      ["Een hert heeft 4 poten. Een insect heeft er 2 meer. Hoeveel poten heeft het insect?", "Een wild zwijn heeft 4 poten. Hoeveel paren poten zijn dat?", "Elke uil heeft 2 vleugels. Hoeveel uilen hebben samen 10 vleugels?", "Hoeveel poten heeft een vos?"]),
+    flavor: T(["Insects have three pairs of legs.", "A pair means two.", "Owls are birds and each has one pair of wings.", "Foxes are mammals with four legs."],
+      ["Insecten hebben drie paar poten.", "Een paar betekent twee.", "Uilen zijn vogels en hebben elk één paar vleugels.", "Vossen zijn zoogdieren met vier poten."]) },
   decoKinds: ["pine", "pine", "deer"],
   doneMsg: T("Three photos in the group chat, 47 replies within a minute. Well done!", "Drie foto's in de groepsapp, 47 reacties binnen een minuut. Goed gedaan!")
 });
