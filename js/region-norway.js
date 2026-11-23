@@ -15,8 +15,10 @@ const NORWAY_LEVELS = [
            T(["Norwegians have a word for cosy: 'koselig'. We'll be very koselig this week."], ["Noren hebben een woord voor gezellig: 'koselig'. We worden deze week heel koselig."]),
            T(["A troll just grumbled at me. I grumbled back. Now we're friends."], ["Een trol mopperde net tegen me. Ik mopperde terug. Nu zijn we vrienden."])],
     code: { answer: "6273", title: T("Cabin key safe", "Sleutelkastje van het huisje"), syms: ["🌊", "⛰️", "🏠", "⭐"],
-      flavor: T(["The fjord is deep, dark and very calm.", "The mountains here look like giant teeth.", "Red cabin, white snow, yellow lights.", "The stars come out at three in the afternoon."],
-        ["Het fjord is diep, donker en heel kalm.", "De bergen hier lijken op enorme tanden.", "Rood huisje, witte sneeuw, gele lampjes.", "Om drie uur 's middags komen de sterren al op."]) },
+      questions: T(["What helped carve many Norwegian fjords? 6: glaciers; 4: volcanoes.", "How many legs does a person have?", "How many days are in one week?", "Water can be ice, liquid water or water vapour. How many states are those?"],
+        ["Wat hielp veel Noorse fjorden uitslijten? 6: gletsjers; 4: vulkanen.", "Hoeveel benen heeft een mens?", "Hoeveel dagen zitten er in één week?", "Water kan ijs, vloeibaar water of waterdamp zijn. Hoeveel toestanden zijn dat?"]),
+      flavor: T(["Glaciers carved deep valleys; the sea later filled many of them.", "A person has two legs.", "A week has seven days.", "Solid, liquid and gas are three states of water."],
+        ["Gletsjers sleten diepe dalen uit; de zee vulde later veel ervan.", "Een mens heeft twee benen.", "Een week heeft zeven dagen.", "Vast, vloeibaar en gas zijn drie toestanden van water."]) },
     task: { kind: "levers", hud: "🔧", name: T("switches", "schakelaars"),
       need: T(["The cabin is dark and cold. Someone turned off the power for the winter.", "There are three switches along the path: the boathouse, the shed and the pump. Flip all three."],
         ["Het huisje is donker en koud. Iemand heeft de stroom uitgezet voor de winter.", "Langs het pad zitten drie schakelaars: het boothuis, de schuur en de pomp. Zet ze alle drie om."]),
@@ -40,10 +42,12 @@ const NORWAY_LEVELS = [
         ["Ik had de schopslee bij de winkel gezet, en nu staat hij op de rotsen.", "Trollen. Ze lenen dingen en vergeten ze terug te brengen."]),
       done: T(["My kicksled! One foot on, one foot kick, and off we go.", "The way to the village shop is open."], ["Mijn schopslee! Eén voet erop, met de andere afzetten, en gaan.", "De weg naar de dorpswinkel is open."]),
       after: T(["Kick, glide, kick, glide. Faster than the car."], ["Afzetten, glijden, afzetten, glijden. Sneller dan de auto."]) },
-    npcs: [T(["Everything here is expensive. Except the view. The view is free."], ["Alles is hier duur. Behalve het uitzicht. Dat is gratis."]),
+    npcs: [T(["Norwegian brown cheese is made by heating whey, the liquid left after making cheese."], ["Noorse bruine kaas wordt gemaakt door wei te verhitten. Wei is de vloeistof die overblijft bij het maken van kaas."]),
            T(["I tried brown cheese. It tastes like caramel and cheese had a baby."], ["Ik heb bruine kaas geproefd. Het smaakt alsof karamel en kaas een baby kregen."]),
            T(["The shop closes at three because it's dark. Sensible."], ["De winkel gaat om drie uur dicht omdat het donker is. Verstandig."])],
     code: { kind: "count", answer: "432", title: T("Gate to the village shop", "Hek naar de dorpswinkel"),
+      riddle: T("Count the red cabins. Which leftover liquid is heated to make Norwegian brown cheese? 3: whey; 1: seawater. Then count the elks.",
+        "Tel de rode huisjes. Welke overgebleven vloeistof wordt verhit voor Noorse bruine kaas? 3: wei; 1: zeewater. Tel daarna de elanden."),
       count: [["rorbu", T("red cabins", "rode huisjes")], ["kicksled", T("kicksleds", "schopsleeën")], ["deer", T("elks", "elanden")]] },
     decoKinds: ["kicksled", "pine", "rorbu", "pine"],
     doneMsg: T("Shopping done, by kicksled. The brown cheese is... interesting. The kids love it.", "Boodschappen gedaan, met de schopslee. De bruine kaas is... bijzonder. De kinderen vinden het heerlijk.")
@@ -62,7 +66,19 @@ const NORWAY_LEVELS = [
            T(["The huskies have blue eyes. Some have one blue and one brown. Fancy."], ["De husky's hebben blauwe ogen. Sommigen één blauw en één bruin. Chic."]),
            T(["After the ride: hot chocolate by the fire in a big tent."], ["Na de rit: warme chocolademelk bij het vuur in een grote tent."])],
     code: { kind: "arrows", answer: "→↑←→", title: T("Husky camp gate", "Hek van het huskykamp"),
-      riddle: T("Four trail markers show the husky route. Enter their arrows in order.", "Vier routepaaltjes wijzen de huskyroute. Voer hun pijlen in, op volgorde.") },
+      riddle: T("Solve the questions on the four trail markers. Enter each answer as an arrow.",
+        "Los de vragen op de vier routepaaltjes op. Voer elk antwoord in als pijl."),
+      questions: T([
+        ["A map has north at the top. Which way is east?", "East is to the right of north."],
+        ["A compass points north. On a map with north at the top, which way is that?", "North is at the top of this map."],
+        ["Face north on the map and turn left. Which way is west?", "West is left when north is at the top."],
+        ["The sun rises roughly in the east. Which way is east on a map with north at the top?", "East is on the right when north is at the top."]
+      ], [
+        ["Op een kaart staat het noorden boven. Welke kant is het oosten?", "Het oosten ligt rechts van het noorden."],
+        ["Een kompas wijst naar het noorden. Welke kant is dat op een kaart met het noorden boven?", "Op deze kaart staat het noorden boven."],
+        ["Kijk op de kaart naar het noorden en draai linksaf. Welke kant is het westen?", "Het westen ligt links als het noorden boven staat."],
+        ["De zon komt ongeveer op in het oosten. Welke kant is het oosten op een kaart met het noorden boven?", "Het oosten ligt rechts als het noorden boven staat."]
+      ]) },
     task: { kind: "follow", hud: "🐶", animal: "🐶", name: T("husky pup", "huskypup"),
       need: T(["One of the pups ran after a snowball and didn't come back.", "Find her and walk her back to me. She's the fluffy one. They're all fluffy."],
         ["Een van de pups rende achter een sneeuwbal aan en kwam niet terug.", "Zoek haar en loop met haar terug naar mij. Het is de pluizige. Ze zijn allemaal pluizig."]),
@@ -85,8 +101,19 @@ const NORWAY_LEVELS = [
            T(["There's rice pudding tonight. Whoever finds the almond wins a marzipan pig."], ["Vanavond is er rijstepap. Wie de amandel vindt, wint een marsepeinen varkentje."]),
            T(["The paper stars glow in every window. From the fjord the village looks like the sky."], ["De papieren sterren gloeien in elk raam. Vanaf het fjord lijkt het dorp op de sterrenhemel."])],
     code: { kind: "melody", answer: "5432", title: T("Gate of the village square", "Hek van het dorpsplein"),
-      riddle: T("The church bells play a short tune at Christmas. Four small bells along the way give the notes. Play them in order.",
-        "Met kerst spelen de kerkklokken een kort deuntje. Vier belletjes onderweg geven de tonen. Speel ze op volgorde.") },
+      riddle: T("Solve the questions at the four bells. Each answer gives a note: 1 = do, 2 = re, 3 = mi, 4 = sol, 5 = la.",
+        "Los de vragen bij de vier bellen op. Elk antwoord geeft een toon: 1 = do, 2 = re, 3 = mi, 4 = sol, 5 = la."),
+      questions: T([
+        ["A star has five points. How many points have two stars together? 5: ten; 3: seven.", "Five plus five makes ten."],
+        ["A church is 800 years old. How many centuries is that? 4: eight; 2: four.", "A century is 100 years."],
+        ["A wooden beam comes from which living thing? 3: a tree; 1: a rock.", "Wood comes from trees."],
+        ["A candle burns for two hours each evening. How many hours in two evenings? 2: four; 5: two.", "Two times two is four."]
+      ], [
+        ["Een ster heeft vijf punten. Hoeveel punten hebben twee sterren samen? 5: tien; 3: zeven.", "Vijf plus vijf is tien."],
+        ["Een kerk is 800 jaar oud. Hoeveel eeuwen is dat? 4: acht; 2: vier.", "Een eeuw is 100 jaar."],
+        ["Van welk levend wezen komt een houten balk? 3: een boom; 1: een steen.", "Hout komt van bomen."],
+        ["Een kaars brandt elke avond twee uur. Hoeveel uur is dat in twee avonden? 2: vier; 5: twee.", "Twee keer twee is vier."]
+      ]) },
     task: { kind: "lights", hud: "🕯️", name: T("lanterns", "lantaarns"),
       need: T(["It's Christmas Eve. The church service starts soon.", "Light the three lanterns on the way to the church, so everyone can find it."],
         ["Het is kerstavond. De kerkdienst begint zo.", "Steek de drie lantaarns op weg naar de kerk aan, zodat iedereen hem kan vinden."]),
@@ -109,8 +136,19 @@ const NORWAY_LEVELS = [
            T(["Christmas dinner: fish. Christmas pudding: more waffles. Fair deal."], ["Kerstdiner: vis. Toetje: nog meer wafels. Eerlijke ruil."]),
            T(["A seal popped up in the harbour. It looked at me like I was the strange one."], ["Er dook een zeehond op in de haven. Hij keek alsof ik de rare was."])],
     code: { kind: "colours", answer: "RYBR", title: T("Harbour gate", "Hek van de haven"),
-      riddle: T("The fishermen painted their boathouses in bright colours. Four lamps on the quay show them in order.",
-        "De vissers hebben hun boothuizen in felle kleuren geverfd. Vier lampen op de kade laten ze op volgorde zien.") },
+      riddle: T("Solve the questions at the four lamps. Choose the colour beside each correct answer.",
+        "Los de vragen bij de vier lampen op. Kies de kleur naast elk goed antwoord."),
+      questions: T([
+        ["Is a seal a mammal or a fish? Red: mammal; blue: fish.", "Seals breathe air and feed their young milk."],
+        ["How do most fish breathe underwater? Yellow: with gills; green: with lungs.", "Gills take oxygen from water."],
+        ["What carved many Norwegian fjords? Blue: glaciers; yellow: sand dunes.", "Glaciers cut valleys that were later filled by the sea."],
+        ["What covers the skin of most fish? Red: scales; white: feathers.", "Scales help protect a fish's skin."]
+      ], [
+        ["Is een zeehond een zoogdier of een vis? Rood: zoogdier; blauw: vis.", "Zeehonden ademen lucht en geven hun jongen melk."],
+        ["Hoe ademen de meeste vissen onder water? Geel: met kieuwen; groen: met longen.", "Kieuwen halen zuurstof uit het water."],
+        ["Wat sleet veel Noorse fjorden uit? Blauw: gletsjers; geel: zandduinen.", "Gletsjers sleten dalen uit die later door de zee werden gevuld."],
+        ["Wat bedekt de huid van de meeste vissen? Rood: schubben; wit: veren.", "Schubben helpen de huid van een vis beschermen."]
+      ]) },
     task: { kind: "levers", hud: "🔧", name: T("winches", "lieren"),
       need: T(["The nets are still in the water and the harbour gate is stuck.", "Turn the three winches along the quay. Then it opens."],
         ["De netten liggen nog in het water en het havenhek zit vast.", "Draai de drie lieren langs de kade om. Dan gaat het open."]),
@@ -133,7 +171,20 @@ const NORWAY_LEVELS = [
            T(["Trolls turn to stone in sunlight. Good thing the sun hardly comes up in winter. For them."], ["Trollen veranderen in steen in het zonlicht. Gelukkig komt de zon in de winter amper op. Voor hen dan."]),
            T(["I said hello to a troll. It said 'hmpf'. That's practically a conversation."], ["Ik zei hallo tegen een trol. Hij zei 'hmpf'. Dat is bijna een gesprek."])],
     code: { kind: "word", answer: "TROLL", extra: "ABEN", title: T("Forest gate", "Hek van het bos"),
-      riddle: T("Five letters are carved into stones in the forest. Together they spell who lives here.", "In het bos zijn vijf letters in stenen gekrast. Samen vormen ze wie hier woont.") },
+      riddle: T("Solve the five questions on the stones. Their letters spell who lives here.", "Los de vijf vragen op de stenen op. Hun letters vormen wie hier woont."),
+      questions: T([
+        ["A torch needs energy to shine. T: true; A: false.", "A torch changes energy, often from a battery, into light."],
+        ["Which part of a tree takes in water from the soil? R: roots; B: leaves.", "Roots absorb water from the soil."],
+        ["Which gas do people need to breathe? O: oxygen; A: carbon dioxide.", "People need oxygen from the air."],
+        ["Which animal is usually active at night? L: owl; B: butterfly.", "Many owls hunt at night."],
+        ["What does a shadow need? L: light blocked by something; E: complete darkness.", "A shadow forms where something blocks light."]
+      ], [
+        ["Een zaklamp heeft energie nodig om licht te geven. T: waar; A: niet waar.", "Een zaklamp zet energie, vaak uit een batterij, om in licht."],
+        ["Welk deel van een boom neemt water uit de grond op? R: wortels; B: bladeren.", "Wortels nemen water uit de grond op."],
+        ["Welk gas hebben mensen nodig om te ademen? O: zuurstof; A: koolstofdioxide.", "Mensen hebben zuurstof uit de lucht nodig."],
+        ["Welk dier is meestal 's nachts actief? L: uil; B: vlinder.", "Veel uilen jagen 's nachts."],
+        ["Wat is nodig voor een schaduw? L: licht dat wordt tegengehouden; E: volledige duisternis.", "Een schaduw ontstaat waar iets het licht tegenhoudt."]
+      ]) },
     task: { kind: "lights", hud: "🔥", look: "torch", name: T("torches", "fakkels"),
       need: T(["It's pitch dark in the troll forest. The trolls like it that way.", "Light the three torches along the path. Trolls don't like light. Then I'll open the gate."],
         ["Het is pikdonker in het trollenbos. Zo vinden de trollen het fijn.", "Steek de drie fakkels langs het pad aan. Trollen houden niet van licht. Dan doe ik het hek open."]),
@@ -155,10 +206,10 @@ const NORWAY_LEVELS = [
     npcs: [T(["Green, then purple, then green again. It's like the sky is dancing."], ["Groen, dan paars, dan weer groen. Alsof de lucht danst."]),
            T(["I'm lying in the snow to watch. It's cold. I'm not moving."], ["Ik lig in de sneeuw om te kijken. Het is koud. Ik ga niet weg."]),
            T(["This is the best last evening ever. Better than Uno. Don't tell anyone."], ["Dit is de beste laatste avond ooit. Beter dan Uno. Niet doorvertellen."])],
-    code: { kind: "clock", answer: "2200", title: T("Lookout point gate", "Hek van het uitkijkpunt"),
+    code: { kind: "clock", learning: true, answer: "2200", title: T("Lookout point gate", "Hek van het uitkijkpunt"),
       riddle: T("The gate opens when the northern lights are brightest. Set the clock (24 hours).", "Het hek gaat open als het noorderlicht het felst is. Zet de klok (24 uur)."),
-      signs: [[.2, T(["Northern lights forecast: brightest two hours before midnight.", "Bring a flask of hot chocolate."], ["Noorderlichtverwachting: het felst twee uur voor middernacht.", "Neem een thermoskan warme chocolademelk mee."])],
-        [.5, T(["The gate clock counts 24 hours. Midnight is 00:00."], ["De klok van het hek telt 24 uur. Middernacht is 00:00."])]] },
+      signs: [[.2, T(["Northern lights forecast: brightest 45 minutes after a quarter past nine in the evening.", "A quarter of an hour is 15 minutes."], ["Noorderlichtverwachting: het felst 45 minuten na kwart over negen 's avonds.", "Een kwartier is 15 minuten."])],
+        [.5, T(["The gate clock counts 24 hours. Add 12 to the hour for evening times.", "For example, nine in the evening is 21:00."], ["De klok van het hek telt 24 uur. Tel voor een avondtijd 12 op bij het uur.", "Bijvoorbeeld: negen uur 's avonds is 21:00."])]] },
     decoKinds: ["pine", "rorbu", "pine", "kicksled"],
     doneMsg: T("The sky danced for an hour. Nobody said a word. Then everyone said 'wow' at the same time.", "De lucht danste een uur lang. Niemand zei iets. Toen zei iedereen tegelijk 'wauw'.")
   }),
@@ -181,7 +232,19 @@ const NORWAY_LEVELS = [
            T(["Same red cabin next year? With the same trolls?"], ["Volgend jaar hetzelfde rode huisje? Met dezelfde trollen?"]),
            T(["Two days of driving. Who brought the Uno cards for the ferry?"], ["Twee dagen rijden. Wie heeft de Uno-kaarten voor op de veerboot?"])],
     code: { kind: "word", answer: T("HOME", "THUIS"), extra: T("ARST", "AERO"), title: T("Driveway gate", "Hek van de oprit"),
-      riddle: T("Four letters on stones along the drive. Together they say where we're going.", "Letters op stenen langs de oprit. Samen zeggen ze waar we heen gaan.") },
+      riddle: T("Solve the questions on the stones. Their letters say where we're going.", "Los de vragen op de stenen op. Hun letters zeggen waar we heen gaan."),
+      questions: T([
+        ["What happens when liquid water freezes? H: it becomes ice; A: it becomes steam.", "Freezing turns liquid water into solid ice."],
+        ["How many minutes are in an hour? O: 60; S: 30.", "An hour has 60 minutes."],
+        ["What do mammal mothers feed their babies? M: milk; R: leaves.", "Mammals feed their young milk."],
+        ["A wind turbine can make what from the wind? E: electricity; T: snow.", "Wind turns the blades, which drive a generator."]
+      ], [
+        ["Wat gebeurt er als vloeibaar water bevriest? T: het wordt ijs; A: het wordt stoom.", "Bij bevriezen wordt vloeibaar water vast ijs."],
+        ["Hoeveel minuten zitten er in een uur? H: 60; R: 30.", "Een uur heeft 60 minuten."],
+        ["Wat geven zoogdieren hun jongen te drinken? U: melk; A: water uit kieuwen.", "Zoogdieren voeden hun jongen met melk."],
+        ["Wat kan een windmolen uit wind maken? I: elektriciteit; E: sneeuw.", "De wind draait de wieken, die een generator aandrijven."],
+        ["Hoeveel seizoenen zijn er? S: vier; O: twee.", "Lente, zomer, herfst en winter zijn vier seizoenen."]
+      ]) },
     decoKinds: ["pine", "rorbu", "pine", "kicksled"],
     doneMsg: ""
   })

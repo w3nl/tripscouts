@@ -17,8 +17,10 @@ const NL_LEVELS = [
            T(["A goose hissed at me. I hissed back. The goose won."], ["Een gans siste naar me. Ik siste terug. De gans won."]),
            T(["Hagelslag for breakfast tomorrow. Chocolate sprinkles on bread. Yes, really."], ["Morgen hagelslag bij het ontbijt. Chocoladevlokjes op brood. Ja, echt."])],
     code: { answer: "3164", title: T("Gate of the little house", "Hek van het huisje"), syms: ["🌬️", "🧀", "🌷", "🚲"],
-      flavor: T(["The wind is free. There's plenty of it.", "Cheese: yellow, round and everywhere.", "Tulips in winter? Only as bulbs. They're sleeping.", "More bikes than people. Officially."],
-        ["Wind is gratis. Er is genoeg van.", "Kaas: geel, rond en overal.", "Tulpen in de winter? Alleen als bol. Ze slapen.", "Meer fietsen dan mensen. Officieel."]) },
+      questions: T(["Three windmills each have one miller. How many millers?", "What turns a traditional windmill's sails? 1: wind; 2: moonlight.", "Three bikes have two wheels each. How many wheels?", "How many seasons are there in a year?"],
+        ["Drie molens hebben elk één molenaar. Hoeveel molenaars zijn dat?", "Wat laat de wieken van een traditionele molen draaien? 1: wind; 2: maanlicht.", "Drie fietsen hebben elk twee wielen. Hoeveel wielen zijn dat?", "Hoeveel seizoenen zijn er in een jaar?"]),
+      flavor: T(["One plus one plus one is three.", "Moving air pushes the sails.", "Three times two is six.", "Spring, summer, autumn and winter."],
+        ["Eén plus één plus één is drie.", "Bewegende lucht duwt de wieken.", "Drie keer twee is zes.", "Lente, zomer, herfst en winter."]) },
     task: { kind: "follow", hud: "🐑", animal: "🐑", name: T("lamb", "lammetje"),
       need: T(["A lamb escaped from the farm by the windmills.", "Find it and walk it back to me. It follows anyone who smells of cheese. So, everyone here."],
         ["Er is een lammetje ontsnapt van de boerderij bij de molens.", "Zoek het en loop ermee terug naar mij. Het loopt iedereen achterna die naar kaas ruikt. Dus iedereen hier."]),
@@ -38,10 +40,12 @@ const NL_LEVELS = [
     pits: true, enemies: true, spikes: true, exitStyle: "arch", exitLabel: T("Along the dike →", "Over de dijk →"),
     intro: T(["Up the dike, down the dike. The land here is lower than the sea.", "The windmills pump the water away. Without them we'd need wellies. Big ones."],
       ["De dijk op, de dijk af. Het land hier ligt lager dan de zee.", "De molens pompen het water weg. Zonder molens hadden we laarzen nodig. Grote."]),
-    npcs: [T(["The wind here pushes you along. Or back. Usually back."], ["De wind hier duwt je vooruit. Of terug. Meestal terug."]),
+    npcs: [T(["A polder is land where the water level is managed. Pumps and mills help drain excess water."], ["Een polder is land waar de waterstand wordt geregeld. Pompen en molens helpen overtollig water weg te malen."]),
            T(["Cycling on the dike against the wind: the Dutch national sport."], ["Fietsen op de dijk met tegenwind: de Nederlandse volkssport."]),
            T(["Those cows stay inside in winter. Smart cows."], ["Die koeien blijven in de winter binnen. Slimme koeien."])],
     code: { kind: "count", answer: "453", title: T("Gate on the dike", "Hek op de dijk"),
+      riddle: T("Count the windmills. What can a polder mill pump away? 5: excess water; 2: sand. Then count the tulip beds.",
+        "Tel de molens. Wat kan een poldermolen wegpompen? 5: overtollig water; 2: zand. Tel daarna de tulpenbedden."),
       count: [["windmill", T("windmills", "molens")], ["cow", T("cows", "koeien")], ["tulips", T("tulip beds", "tulpenbedden")]] },
     task: { kind: "levers", hud: "🔧", name: T("sluice wheels", "sluiswielen"),
       need: T(["The polder is too full. The water has to go into the river.", "Turn the three sluice wheels along the dike. Then the gate opens too."],
@@ -66,8 +70,19 @@ const NL_LEVELS = [
            T(["Every year they fish thousands of bikes out of the canals. Where do they all come from?"], ["Elk jaar vissen ze duizenden fietsen uit de grachten. Waar komen die allemaal vandaan?"]),
            T(["Chips with mayonnaise in a paper cone. That's the law here."], ["Patat met mayonaise in een puntzak. Dat is hier de wet."])],
     code: { kind: "colours", answer: "GBRG", title: T("Gate by the bridge", "Hek bij de brug"),
-      riddle: T("Canal houses have colourful front doors. Four lamps along the canal show the door colours in order.",
-        "Grachtenhuizen hebben kleurige voordeuren. Vier lampen langs de gracht laten de deurkleuren op volgorde zien.") },
+      riddle: T("Solve the questions at the four lamps. Choose the colour beside each correct answer.",
+        "Los de vragen bij de vier lampen op. Kies de kleur naast elk goed antwoord."),
+      questions: T([
+        ["A boat can float because the water pushes it which way? Green: up; red: down.", "Water pushes upwards on an object in it. This is buoyancy."],
+        ["How many banks does one canal have, one on each side? Blue: two; yellow: four.", "A canal has a bank on each side."],
+        ["A bridge opens for 10 minutes and closes for 5. How long together? Red: 15 minutes; white: 5 minutes.", "Ten plus five is fifteen."],
+        ["Rainwater flows into a canal. What can happen to water in sunshine? Green: it evaporates; blue: it turns into stone.", "Evaporation changes liquid water into water vapour."]
+      ], [
+        ["Een boot kan drijven omdat het water hem welke kant op duwt? Groen: omhoog; rood: omlaag.", "Water duwt een voorwerp erin omhoog. Dat heet opwaartse kracht."],
+        ["Hoeveel oevers heeft één gracht, aan elke kant één? Blauw: twee; geel: vier.", "Een gracht heeft aan elke kant een oever."],
+        ["Een brug staat 10 minuten open en 5 minuten dicht. Hoe lang samen? Rood: 15 minuten; wit: 5 minuten.", "Tien plus vijf is vijftien."],
+        ["Regenwater stroomt een gracht in. Wat kan er met water gebeuren in de zon? Groen: het verdampt; blauw: het wordt steen.", "Bij verdamping verandert vloeibaar water in waterdamp."]
+      ]) },
     task: { kind: "timer", hud: "🔔", secs: 6, name: T("bridge bell", "brugbel"),
       need: T(["Ring the bell at the bridge back there. Then the bridge goes up and the gate opens.", "But not for long. The bikes are waiting."],
         ["Luid daar achter de bel van de brug. Dan gaat de brug omhoog en het hek open.", "Maar niet lang. De fietsers staan te wachten."]),
@@ -97,7 +112,20 @@ const NL_LEVELS = [
            T(["Stroopwafels were invented here. Two thin waffles with syrup in between. Genius."], ["De stroopwafel is hier uitgevonden. Twee dunne wafels met stroop ertussen. Geniaal."]),
            T(["Oliebollen already? It's not even New Year. I'll have two."], ["Nu al oliebollen? Het is nog geen oud en nieuw. Doe mij er maar twee."])],
     code: { kind: "word", answer: "GOUDA", extra: "EKSL", title: T("Gate of the market square", "Hek van de Markt"),
-      riddle: T("Five letters glow on stones in the candlelight. Together they spell this town. And a cheese.", "Vijf letters op stenen in het kaarslicht. Samen vormen ze deze stad. En een kaas.") },
+      riddle: T("Solve the five questions on the stones. Their letters spell this town and a cheese.", "Los de vijf vragen op de stenen op. Hun letters vormen deze stad en een kaas."),
+      questions: T([
+        ["Which Dutch town is famous for its cheese and stroopwafels? G: Gouda; K: Leeds.", "Gouda is a Dutch town known for both."],
+        ["Sound travels as vibrations. O: true; E: false.", "A vibrating object can make sound waves travel through air."],
+        ["What does a burning candle give off? U: light and heat; K: snow.", "A flame gives off light and heat."],
+        ["Two rounds of cheese cut into two equal halves give how many pieces? D: four; S: two.", "Two times two is four."],
+        ["Plants use sunlight to help make food. A: true; L: false.", "Plants use light, water and carbon dioxide to make food."]
+      ], [
+        ["Welke Nederlandse stad is bekend om kaas en stroopwafels? G: Gouda; K: Leeds.", "Gouda is een Nederlandse stad die om allebei bekend is."],
+        ["Geluid verplaatst zich als trillingen. O: waar; E: niet waar.", "Een trillend voorwerp kan geluidsgolven door de lucht laten gaan."],
+        ["Wat geeft een brandende kaars af? U: licht en warmte; K: sneeuw.", "Een vlam geeft licht en warmte af."],
+        ["Twee kazen elk in twee gelijke helften gesneden: hoeveel stukken zijn dat? D: vier; S: twee.", "Twee keer twee is vier."],
+        ["Planten gebruiken zonlicht om voedsel te maken. A: waar; L: niet waar.", "Planten gebruiken licht, water en koolstofdioxide om voedsel te maken."]
+      ]) },
     decoKinds: ["stall", "cheese", "gablehouse", "streetlamp"], decoExtra: [["xtree", .5]],
     doneMsg: T("The tree is lit, the square is full of candles and everyone has a warm stroopwafel. A beautiful Christmas Eve.", "De boom is aan, het plein staat vol kaarsjes en iedereen heeft een warme stroopwafel. Een mooie kerstavond.")
   }),
@@ -115,10 +143,10 @@ const NL_LEVELS = [
     npcs: [T(["Koek en zopie: a little stall on the ice with hot chocolate. The best invention ever."], ["Koek en zopie: een kraampje op het ijs met warme chocomel. De beste uitvinding ooit."]),
            T(["The houses here have thatched roofs and little bridges to the front door."], ["De huizen hier hebben rieten daken en bruggetjes naar de voordeur."]),
            T(["Holes in the ice are marked with a branch. Stay away from the branches."], ["Wakken zijn gemarkeerd met een tak. Blijf uit de buurt van de takken."])],
-    code: { kind: "clock", answer: "1415", title: T("Gate by the koek-en-zopie", "Hek bij de koek-en-zopie"),
+    code: { kind: "clock", learning: true, answer: "1415", title: T("Gate by the koek-en-zopie", "Hek bij de koek-en-zopie"),
       riddle: T("The gate opens when the koek-en-zopie opens. Set the clock (24 hours).", "Het hek gaat open als de koek-en-zopie opengaat. Zet de klok (24 uur)."),
-      signs: [[.2, T(["Koek-en-zopie: hot chocolate and pea soup on the ice.", "Open at a quarter past two in the afternoon."], ["Koek-en-zopie: warme chocomel en erwtensoep op het ijs.", "Open om kwart over twee 's middags."])],
-        [.5, T(["The clock on the ice counts 24 hours."], ["De klok op het ijs telt 24 uur."])]] },
+      signs: [[.2, T(["The koek-en-zopie opens 45 minutes after half past one in the afternoon.", "A quarter of an hour is 15 minutes."], ["De koek-en-zopie gaat 45 minuten na half twee 's middags open.", "Een kwartier is 15 minuten."])],
+        [.5, T(["The clock counts 24 hours. Add 12 to the hour for afternoon times.", "For example, one in the afternoon is 13:00."], ["De klok telt 24 uur. Tel voor een middaguur 12 op bij het uur.", "Bijvoorbeeld: één uur 's middags is 13:00."])]] },
     decoKinds: ["thatch", "willow", "thatch", "stall"],
     stalls: T(["Koek en zopie", "Hot chocolate", "Pea soup", "Stroopwafels"], ["Koek en zopie", "Warme chocomel", "Erwtensoep", "Stroopwafels"]),
     doneMsg: T("Skating on Christmas Day, pea soup on the ice, and nobody fell through. A real Dutch winter fairy tale.", "Schaatsen op eerste kerstdag, erwtensoep op het ijs, en niemand erdoor gezakt. Een echt Hollands wintersprookje.")
@@ -143,7 +171,18 @@ const NL_LEVELS = [
            T(["A wild boar crossed the path. It didn't even look left and right."], ["Er stak een wild zwijn het pad over. Hij keek niet eens naar links en rechts."]),
            T(["Three hours of cycling and my legs are jelly. Dutch jelly."], ["Drie uur gefietst en mijn benen zijn pudding. Nederlandse pudding."])],
     code: { kind: "arrows", answer: "→→↑←", title: T("Gate of the park", "Poort van het park"),
-      riddle: T("Four cycle-route signs show the way to the museum. Enter their arrows in order.", "Vier fietsrouteborden wijzen de weg naar het museum. Voer hun pijlen in, op volgorde.") },
+      riddle: T("Solve the questions on the four cycle-route signs. Enter each answer as an arrow.", "Los de vragen op de vier fietsrouteborden op. Voer elk antwoord in als pijl."),
+      questions: T([
+        ["On a map with north at the top, which way is east?", "East is to the right of north."],
+        ["Which way does a clock hand point when it points at 3?", "The 3 is on the right of the clock face."],
+        ["Warm air rises. Which arrow shows the direction it goes?", "Rising means moving up."],
+        ["On a map with north at the top, which way is west?", "West is to the left of north."]
+      ], [
+        ["Op een kaart met het noorden boven, welke kant is het oosten?", "Het oosten ligt rechts van het noorden."],
+        ["Welke kant wijst een wijzer op als hij naar de 3 op de klok wijst?", "De 3 staat rechts op de klok."],
+        ["Warme lucht stijgt op. Welke pijl laat zien welke kant die opgaat?", "Stijgen betekent omhooggaan."],
+        ["Op een kaart met het noorden boven, welke kant is het westen?", "Het westen ligt links van het noorden."]
+      ]) },
     decoKinds: ["pine", "bike", "pine", "deer"],
     doneMsg: T("Cycled across the whole park, saw the sunflowers and spotted one very surprised wild boar.", "Het hele park doorgefietst, de zonnebloemen gezien en één heel verbaasd wild zwijn gespot.")
   }),
@@ -162,8 +201,19 @@ const NL_LEVELS = [
            T(["The wind here is so strong, I walked backwards for a while without noticing."], ["De wind is hier zo sterk, ik liep een tijdje achteruit zonder het te merken."]),
            T(["The lighthouse is red and white. And very tall. And the stairs are very many."], ["De vuurtoren is rood met wit. En heel hoog. En de trap is heel lang."])],
     code: { kind: "melody", answer: "1324", title: T("Gate in the dunes", "Hek in de duinen"),
-      riddle: T("The ship's bells in the harbour play a little tune. Four bells along the way give the notes. Play them in order.",
-        "De scheepsbellen in de haven spelen een deuntje. Vier bellen onderweg geven de tonen. Speel ze op volgorde.") },
+      riddle: T("Solve the questions at the four bells. Each answer gives a note: 1 = do, 2 = re, 3 = mi, 4 = sol, 5 = la.",
+        "Los de vragen bij de vier bellen op. Elk antwoord geeft een toon: 1 = do, 2 = re, 3 = mi, 4 = sol, 5 = la."),
+      questions: T([
+        ["When the sea is low and sandbanks appear, is it low tide or high tide? 1: low tide; 5: high tide.", "At low tide, the water level is lower."],
+        ["Is a seal a mammal or a fish? 3: mammal; 2: fish.", "Seals breathe air and feed their young milk."],
+        ["What do marram grass roots help hold in place in the dunes? 2: sand; 4: boats.", "The roots help keep dune sand from blowing away."],
+        ["Which body in space strongly influences the tides? 4: the Moon; 1: Mars.", "The Moon's gravity helps cause tides."]
+      ], [
+        ["Als de zee laag staat en zandplaten verschijnen, is het dan eb of vloed? 1: eb; 5: vloed.", "Bij eb staat het water lager."],
+        ["Is een zeehond een zoogdier of een vis? 3: zoogdier; 2: vis.", "Zeehonden ademen lucht en geven hun jongen melk."],
+        ["Wat helpen de wortels van helmgras in de duinen vasthouden? 2: zand; 4: boten.", "De wortels helpen voorkomen dat duinzand wegwaait."],
+        ["Welk hemellichaam heeft veel invloed op eb en vloed? 4: de maan; 1: Mars.", "De zwaartekracht van de maan helpt eb en vloed veroorzaken."]
+      ]) },
     task: { kind: "lights", hud: "🏮", name: T("dike lamps", "dijklampen"),
       need: T(["Fog is rolling in from the sea. The ferry can't see the harbour.", "Light the three lamps on the dike. Then the gate to the harbour opens."],
         ["Er komt mist van zee. De veerboot kan de haven niet zien.", "Steek de drie lampen op de dijk aan. Dan gaat het hek naar de haven open."]),
@@ -187,7 +237,17 @@ const NL_LEVELS = [
            T(["Same little house next year? With the same goose?"], ["Volgend jaar hetzelfde huisje? Met dezelfde gans?"]),
            T(["Are we there yet? We haven't even crossed the dike."], ["Zijn we er al? We zijn de dijk nog niet eens over."])],
     code: { kind: "colours", answer: "RWB", title: T("Driveway gate", "Hek van de oprit"),
-      riddle: T("Three lamps by the drive, in the colours of the flag. Enter them in order.", "Drie lampen bij de oprit, in de kleuren van de vlag. Voer ze in, op volgorde.") },
+      riddle: T("Solve the questions at the three lamps. Choose the colour beside each correct answer.",
+        "Los de vragen bij de drie lampen op. Kies de kleur naast elk goed antwoord."),
+      questions: T([
+        ["How many clogs are in six pairs? Red: 12; green: 6.", "A pair is two, so six pairs are twelve."],
+        ["Which part of a tulip plant takes up water from the soil? White: roots; yellow: petals.", "Roots absorb water from the soil."],
+        ["What can a wind turbine make from wind? Blue: electricity; red: snow.", "Wind turns the blades, which drive a generator."]
+      ], [
+        ["Hoeveel klompen zitten er in zes paar? Rood: 12; groen: 6.", "Een paar is twee, dus zes paar is twaalf."],
+        ["Welk deel van een tulpenplant neemt water uit de grond op? Wit: wortels; geel: bloemblaadjes.", "Wortels nemen water uit de grond op."],
+        ["Wat kan een windmolen uit wind maken? Blauw: elektriciteit; rood: sneeuw.", "De wind draait de wieken, die een generator aandrijven."]
+      ]) },
     task: { kind: "levers", hud: "🔧", name: T("bridge levers", "bruglevers"),
       need: T(["The little bridges over the ditches are all up. Typical.", "Pull the three levers to lower them. Then we can drive home."],
         ["De bruggetjes over de sloten staan allemaal open. Typisch.", "Trek de drie hendels over om ze te laten zakken. Dan kunnen we naar huis rijden."]),

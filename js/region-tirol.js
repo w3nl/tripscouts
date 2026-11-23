@@ -15,8 +15,10 @@ const TIROL_LEVELS = [
            T(["A goat looked at me as if I owed it money."], ["Een geit keek me aan alsof ik hem geld schuldig was."]),
            T(["Tomorrow: ski school. Today: hot chocolate. Priorities."], ["Morgen: skiles. Vandaag: warme chocolademelk. Prioriteiten."])],
     code: { answer: "4718", title: T("Chalet key safe", "Sleutelkastje van het chalet"), syms: ["🏔️", "🔑", "🐐", "⛪"],
-      flavor: T(["The mountains are higher than the clouds today.", "Keys: always in the last place you look.", "The goat knows the code. It isn't telling.", "The church tower has an onion on top."],
-        ["De bergen zijn vandaag hoger dan de wolken.", "Sleutels: altijd op de laatste plek waar je zoekt.", "De geit weet de code. Hij verklapt hem niet.", "De kerktoren heeft een ui op zijn kop."]) },
+      questions: T(["A compass has north, east, south and west. How many main directions?", "We stay for one week: 5 weekdays and 2 weekend days. How many days?", "Which country is Tirol in? 1: Austria. 2: Norway.", "Two goats each have 4 legs. How many legs altogether?"],
+        ["Een kompas heeft noord, oost, zuid en west. Hoeveel hoofdwindrichtingen zijn dat?", "We blijven één week: 5 doordeweekse dagen en 2 weekenddagen. Hoeveel dagen?", "In welk land ligt Tirol? 1: Oostenrijk. 2: Noorwegen.", "Twee geiten hebben elk 4 poten. Hoeveel poten samen?"]),
+      flavor: T(["The four main directions help you read a map.", "Add five and two.", "Tirol is a region of Austria in the Alps.", "Two times four."],
+        ["De vier hoofdwindrichtingen helpen je een kaart te lezen.", "Tel vijf en twee op.", "Tirol is een deel van Oostenrijk in de Alpen.", "Twee keer vier."]) },
     task: { kind: "follow", hud: "🐐", animal: "🐐", name: T("goat kid", "geitje"),
       need: T(["Have you seen my little goat? She jumped over the fence this morning.", "If you find her, walk back to me. She follows anyone with a pretzel."],
         ["Heb je mijn geitje gezien? Ze is vanochtend over het hek gesprongen.", "Vind je haar, loop dan terug naar mij. Ze loopt iedereen met een krakeling achterna."]),
@@ -39,7 +41,18 @@ const TIROL_LEVELS = [
            T(["The button lift pulls you up. Don't sit down. I sat down."], ["De sleeplift trekt je omhoog. Niet gaan zitten. Ik ging zitten."]),
            T(["Après-ski: that's French for hot chocolate."], ["Après-ski: dat is Frans voor warme chocolademelk."])],
     code: { kind: "arrows", answer: "→↓→↓", title: T("Ski school gate", "Hek van de skischool"),
-      riddle: T("Four piste signs show the run down to the ski school. Enter their arrows in order.", "Vier pistebordjes wijzen de afdaling naar de skischool. Voer hun pijlen in, op volgorde.") },
+      riddle: T("Solve the questions on the four piste signs. Enter the arrows in order.", "Los de vragen op de vier pistebordjes op. Voer de pijlen op volgorde in."),
+      questions: T([
+        ["On a map with north at the top, which arrow points east?", "East is to the right of north."],
+        ["Gravity pulls a dropped snowball towards the ground. Which arrow shows that?", "The ground is below the snowball."],
+        ["Face north on the map, then turn right. Which arrow shows your direction?", "Turning right from north points east."],
+        ["Which arrow shows a skier going from a high point to a lower point on a diagram?", "A lower point is below a higher one."]
+      ], [
+        ["Op een kaart met het noorden boven, welke pijl wijst naar het oosten?", "Het oosten ligt rechts van het noorden."],
+        ["De zwaartekracht trekt een gevallen sneeuwbal naar de grond. Welke pijl laat dat zien?", "De grond is onder de sneeuwbal."],
+        ["Kijk op de kaart naar het noorden en draai rechtsaf. Welke pijl wijst jouw richting aan?", "Rechtsaf vanaf het noorden is het oosten."],
+        ["Welke pijl laat op een tekening zien dat een skiër van hoog naar laag gaat?", "Een lager punt ligt onder een hoger punt."]
+      ]) },
     task: { kind: "timer", hud: "🔔", secs: 7, name: T("bell", "bel"),
       need: T(["The ski school start gate opens when you ring the bell up there.", "Then you have a few seconds. Like a real race!"],
         ["Het starthek van de skischool gaat open als je daarboven de bel luidt.", "Dan heb je een paar tellen. Net een echte wedstrijd!"]),
@@ -58,10 +71,12 @@ const TIROL_LEVELS = [
     pits: true, enemies: true, spikes: true, exitStyle: "arch", exitLabel: T("Summit station →", "Bergstation →"),
     intro: T(["The cable car goes up 1,000 metres in eight minutes.", "Don't look down. Or do. The view is amazing."],
       ["De kabelbaan gaat in acht minuten 1000 meter omhoog.", "Niet naar beneden kijken. Of juist wel. Het uitzicht is geweldig."]),
-    npcs: [T(["From the top you can see three countries. Or three clouds. Depends on the day."], ["Vanaf de top zie je drie landen. Of drie wolken. Hangt van de dag af."]),
+    npcs: [T(["A kilometre is 1,000 metres. The cable car climbs that far in eight minutes."], ["Een kilometer is 1000 meter. De kabelbaan stijgt zoveel in acht minuten."]),
            T(["My ears popped. Both of them. At the same time."], ["Mijn oren ploppen. Allebei. Tegelijk."]),
            T(["At the summit there's a restaurant with apple strudel. I'm just saying."], ["Op de top is een restaurant met appelstrudel. Ik zeg het maar even."])],
     code: { kind: "count", answer: "324", title: T("Summit gate", "Hek bij de top"),
+      riddle: T("Count the chalets. How many metres are in a kilometre? 2: 1,000; 5: 100. Then count the chamois.",
+        "Tel de chalets. Hoeveel meter is één kilometer? 2: 1000; 5: 100. Tel daarna de gemzen."),
       count: [["chalet", T("chalets", "chalets")], ["skis", T("pairs of skis", "paar ski's")], ["deer", T("chamois", "gemzen")]] },
     decoKinds: ["pine", "skis", "pine", "chalet"],
     doneMsg: T("Lunch above the clouds, apple strudel with cream. The way down was quick.", "Lunch boven de wolken, appelstrudel met slagroom. De weg naar beneden ging snel.")
@@ -85,8 +100,19 @@ const TIROL_LEVELS = [
            T(["A stall sells only wooden stars. Hundreds of them. I want them all."], ["Een kraampje verkoopt alleen houten sterren. Honderden. Ik wil ze allemaal."]),
            T(["Hot apple juice with cinnamon. The kids' version of mulled wine. Even better."], ["Warm appelsap met kaneel. De kinderversie van glühwein. Nog lekkerder."])],
     code: { kind: "melody", answer: "5315", title: T("Gate of the market square", "Hek van het marktplein"),
-      riddle: T("The brass band left four bells along the way. Play their notes in order and the gate opens.",
-        "De blaaskapel heeft onderweg vier bellen laten hangen. Speel hun tonen op volgorde en het hek gaat open.") },
+      riddle: T("Solve the questions at the four bells. Each answer gives a note: 1 = do, 2 = re, 3 = mi, 4 = sol, 5 = la.",
+        "Los de vragen bij de vier bellen op. Elk antwoord geeft een toon: 1 = do, 2 = re, 3 = mi, 4 = sol, 5 = la."),
+      questions: T([
+        ["Which country is Innsbruck in? 5: Austria; 3: Norway.", "Innsbruck is a city in Austrian Tirol."],
+        ["How many sides does a triangle have?", "A triangle has three corners and three sides."],
+        ["The Golden Roof is gold-plated. What does that mean? 1: a layer of gold covers it; 4: it is solid gold.", "Gold-plated means covered with a thin layer of gold."],
+        ["A band has ten players. Half play trumpets. How many trumpet players?", "Half of ten is five."]
+      ], [
+        ["In welk land ligt Innsbruck? 5: Oostenrijk; 3: Noorwegen.", "Innsbruck is een stad in het Oostenrijkse Tirol."],
+        ["Hoeveel zijden heeft een driehoek?", "Een driehoek heeft drie hoeken en drie zijden."],
+        ["Het Gouden Dakje is verguld. Wat betekent dat? 1: er zit een laagje goud op; 4: het is van massief goud.", "Verguld betekent bedekt met een dun laagje goud."],
+        ["Een kapel heeft tien muzikanten. De helft speelt trompet. Hoeveel trompettisten zijn dat?", "De helft van tien is vijf."]
+      ]) },
     decoKinds: ["stall", "stall", "streetlamp", "xtree"],
     doneMsg: T("Candles bought, chestnuts eaten, the band played. Back up the mountain.", "Kaarsjes gekocht, kastanjes gegeten, de kapel speelde. Terug de berg op.")
   }),
@@ -104,7 +130,18 @@ const TIROL_LEVELS = [
            T(["There's a hut halfway down with soup. Halfway is a very good place for soup."], ["Halverwege is een hut met soep. Halverwege is een heel goede plek voor soep."]),
            T(["I'm not scared. I'm just being careful. Very, very careful."], ["Ik ben niet bang. Ik ben gewoon voorzichtig. Heel, heel voorzichtig."])],
     code: { kind: "arrows", answer: "↓←↓→", title: T("Start of the toboggan run", "Start van de rodelbaan"),
-      riddle: T("The toboggan run zigzags. Four signs show the bends. Enter their arrows in order.", "De rodelbaan zigzagt. Vier bordjes wijzen de bochten. Voer hun pijlen in, op volgorde.") },
+      riddle: T("Solve the questions on the four signs. Enter each answer as an arrow.", "Los de vragen op de vier bordjes op. Voer elk antwoord in als pijl."),
+      questions: T([
+        ["On a map with north at the top, which arrow points south?", "South is opposite north."],
+        ["Which way does a clock hand point when it points at 9?", "The 9 is on the left of the clock face."],
+        ["On a thermometer, which way does the liquid move when it cools down?", "A lower temperature is lower on the scale."],
+        ["On a map with north at the top, which arrow points towards the east, where the sun rises?", "East is to the right of north."]
+      ], [
+        ["Op een kaart met het noorden boven, welke pijl wijst naar het zuiden?", "Het zuiden ligt tegenover het noorden."],
+        ["Welke kant wijst een wijzer op als hij naar de 9 op de klok wijst?", "De 9 staat links op de klok."],
+        ["Welke kant beweegt de vloeistof in een thermometer op als het kouder wordt?", "Een lagere temperatuur staat lager op de schaal."],
+        ["Op een kaart met het noorden boven, welke pijl wijst naar het oosten, waar de zon opkomt?", "Het oosten ligt rechts van het noorden."]
+      ]) },
     task: { kind: "timer", hud: "🔔", secs: 7, name: T("bell", "bel"),
       need: T(["Ring the start bell back there. Then the gate opens, but only for a moment.", "Toboggan rule: whoever hesitates, waits."],
         ["Luid daar achter de startbel. Dan gaat het hek open, maar maar heel even.", "Rodelregel: wie twijfelt, wacht."]),
@@ -127,10 +164,10 @@ const TIROL_LEVELS = [
     npcs: [T(["The hut is 300 years old. The wifi is 3 days old. Neither works very well."], ["De hut is 300 jaar oud. De wifi is 3 dagen oud. Ze werken allebei niet zo goed."]),
            T(["Laura and Anna are on the sun terrace. With chocolate. Don't disturb."], ["Laura en Anna zitten op het zonneterras. Met chocolade. Niet storen."]),
            T(["Tea for Paul and Laura, as always. The landlord knows by now."], ["Thee voor Paul en Laura, zoals altijd. De waard weet het inmiddels."])],
-    code: { kind: "clock", answer: "1930", title: T("Door to the sun terrace", "Deur naar het zonneterras"),
+    code: { kind: "clock", learning: true, answer: "1930", title: T("Door to the sun terrace", "Deur naar het zonneterras"),
       riddle: T("The door opens at dinner time. Set the clock (24 hours).", "De deur gaat open bij etenstijd. Zet de klok (24 uur)."),
-      signs: [[.2, T(["The cuckoo clock calls seven times for dinner.", "And dinner is always half an hour after the cuckoo. Mountain rules."], ["De koekoeksklok roept zeven keer voor het eten.", "En het eten is altijd een halfuur na de koekoek. Bergregels."])],
-        [.5, T(["It's evening, so count like the station clock: 24 hours."], ["Het is avond, dus tel zoals de stationsklok: 24 uur."])]] },
+      signs: [[.2, T(["Dinner starts 45 minutes after a quarter to seven in the evening.", "A quarter of an hour is 15 minutes."], ["Het eten begint 45 minuten na kwart voor zeven 's avonds.", "Een kwartier is 15 minuten."])],
+        [.5, T(["For an evening time on a 24-hour clock, add 12 to the hour.", "For example, six in the evening is 18:00."], ["Tel voor een avondtijd op een 24-uursklok 12 op bij het uur.", "Bijvoorbeeld: zes uur 's avonds is 18:00."])]] },
     task: { kind: "lights", hud: "🪔", name: T("oil lamps", "olielampen"),
       need: T(["The power is out in the hut. Again.", "Light the three oil lamps and we can open the door to the sun terrace."],
         ["De stroom in de hut is uitgevallen. Alweer.", "Steek de drie olielampen aan, dan kan de deur naar het zonneterras open."]),
@@ -159,7 +196,22 @@ const TIROL_LEVELS = [
            T(["Uno after the fondue? Same rules as always: nobody agrees on the rules."], ["Uno na de fondue? Zelfde regels als altijd: niemand is het eens over de regels."]),
            T(["The sauna is warm. The snow outside is cold. Some people go from one to the other. Brave."], ["De sauna is warm. De sneeuw buiten is koud. Sommigen gaan van de een naar de ander. Dapper."])],
     code: { kind: "word", answer: "FONDUE", extra: "ACKS", title: T("Door to the sauna", "Deur naar de sauna"),
-      riddle: T("Six letters are carved into the beams. Together they spell tonight's dinner.", "In de balken zijn zes letters gesneden. Samen vormen ze het eten van vanavond.") },
+      riddle: T("Solve the six questions on the blocks. Their letters spell tonight's dinner.", "Los de zes vragen op de blokken op. Hun letters vormen het eten van vanavond."),
+      questions: T([
+        ["Cheese melts when it gets warmer or colder? F: warmer; C: colder.", "Heat can turn solid cheese into a liquid."],
+        ["Ten pieces of bread shared equally between two people: how many each? O: 5; A: 2.", "Ten divided by two is five."],
+        ["Which compass letter stands for north? N: N; S: S.", "N stands for north."],
+        ["Water vapour forms droplets when it cools. What is this called? D: condensation; K: evaporation.", "Condensation turns water vapour into liquid droplets."],
+        ["How many sides does a triangle have? U: 3; K: 4.", "A triangle has three sides."],
+        ["Seven plus how many makes ten? E: 3; C: 4.", "Seven and three make ten."]
+      ], [
+        ["Smelt kaas als hij warmer of kouder wordt? F: warmer; C: kouder.", "Door warmte kan vaste kaas vloeibaar worden."],
+        ["Tien stukjes brood eerlijk verdeeld over twee mensen: hoeveel per persoon? O: 5; A: 2.", "Tien gedeeld door twee is vijf."],
+        ["Welke kompasletter staat voor het noorden? N: N; S: S.", "N staat voor noord."],
+        ["Waterdamp vormt druppels als hij afkoelt. Hoe heet dat? D: condensatie; K: verdamping.", "Bij condensatie verandert waterdamp in vloeibare druppels."],
+        ["Hoeveel zijden heeft een driehoek? U: 3; K: 4.", "Een driehoek heeft drie zijden."],
+        ["Zeven plus hoeveel is tien? E: 3; C: 4.", "Zeven en drie zijn tien."]
+      ]) },
     decoKinds: ["sofa", "table", "fire", "lamp", "sauna"],
     doneMsg: T("Fondue gone, Uno played, rules argued about. Goodnight, mountains.", "Fondue op, Uno gespeeld, over de regels gediscussieerd. Welterusten, bergen.")
   }),
@@ -177,8 +229,19 @@ const TIROL_LEVELS = [
            T(["Same chalet next year? I've already put it in my diary."], ["Volgend jaar hetzelfde chalet? Ik heb het al in mijn agenda gezet."]),
            T(["Are we there yet? We haven't even left the village."], ["Zijn we er al? We zijn het dorp nog niet eens uit."])],
     code: { kind: "colours", answer: "RWRG", title: T("Car park gate", "Hek van de parkeerplaats"),
-      riddle: T("Four lamps along the way: red and white like the Tirol flag, and one more. Enter the colours in order.",
-        "Vier lampen onderweg: rood en wit zoals de vlag van Tirol, en nog één. Voer de kleuren in, op volgorde.") },
+      riddle: T("Solve the questions at the four lamps. Choose the colour beside each correct answer.",
+        "Los de vragen bij de vier lampen op. Kies de kleur naast elk goed antwoord."),
+      questions: T([
+        ["Which colour is found in the Austrian flag? Red: red; blue: blue.", "Austria's flag has red, white and red horizontal stripes."],
+        ["Which colour does fresh snow usually look? White: white; green: green.", "Snow scatters light, so it usually looks white."],
+        ["What colour means stop at a traffic light? Red: red; green: green.", "A red traffic light tells traffic to stop."],
+        ["Which colour does chlorophyll give leaves? Green: green; red: red.", "Chlorophyll helps plants use light and makes many leaves look green."]
+      ], [
+        ["Welke kleur zit in de Oostenrijkse vlag? Rood: rood; blauw: blauw.", "De vlag van Oostenrijk heeft rode, witte en rode horizontale banen."],
+        ["Welke kleur heeft verse sneeuw meestal? Wit: wit; groen: groen.", "Sneeuw verstrooit licht en ziet er daarom meestal wit uit."],
+        ["Welke kleur betekent stoppen bij een verkeerslicht? Rood: rood; groen: groen.", "Een rood verkeerslicht zegt dat het verkeer moet stoppen."],
+        ["Welke kleur geeft bladgroen aan bladeren? Groen: groen; rood: rood.", "Bladgroen helpt planten licht te gebruiken en maakt veel bladeren groen."]
+      ]) },
     task: { kind: "levers", hud: "🔧", name: T("ski lockers", "skikluisjes"),
       need: T(["Our ski boots are still in the lockers. Three of them.", "Open all three, and then the car park gate opens too. Austrian efficiency."],
         ["Onze skischoenen staan nog in de kluisjes. Drie stuks.", "Doe ze alle drie open, dan gaat het hek van de parkeerplaats ook open. Oostenrijkse degelijkheid."]),

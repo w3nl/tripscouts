@@ -215,6 +215,16 @@ function genLevel(o) {
   [gateX, gateX - 1, gateX + 1, codeX, codeX - 1, codeX + 1, w - 6].forEach(c => used.add(c));
   // Levers, lamps, the bell, the animal and clues get some room, so nobody stands right next to them.
   const room = c => { for (let d = -2; d <= 2; d++) used.add(c + d); return c; };
+  const questionPlace = t => {
+    t = Math.round(t);
+    for (let d = 0; d < w; d++) for (const c of [t + d, t - d]) {
+      if (c < 3 || c > codeX - 4 || bad.has(c) || used.has(c) || topAt[c] >= ROWS_GEN) continue;
+      if (ents.some(([kind, x]) => ["npc", "sign", "switch", "bell", "animal", "clue"].includes(kind) && Math.abs(x - c) < 3)) continue;
+      used.add(c);
+      return c;
+    }
+    throw new Error(`No room for a question clue in level ${o.seed}`);
+  };
 
   if (o.intro) { const c = free(5); ents.push(["sign", c, yAt(c), o.intro]); }
   ladderSigns.forEach(lx => { const c = free(lx - 2, lx - 6, lx); ents.push(["sign", c, yAt(c), [T("A ladder! Hold ↑ (or jump) to climb up, and ↓ (or 💬) to climb down.", "Een ladder! Houd ↑ (of springen) ingedrukt om naar boven te klimmen, en ↓ (of 💬) om naar beneden te gaan."),
@@ -274,19 +284,25 @@ function genLevel(o) {
   (o.signs || []).forEach(([f, lines]) => { const c = free(w * f); ents.push(["sign", c, yAt(c), lines]); });
   if (o.code) {
     const kind = o.code.kind || "symbols", ans = [...o.code.answer];
-    code = { x: codeX, y1: 2, y2: yAt(codeX), pad: codeX - 2, answer: o.code.answer, title: o.code.title, kind, keys: lockKeys(o.code), riddle: o.code.riddle, count: o.code.count };
+    code = { x: codeX, y1: 2, y2: yAt(codeX), pad: codeX - 2, answer: o.code.answer, title: o.code.title, kind, keys: lockKeys(o.code), riddle: o.code.riddle, count: o.code.count, questions: o.code.questions };
     used.add(codeX - 2);
     if (kind === "symbols") {
       const syms = o.code.syms;
-      code.riddle = T(`Four symbols: ${syms.join("  ")}. Signs along the way tell you which digit goes with which symbol.`,
-        `Vier symbolen: ${syms.join("  ")}. Onderweg staan bordjes die vertellen welk cijfer bij welk symbool hoort.`);
-      [.14, .37, .56, .74].forEach((f, i) => { const k = [2, 0, 3, 1][i], c = free(w * f); ents.push(["sign", c, yAt(c), [T(`Someone scratched something on this sign: ${syms[k]} = ${ans[k]}`, `Op dit bordje is iets gekrast: ${syms[k]} = ${ans[k]}`), o.code.flavor[k]]]); });
+      code.riddle = o.code.questions
+        ? T(`Four symbols: ${syms.join("  ")}. Solve the questions on the signs for their digits.`, `Vier symbolen: ${syms.join("  ")}. Los de vragen op de bordjes op voor de cijfers.`)
+        : T(`Four symbols: ${syms.join("  ")}. Signs along the way tell you which digit goes with which symbol.`,
+          `Vier symbolen: ${syms.join("  ")}. Onderweg staan bordjes die vertellen welk cijfer bij welk symbool hoort.`);
+      [.14, .37, .56, .74].forEach((f, i) => {
+        const k = [2, 0, 3, 1][i], c = o.code.questions ? room(questionPlace(w * f)) : free(w * f);
+        const clue = o.code.questions ? `${syms[k]}: ${o.code.questions[k]}` : T(`Someone scratched something on this sign: ${syms[k]} = ${ans[k]}`, `Op dit bordje is iets gekrast: ${syms[k]} = ${ans[k]}`);
+        ents.push(["sign", c, yAt(c), [clue, o.code.flavor[k]]]);
+      });
     } else if (kind === "melody" || kind === "colours" || kind === "arrows" || kind === "word") {
       // numbered clues along the way: bells, coloured lamps, signposts with an arrow, or carved letters
       const n = ans.length, end = (codeX - 4) / w;
-      ans.forEach((v, i) => { const c = free(w * (.12 + i * (end - .16) / (n - 1))); ents.push(["clue", room(c), yAt(c), { kind, i, n, v, look: o.code.look }]); });
+      ans.forEach((v, i) => { const at = w * (.12 + i * (end - .16) / (n - 1)), c = o.code.questions ? questionPlace(at) : free(at); ents.push(["clue", room(c), yAt(c), { kind, i, n, v, look: o.code.look, question: o.code.questions && o.code.questions[i] }]); });
     } else if (kind === "clock") {
-      (o.code.signs || []).forEach(([f, lines]) => { const c = free(w * f); ents.push(["sign", c, yAt(c), lines]); });
+      (o.code.signs || []).forEach(([f, lines]) => { const c = o.code.learning ? room(questionPlace(w * f)) : free(w * f); ents.push(["sign", c, yAt(c), lines]); });
     }
   }
   let lanternX = null;
@@ -394,8 +410,10 @@ const DAY22 = genLevel({
          T(["I saw a squirrel! Or it was a leaf. It did move."], ["Ik heb een eekhoorn gezien! Of het was een bladje. Het bewoog wel."]),
          T(["Nearly back. I can smell the chips already. Or that's my imagination."], ["Bijna terug. Ik ruik de frieten al. Of dat is de verbeelding."])],
   code: { answer: "3817", title: T("Barrier on the old railway", "Slagboom van het spoorpad"), syms: ["🍄", "🌲", "🦔", "🍂"],
-    flavor: T(["Mushrooms: look, don't eat.", "Pine trees smell like Christmas.", "Hedgehogs sleep in winter. Except this one.", "Autumn leaves, even in December."],
-      ["Paddenstoelen: kijken mag, eten niet.", "Dennen ruiken naar kerst.", "Egels slapen in de winter. Behalve deze.", "Herfstblaadjes, zelfs in december."]) },
+    questions: T(["You see 1 mushroom, then 2 more. How many in total?", "There are 4 pairs of pine cones. How many cones?", "A hedgehog sleeps by day and searches for food at night. How many nights are in one day and night?", "A week has 5 weekdays and 2 weekend days. How many days in all?"],
+      ["Je ziet 1 paddenstoel en daarna nog 2. Hoeveel samen?", "Er zijn 4 paren dennenappels. Hoeveel dennenappels?", "Een egel slaapt overdag en zoekt 's nachts eten. Hoeveel nachten zitten er in één dag en nacht?", "Een week heeft 5 doordeweekse dagen en 2 weekenddagen. Hoeveel dagen samen?"]),
+    flavor: T(["Mushrooms are fungi. Look, but don't eat wild ones.", "A pair means two.", "Hedgehogs are usually active at night.", "Count the days together."],
+      ["Paddenstoelen zijn schimmels. Kijk ernaar, maar eet geen wilde paddenstoelen.", "Een paar betekent twee.", "Egels zijn meestal 's nachts actief.", "Tel de dagen bij elkaar op."]) },
   decoKinds: ["tree", "tree", "pine"],
   doneMsg: T("The map is complete and everyone is back. Tired, muddy and happy.", "De kaart is compleet en iedereen is terug. Moe, modderig en vrolijk.")
 });
@@ -421,8 +439,10 @@ const DAY23 = genLevel({
          T(["The glass lift takes you from the old town straight down. Don't look down. Or do."], ["Met de glazen lift ga je zo van de oude stad naar beneden. Niet naar beneden kijken. Of juist wel."]),
          T(["Mulled wine for the grown-ups, hot chocolate for the kids. And for anyone who can't decide: both."], ["Glühwein voor de volwassenen, warme chocomel voor de kinderen. En voor wie twijfelt: allebei."])],
   code: { answer: "6382", title: T("Christmas market gate", "Hek van de kerstmarkt"), syms: ["⭐", "🔔", "🎠", "🥨"],
-    flavor: T(["The star on top of the big Christmas tree.", "The bells of the cathedral.", "The carousel goes round and round.", "A pretzel from the bakery stall."],
-      ["De ster boven op de grote kerstboom.", "De klokken van de kathedraal.", "De draaimolen draait rondjes.", "Een krakeling uit de bakkerskraam."]) },
+    questions: T(["Three stalls each hang 2 stars. How many stars altogether?", "Luxembourg borders Belgium, France and Germany. How many countries is that?", "Two carousel rides each last 4 minutes. How many minutes in total?", "A pretzel costs 4 euros. You share the cost equally with a friend. How many euros does each pay?"],
+      ["Drie kraampjes hangen elk 2 sterren op. Hoeveel sterren samen?", "Luxemburg grenst aan België, Frankrijk en Duitsland. Hoeveel landen zijn dat?", "Twee ritjes in de draaimolen duren elk 4 minuten. Hoeveel minuten samen?", "Een krakeling kost 4 euro. Je deelt de kosten eerlijk met een vriend. Hoeveel euro betaalt ieder?"]),
+    flavor: T(["Add the three pairs.", "The country and its capital city are both called Luxembourg.", "Two times four minutes.", "Half of four euros."],
+      ["Tel de drie paren op.", "Het land en de hoofdstad heten allebei Luxemburg.", "Twee keer vier minuten.", "De helft van vier euro."]) },
   decoKinds: ["stall", "stall", "streetlamp", "xtree"], decoExtra: [["saab96", .1]],
   doneMsg: T("A lovely day in Luxembourg. Tomorrow is Paul's birthday.", "Een mooie dag in Luxemburg. Morgen is Paul jarig.")
 });
@@ -446,8 +466,10 @@ const DAY26 = genLevel({
          T(["The owls here only wake up when we've gone. Typical."], ["De uilen hier worden pas wakker als wij weg zijn. Typisch."]),
          T(["Hot chocolate at the exit. That's the real reason we're here."], ["Warme chocolademelk bij de uitgang. Dat is de echte reden dat we hier zijn."])],
   code: { answer: "6254", title: T("Wildlife park gate", "Poort van het wildpark"), syms: ["🦌", "🐗", "🦉", "🦊"],
-    flavor: T(["The deer has antlers. Or a coat rack.", "Wild boar: don't stroke.", "The owl is looking at you. It knows the code.", "The fox is too clever for this sign."],
-      ["Het hert heeft een gewei. Of een kapstok.", "Wild zwijn: niet aaien.", "De uil kijkt je aan. Hij weet de code.", "De vos is te slim voor dit bordje."]) },
+    questions: T(["A deer has 4 legs. An insect has 2 more. How many legs does the insect have?", "A wild boar has 4 legs. How many pairs of legs is that?", "Each owl has 2 wings. How many owls have 10 wings altogether?", "A fox has one paw on each leg. How many paws does a fox have?"],
+      ["Een hert heeft 4 poten. Een insect heeft er 2 meer. Hoeveel poten heeft het insect?", "Een wild zwijn heeft 4 poten. Hoeveel paren poten zijn dat?", "Elke uil heeft 2 vleugels. Hoeveel uilen hebben samen 10 vleugels?", "Hoeveel poten heeft een vos?"]),
+    flavor: T(["Insects have three pairs of legs.", "A pair means two.", "Owls are birds and each has one pair of wings.", "Foxes are mammals with four legs."],
+      ["Insecten hebben drie paar poten.", "Een paar betekent twee.", "Uilen zijn vogels en hebben elk één paar vleugels.", "Vossen zijn zoogdieren met vier poten."]) },
   decoKinds: ["pine", "pine", "deer"],
   doneMsg: T("Three photos in the group chat, 47 replies within a minute. Well done!", "Drie foto's in de groepsapp, 47 reacties binnen een minuut. Goed gedaan!")
 });
@@ -472,8 +494,10 @@ const DAY27 = genLevel({
          T(["I've already packed my suitcase. Just kidding. It's still open on the bed."], ["Ik heb mijn koffer al ingepakt. Grapje. Hij ligt nog open op bed."]),
          T(["Home tomorrow. I'll miss the steam room. And the gourmet set. And the raclette."], ["Morgen naar huis. Ik ga het stoombad missen. En de gourmet. En de raclette."])],
   code: { answer: "7924", title: T("Door to the terrace", "Deur naar het terras"), syms: ["🌙", "👨‍👩‍👧", "🛏️", "🧖"],
-    flavor: T(["Count the nights this week.", "Count everyone in the cabin.", "Two bedrooms for two people. How many per room?", "How many people fit in the sauna?"],
-      ["Tel de nachtjes deze week.", "Tel alle mensen in het huis.", "Twee slaapkamers voor twee personen. Hoeveel per kamer?", "Hoeveel mensen passen in de sauna?"]) },
+    questions: T(["A week has 5 weekdays and 2 weekend days. How many days is that?", "The families have 4 grown-ups and 5 children. How many people altogether?", "Four people share 2 bedrooms equally. How many in each room?", "Eight people go to the sauna in 2 equal groups. How many in each group?"],
+      ["Een week heeft 5 doordeweekse dagen en 2 weekenddagen. Hoeveel dagen zijn dat?", "De gezinnen hebben 4 volwassenen en 5 kinderen. Hoeveel mensen zijn dat samen?", "Vier mensen verdelen zich eerlijk over 2 slaapkamers. Hoeveel per kamer?", "Acht mensen gaan in 2 gelijke groepen naar de sauna. Hoeveel per groep?"]),
+    flavor: T(["There are seven nights in a week too.", "Add grown-ups and children.", "Share four people between two rooms.", "Share eight people between two groups."],
+      ["Een week heeft ook zeven nachten.", "Tel volwassenen en kinderen bij elkaar op.", "Verdeel vier mensen over twee kamers.", "Verdeel acht mensen over twee groepen."]) },
   decoKinds: ["sofa", "lamp", "table", "bed", "stove"],
   doneMsg: T("Raclette gone, Uno won (by someone who won't say it out loud). Good night!", "Raclette op, Uno gewonnen (door iemand die het niet hardop zegt). Welterusten!")
 });
@@ -497,8 +521,10 @@ const DAY28 = genLevel({
          T(["It was a great week. Same cabin next year?"], ["Het was een topweek. Zelfde huis volgend jaar?"]),
          T(["Are we there yet? We haven't even left."], ["Zijn we er al? We zijn nog niet eens vertrokken."])],
   code: { answer: "2128", title: T("Driveway gate", "Hek van de oprit"), syms: ["🚗", "🧳", "🎄", "🏠"],
-    flavor: T(["The car is ready.", "Suitcases: always one more than you think.", "The Christmas tree stays here. It won't fit in the car.", "Your own bed is waiting at home."],
-      ["De auto staat klaar.", "Koffers: altijd één meer dan je denkt.", "De kerstboom blijft hier. Hij past niet in de auto.", "Thuis wacht je eigen bed."]) },
+    questions: T(["A car has 4 wheels. How many pairs of wheels is that?", "A bag weighs 1,000 grams. How many kilograms is that?", "Which part of a tree takes up water? 1: the needles. 2: the roots.", "A spider is not an insect. How many legs does a spider have?"],
+      ["Een auto heeft 4 wielen. Hoeveel paren wielen zijn dat?", "Een tas weegt 1.000 gram. Hoeveel kilogram is dat?", "Welk deel van een boom neemt water op? 1: de naalden. 2: de wortels.", "Een spin is geen insect. Hoeveel poten heeft een spin?"]),
+    flavor: T(["A pair is two wheels.", "One kilogram is 1,000 grams.", "Roots take up water from the soil.", "Spiders have four pairs of legs; insects have three."],
+      ["Een paar is twee wielen.", "Eén kilogram is 1.000 gram.", "Wortels nemen water uit de grond op.", "Spinnen hebben vier paar poten; insecten hebben er drie."]) },
   decoKinds: ["tree", "tree", "pine"],
   doneMsg: ""
 });

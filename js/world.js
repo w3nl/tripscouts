@@ -2531,7 +2531,7 @@ function drawClue(c) {
   g.strokeStyle = OUT; g.lineWidth = 1.5;
   if (c.kind === "melody") {
     // a bell on a post, in the colour of its note
-    const col = NOTES[+c.v - 1][3], a = c.ring ? Math.sin(c.ring / 2.5) * c.ring / 100 : 0;
+    const col = c.question ? "#d0c5ad" : NOTES[+c.v - 1][3], a = c.ring ? Math.sin(c.ring / 2.5) * c.ring / 100 : 0;
     g.fillStyle = "#6b4528"; g.fillRect(cx - 2.5, by - 52, 5, 52); g.strokeRect(cx - 2.5, by - 52, 5, 52); g.fillRect(cx - 2.5, by - 54, 16, 5); g.strokeRect(cx - 2.5, by - 54, 16, 5);
     g.save(); g.translate(cx + 10, by - 49); g.rotate(a);
     g.fillStyle = col; g.beginPath(); g.moveTo(-3, 0); g.quadraticCurveTo(-4, 10, -9, 15); g.lineTo(9, 15); g.quadraticCurveTo(4, 10, 3, 0); g.closePath(); g.fill(); g.stroke();
@@ -2540,7 +2540,7 @@ function drawClue(c) {
     numPlate(cx, by - 20, c.i + 1);
   } else if (c.kind === "colours") {
     // a lamp post with a coloured globe
-    const col = COLOURS[c.v][0];
+    const col = c.question ? "#d0c5ad" : COLOURS[c.v][0];
     g.fillStyle = "#2b2b30"; g.fillRect(cx - 2.5, by - 56, 5, 56); g.fillRect(cx - 8, by - 4, 16, 4);
     const glow = g.createRadialGradient(cx, by - 62, 3, cx, by - 62, 40); glow.addColorStop(0, col + "aa"); glow.addColorStop(1, col + "00");
     g.fillStyle = glow; g.fillRect(cx - 40, by - 102, 80, 80);
@@ -2551,16 +2551,20 @@ function drawClue(c) {
     // a signpost with an arrow
     g.fillStyle = "#6b4528"; g.fillRect(cx - 3, by - 50, 6, 50); g.strokeRect(cx - 3, by - 50, 6, 50);
     g.fillStyle = "#e8d4a8"; g.beginPath(); rp(cx - 17, by - 62, 34, 26, 4); g.fill(); g.stroke();
-    g.save(); g.translate(cx, by - 49); g.rotate({ "→": 0, "↓": Math.PI / 2, "←": Math.PI, "↑": -Math.PI / 2 }[c.v]);
-    g.fillStyle = "#c43a3a"; g.beginPath(); g.moveTo(-9, -3); g.lineTo(2, -3); g.lineTo(2, -8); g.lineTo(10, 0); g.lineTo(2, 8); g.lineTo(2, 3); g.lineTo(-9, 3); g.closePath(); g.fill();
-    g.restore();
+    if (c.question) {
+      g.fillStyle = "#3a3f4a"; g.font = "700 18px Fredoka, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("?", cx, by - 49);
+    } else {
+      g.save(); g.translate(cx, by - 49); g.rotate({ "→": 0, "↓": Math.PI / 2, "←": Math.PI, "↑": -Math.PI / 2 }[c.v]);
+      g.fillStyle = "#c43a3a"; g.beginPath(); g.moveTo(-9, -3); g.lineTo(2, -3); g.lineTo(2, -8); g.lineTo(10, 0); g.lineTo(2, 8); g.lineTo(2, 3); g.lineTo(-9, 3); g.closePath(); g.fill();
+      g.restore();
+    }
     numPlate(cx, by - 20, c.i + 1);
   } else {
     // a stone with a carved letter (indoors: a wooden letter block)
     if (L.d.theme === "huis") { g.fillStyle = "#e0b070"; g.beginPath(); rp(cx - 16, by - 32, 32, 32, 4); g.fill(); g.stroke(); g.fillStyle = "#c8955a"; g.fillRect(cx - 12, by - 28, 24, 2); }
     else { g.fillStyle = "#8a8f98"; g.beginPath(); g.ellipse(cx, by - 16, 18, 17, 0, Math.PI, 0); g.lineTo(cx + 18, by); g.lineTo(cx - 18, by); g.closePath(); g.fill(); g.stroke(); }
     if (L.d.theme === "sneeuw") { g.fillStyle = "#f4f8ff"; g.beginPath(); g.ellipse(cx, by - 31, 12, 4, 0, 0, 7); g.fill(); }
-    g.fillStyle = "#3a3f4a"; g.font = "700 18px Fredoka, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(c.v, cx, by - 15);
+    g.fillStyle = "#3a3f4a"; g.font = "700 18px Fredoka, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(c.question ? "?" : c.v, cx, by - 15);
     numPlate(cx + 17, by - 30, c.i + 1);
   }
 }

@@ -331,6 +331,10 @@ function ringBell() {
 function clueTalk(c) {
   c.heard = true;
   const nr = T(`${c.i + 1} of ${c.n}`, `${c.i + 1} van ${c.n}`);
+  if (c.question) {
+    const name = c.kind === "melody" ? T("Bell", "Belletje") : c.kind === "colours" ? T("Lamp", "Lamp") : c.kind === "arrows" ? T("Signpost", "Wegwijzer") : T("Letter", "Letter");
+    return say(name, [`${nr}: ${c.question[0]}`, c.question[1]]);
+  }
   if (c.kind === "melody") { const nt = NOTES[+c.v - 1]; ringClue(c); return say(T("Bell", "Belletje"), [T(`Bell ${nr} plays a note: ${nt[1]}.`, `Belletje ${nr} speelt een toon: ${nt[1]}.`)]); }
   if (c.kind === "colours") return say(T("Lamp", "Lamp"), [T(`Lamp ${nr} shines ${COLOURS[c.v][1]}.`, `Lamp ${nr} brandt ${COLOURS[c.v][1]}.`)]);
   if (c.kind === "arrows") return say(T("Signpost", "Wegwijzer"), [T(`Signpost ${nr} points ${ARROWS[c.v]}.`, `Wegwijzer ${nr} wijst ${ARROWS[c.v]}.`)]);
@@ -630,7 +634,7 @@ function step() {
     else if (L.timer < 120 && L.timer % 30 === 0) tone(880, .04, "square", .025); // the last two seconds tick faster
   }
   // A melody bell rings when you walk past it for the first time.
-  for (const c of L.clues) { if (c.ring > 0) c.ring--; if (c.kind === "melody" && !c.heard && Math.abs(c.x + 16 - (P.x + P.w / 2)) < 20) { c.heard = true; ringClue(c); } }
+  for (const c of L.clues) { if (c.ring > 0) c.ring--; if (c.kind === "melody" && !c.question && !c.heard && Math.abs(c.x + 16 - (P.x + P.w / 2)) < 20) { c.heard = true; ringClue(c); } }
   if (L.bell && L.bell.swing > 0) L.bell.swing--;
   // The animal follows your footsteps, a little behind you, never on top of you (then you couldn't see it).
   // After a big jump (a respawn) it comes along at once.
