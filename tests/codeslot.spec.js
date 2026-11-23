@@ -189,7 +189,7 @@ for (const [lang, insulated, question] of [
 });
 
 for (const lang of ['en', 'nl']) for (const [region, day, answer] of [
-  ['pole', 4, 'RGBY'], ['tirol', 7, 'RWRG'], ['norway', 4, 'RYBR']
+  ['pole', 4, 'RGBY'], ['tirol', 7, 'RWRG'], ['norway', 4, 'RYBR'], ['netherlands', 2, 'GBRG']
 ]) test(`${region} dag ${day + 1}: lampvragen bepalen de kleuren zonder ze te verraden (${lang})`, async ({ page }) => {
   await seed(page, { lang, region, unlocked: 8 });
   await startDay(page, day);

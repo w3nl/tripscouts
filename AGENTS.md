@@ -214,7 +214,7 @@ The Linux app is listed at https://snapcraft.io/tripscouts (currently edge: `sud
 |---|---|---|---|---|---|---|---|
 | 1 | Arrival at the Zaanse Schans (6101) | house keys 🔑 | bring back 🐑 lamb | symbols | **3164** | millers, wind power (option 1), bicycle wheels and seasons | wind, canals |
 | 2 | The Windmills of Kinderdijk (6202) | tulip bulbs 🌷 | 3 levers 🔧 | count | **453** | windmills 4, polder water management (option 5), tulip beds 3 | dikes (hills), strong wind |
-| 3 | Amsterdam by Canal Boat (6303, `stad`) | bike bells 🔔 | bell 🔔 6 s | colours | **GBRG** | green, blue, red, green | canal boats carry you, city pigeons |
+| 3 | Amsterdam by Canal Boat (6303, `stad`) | bike bells 🔔 | bell 🔔 6 s | colours | **GBRG** | buoyancy, canal banks, time and evaporation | canal boats carry you, city pigeons |
 | 4 | Gouda by Candlelight (6404, `stad`, no enemies) | cheeses 🧀 | bring big candle 🕯️ | word | **GOUDA** | numbered letters | dark, light grows with the candle |
 | 5 | Skating in Giethoorn (6505) | pairs of skates ⛸️ | no gate | clock | **1415** | signs with the time | ice, holes in the ice, **skating** on a frozen canal (307 wide) |
 | 6 | The Hoge Veluwe (6606) | white bikes 🚲 | bring museum ticket 🖼️ | arrows | **→→↑←** | numbered signposts | drifting-sand hills, wild boar, **a white bike** (367 wide, 140 tiles cycling) |

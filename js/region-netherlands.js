@@ -70,8 +70,19 @@ const NL_LEVELS = [
            T(["Every year they fish thousands of bikes out of the canals. Where do they all come from?"], ["Elk jaar vissen ze duizenden fietsen uit de grachten. Waar komen die allemaal vandaan?"]),
            T(["Chips with mayonnaise in a paper cone. That's the law here."], ["Patat met mayonaise in een puntzak. Dat is hier de wet."])],
     code: { kind: "colours", answer: "GBRG", title: T("Gate by the bridge", "Hek bij de brug"),
-      riddle: T("Canal houses have colourful front doors. Four lamps along the canal show the door colours in order.",
-        "Grachtenhuizen hebben kleurige voordeuren. Vier lampen langs de gracht laten de deurkleuren op volgorde zien.") },
+      riddle: T("Solve the questions at the four lamps. Choose the colour beside each correct answer.",
+        "Los de vragen bij de vier lampen op. Kies de kleur naast elk goed antwoord."),
+      questions: T([
+        ["A boat can float because the water pushes it which way? Green: up; red: down.", "Water pushes upwards on an object in it. This is buoyancy."],
+        ["How many banks does one canal have, one on each side? Blue: two; yellow: four.", "A canal has a bank on each side."],
+        ["A bridge opens for 10 minutes and closes for 5. How long together? Red: 15 minutes; white: 5 minutes.", "Ten plus five is fifteen."],
+        ["Rainwater flows into a canal. What can happen to water in sunshine? Green: it evaporates; blue: it turns into stone.", "Evaporation changes liquid water into water vapour."]
+      ], [
+        ["Een boot kan drijven omdat het water hem welke kant op duwt? Groen: omhoog; rood: omlaag.", "Water duwt een voorwerp erin omhoog. Dat heet opwaartse kracht."],
+        ["Hoeveel oevers heeft één gracht, aan elke kant één? Blauw: twee; geel: vier.", "Een gracht heeft aan elke kant een oever."],
+        ["Een brug staat 10 minuten open en 5 minuten dicht. Hoe lang samen? Rood: 15 minuten; wit: 5 minuten.", "Tien plus vijf is vijftien."],
+        ["Regenwater stroomt een gracht in. Wat kan er met water gebeuren in de zon? Groen: het verdampt; blauw: het wordt steen.", "Bij verdamping verandert vloeibaar water in waterdamp."]
+      ]) },
     task: { kind: "timer", hud: "🔔", secs: 6, name: T("bridge bell", "brugbel"),
       need: T(["Ring the bell at the bridge back there. Then the bridge goes up and the gate opens.", "But not for long. The bikes are waiting."],
         ["Luid daar achter de bel van de brug. Dan gaat de brug omhoog en het hek open.", "Maar niet lang. De fietsers staan te wachten."]),
