@@ -511,8 +511,10 @@ const DAY28 = genLevel({
          T(["It was a great week. Same cabin next year?"], ["Het was een topweek. Zelfde huis volgend jaar?"]),
          T(["Are we there yet? We haven't even left."], ["Zijn we er al? We zijn nog niet eens vertrokken."])],
   code: { answer: "2128", title: T("Driveway gate", "Hek van de oprit"), syms: ["🚗", "🧳", "🎄", "🏠"],
-    flavor: T(["The car is ready.", "Suitcases: always one more than you think.", "The Christmas tree stays here. It won't fit in the car.", "Your own bed is waiting at home."],
-      ["De auto staat klaar.", "Koffers: altijd één meer dan je denkt.", "De kerstboom blijft hier. Hij past niet in de auto.", "Thuis wacht je eigen bed."]) },
+    questions: T(["A car has 4 wheels. How many pairs of wheels is that?", "A bag weighs 1,000 grams. How many kilograms is that?", "Which part of a tree takes up water? 1: the needles. 2: the roots.", "A spider is not an insect. How many legs does a spider have?"],
+      ["Een auto heeft 4 wielen. Hoeveel paren wielen zijn dat?", "Een tas weegt 1.000 gram. Hoeveel kilogram is dat?", "Welk deel van een boom neemt water op? 1: de naalden. 2: de wortels.", "Een spin is geen insect. Hoeveel poten heeft een spin?"]),
+    flavor: T(["A pair is two wheels.", "One kilogram is 1,000 grams.", "Roots take up water from the soil.", "Spiders have four pairs of legs; insects have three."],
+      ["Een paar is twee wielen.", "Eén kilogram is 1.000 gram.", "Wortels nemen water uit de grond op.", "Spinnen hebben vier paar poten; insecten hebben er drie."]) },
   decoKinds: ["tree", "tree", "pine"],
   doneMsg: ""
 });

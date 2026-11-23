@@ -74,7 +74,8 @@ for (const lang of ['en', 'nl']) for (const [day, answer, symbols] of [
   [1, '3817', ['🍄', '🌲', '🦔', '🍂']],
   [2, '6382', ['⭐', '🔔', '🎠', '🥨']],
   [5, '6254', ['🦌', '🐗', '🦉', '🦊']],
-  [6, '7924', ['🌙', '👨‍👩‍👧', '🛏️', '🧖']]
+  [6, '7924', ['🌙', '👨‍👩‍👧', '🛏️', '🧖']],
+  [7, '2128', ['🚗', '🧳', '🎄', '🏠']]
 ]) test(`dag ${day + 1}: elk symbool heeft een vraag in plaats van een antwoord (${lang})`, async ({ page }) => {
   await seed(page, { lang, unlocked: 8 });
   const info = await page.evaluate(day => {

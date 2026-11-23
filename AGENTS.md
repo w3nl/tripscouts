@@ -153,7 +153,7 @@ The Linux app is listed at https://snapcraft.io/tripscouts (currently edge: `sud
 | 5 · Fri | Christmas Day (`sneeuw`, by hand) | baubles 🎄 | firewood 🪵 for the campfire | **5474** | 9 people minus 2×2 adults, 2×2 adults, 7 nights in a week, 2×2 sauna places |
 | 6 · Sat | The Wildlife Park (`sneeuw`, seed 2626) | animal photos 📸 | carrots 🥕 for the deer | **6254** | insect legs 4+2, pairs of boar legs, owls with 10 wings, fox paws |
 | 7 · Sun | The Last Evening (`huis`, seed 2727) | raclette cheeses 🧀 | Uno cards 🃏 | **7924** | 5+2 days, 4+5 people, 4 people in 2 rooms, 8 people in 2 sauna groups |
-| 8 · Mon | Going Home (`bos`, seed 2828) | lost socks 🧦 | suitcase 🧳 with the presents | **2128** | 🚗=2 🧳=1 🎄=2 🏠=8 |
+| 8 · Mon | Going Home (`bos`, seed 2828) | lost socks 🧦 | suitcase 🧳 with the presents | **2128** | pairs of car wheels, 1,000 grams in kilograms, tree roots take up water (option 2), spider legs |
 
 **North Pole** (Santa's village, scene `pole`; one lost penguin on day 1, otherwise arctic foxes `poolvos` and lemmings `lemming`; polar bears, walruses and a musk ox in the scenery; indoors a wind-up toy robot `speelgoed` in the workshop and runaway parcels `pakje` in the post office):
 
