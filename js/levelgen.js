@@ -429,8 +429,10 @@ const DAY23 = genLevel({
          T(["The glass lift takes you from the old town straight down. Don't look down. Or do."], ["Met de glazen lift ga je zo van de oude stad naar beneden. Niet naar beneden kijken. Of juist wel."]),
          T(["Mulled wine for the grown-ups, hot chocolate for the kids. And for anyone who can't decide: both."], ["Glühwein voor de volwassenen, warme chocomel voor de kinderen. En voor wie twijfelt: allebei."])],
   code: { answer: "6382", title: T("Christmas market gate", "Hek van de kerstmarkt"), syms: ["⭐", "🔔", "🎠", "🥨"],
-    flavor: T(["The star on top of the big Christmas tree.", "The bells of the cathedral.", "The carousel goes round and round.", "A pretzel from the bakery stall."],
-      ["De ster boven op de grote kerstboom.", "De klokken van de kathedraal.", "De draaimolen draait rondjes.", "Een krakeling uit de bakkerskraam."]) },
+    questions: T(["Three stalls each hang 2 stars. How many stars altogether?", "Luxembourg borders Belgium, France and Germany. How many countries is that?", "Two carousel rides each last 4 minutes. How many minutes in total?", "A pretzel costs 4 euros. You share the cost equally with a friend. How many euros does each pay?"],
+      ["Drie kraampjes hangen elk 2 sterren op. Hoeveel sterren samen?", "Luxemburg grenst aan België, Frankrijk en Duitsland. Hoeveel landen zijn dat?", "Twee ritjes in de draaimolen duren elk 4 minuten. Hoeveel minuten samen?", "Een krakeling kost 4 euro. Je deelt de kosten eerlijk met een vriend. Hoeveel euro betaalt ieder?"]),
+    flavor: T(["Add the three pairs.", "The country and its capital city are both called Luxembourg.", "Two times four minutes.", "Half of four euros."],
+      ["Tel de drie paren op.", "Het land en de hoofdstad heten allebei Luxemburg.", "Twee keer vier minuten.", "De helft van vier euro."]) },
   decoKinds: ["stall", "stall", "streetlamp", "xtree"], decoExtra: [["saab96", .1]],
   doneMsg: T("A lovely day in Luxembourg. Tomorrow is Paul's birthday.", "Een mooie dag in Luxemburg. Morgen is Paul jarig.")
 });

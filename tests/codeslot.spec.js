@@ -42,15 +42,18 @@ for (const [lang, seasons, parking, bedrooms] of [
   expect(clues.signs).toContain(bedrooms);
 });
 
-for (const lang of ['en', 'nl']) test(`spoorpad: elk symbool heeft een vraag in plaats van een antwoord (${lang})`, async ({ page }) => {
+for (const lang of ['en', 'nl']) for (const [day, answer, symbols] of [
+  [1, '3817', ['🍄', '🌲', '🦔', '🍂']],
+  [2, '6382', ['⭐', '🔔', '🎠', '🥨']]
+]) test(`dag ${day + 1}: elk symbool heeft een vraag in plaats van een antwoord (${lang})`, async ({ page }) => {
   await seed(page, { lang, unlocked: 8 });
-  const info = await page.evaluate(() => {
-    const d = LEVELS[1], signs = d.ents.filter(e => e[0] === 'sign').map(e => e[3][0]);
+  const info = await page.evaluate(day => {
+    const d = LEVELS[day], signs = d.ents.filter(e => e[0] === 'sign').map(e => e[3][0]);
     return { answer: d.code.answer, riddle: d.code.riddle, questions: d.code.questions, signs };
-  });
-  expect(info.answer).toBe('3817');
+  }, day);
+  expect(info.answer).toBe(answer);
   expect(info.riddle).toContain(lang === 'nl' ? 'vragen' : 'questions');
-  for (const [i, symbol] of ['🍄', '🌲', '🦔', '🍂'].entries()) {
+  for (const [i, symbol] of symbols.entries()) {
     expect(info.signs).toContain(`${symbol}: ${info.questions[i]}`);
     expect(info.signs.some(s => s.includes(`${symbol} = `))).toBe(false);
   }
