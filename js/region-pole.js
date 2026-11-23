@@ -170,8 +170,19 @@ const POLE_LEVELS = [
            T(["Shh. If you whistle, the lights dance faster. That's what the elves say."], ["Ssst. Als je fluit, dansen de lichten sneller. Dat zeggen de elfjes."]),
            T(["My toes are cold, but I'm not going inside. Not now."], ["Mijn tenen zijn koud, maar ik ga niet naar binnen. Nu niet."])],
     code: { kind: "arrows", answer: "↑→→↓", title: T("Lookout point gate", "Hek van het uitkijkpunt"),
-      riddle: T("Four signposts in the dark show the way to the lookout. Enter their arrows in order.",
-        "Vier wegwijzers in het donker wijzen de weg naar het uitkijkpunt. Voer hun pijlen in, op volgorde.") },
+      riddle: T("Solve the map questions at the four signposts. Enter each answer as an arrow.",
+        "Los de kaartvragen bij de vier wegwijzers op. Voer elk antwoord in als pijl."),
+      questions: T([
+        ["On a map with north at the top, which arrow points north?", "North is at the top of this map."],
+        ["On that map, east is to the right. Which arrow points east?", "East is to the right of north."],
+        ["Face north on the map and turn right. Which arrow shows your new direction?", "Right of north is east."],
+        ["On the map, south is opposite north. Which arrow points south?", "South is at the bottom of this map."]
+      ], [
+        ["Op een kaart met het noorden boven, welke pijl wijst naar het noorden?", "Op deze kaart staat het noorden bovenaan."],
+        ["Op die kaart ligt het oosten rechts. Welke pijl wijst naar het oosten?", "Het oosten ligt rechts van het noorden."],
+        ["Kijk op de kaart naar het noorden en draai rechtsaf. Welke pijl wijst jouw nieuwe richting aan?", "Rechts van het noorden ligt het oosten."],
+        ["Op de kaart ligt het zuiden tegenover het noorden. Welke pijl wijst naar het zuiden?", "Op deze kaart staat het zuiden onderaan."]
+      ]) },
     task: { kind: "lights", hud: "🏮", name: T("lanterns", "lantaarns"),
       need: T(["It's so dark that even the reindeer bump into each other.", "Light the three lanterns along the path. Then I'll open the gate to the lookout."],
         ["Het is zo donker dat zelfs de rendieren tegen elkaar op lopen.", "Steek de drie lantaarns langs het pad aan. Dan doe ik het hek naar het uitkijkpunt open."]),

@@ -2551,9 +2551,13 @@ function drawClue(c) {
     // a signpost with an arrow
     g.fillStyle = "#6b4528"; g.fillRect(cx - 3, by - 50, 6, 50); g.strokeRect(cx - 3, by - 50, 6, 50);
     g.fillStyle = "#e8d4a8"; g.beginPath(); rp(cx - 17, by - 62, 34, 26, 4); g.fill(); g.stroke();
-    g.save(); g.translate(cx, by - 49); g.rotate({ "→": 0, "↓": Math.PI / 2, "←": Math.PI, "↑": -Math.PI / 2 }[c.v]);
-    g.fillStyle = "#c43a3a"; g.beginPath(); g.moveTo(-9, -3); g.lineTo(2, -3); g.lineTo(2, -8); g.lineTo(10, 0); g.lineTo(2, 8); g.lineTo(2, 3); g.lineTo(-9, 3); g.closePath(); g.fill();
-    g.restore();
+    if (c.question) {
+      g.fillStyle = "#3a3f4a"; g.font = "700 18px Fredoka, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle"; g.fillText("?", cx, by - 49);
+    } else {
+      g.save(); g.translate(cx, by - 49); g.rotate({ "→": 0, "↓": Math.PI / 2, "←": Math.PI, "↑": -Math.PI / 2 }[c.v]);
+      g.fillStyle = "#c43a3a"; g.beginPath(); g.moveTo(-9, -3); g.lineTo(2, -3); g.lineTo(2, -8); g.lineTo(10, 0); g.lineTo(2, 8); g.lineTo(2, 3); g.lineTo(-9, 3); g.closePath(); g.fill();
+      g.restore();
+    }
     numPlate(cx, by - 20, c.i + 1);
   } else {
     // a stone with a carved letter (indoors: a wooden letter block)

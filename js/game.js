@@ -332,7 +332,7 @@ function clueTalk(c) {
   c.heard = true;
   const nr = T(`${c.i + 1} of ${c.n}`, `${c.i + 1} van ${c.n}`);
   if (c.question) {
-    const name = c.kind === "melody" ? T("Bell", "Belletje") : c.kind === "colours" ? T("Lamp", "Lamp") : T("Letter", "Letter");
+    const name = c.kind === "melody" ? T("Bell", "Belletje") : c.kind === "colours" ? T("Lamp", "Lamp") : c.kind === "arrows" ? T("Signpost", "Wegwijzer") : T("Letter", "Letter");
     return say(name, [`${nr}: ${c.question[0]}`, c.question[1]]);
   }
   if (c.kind === "melody") { const nt = NOTES[+c.v - 1]; ringClue(c); return say(T("Bell", "Belletje"), [T(`Bell ${nr} plays a note: ${nt[1]}.`, `Belletje ${nr} speelt een toon: ${nt[1]}.`)]); }
