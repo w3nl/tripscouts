@@ -484,8 +484,10 @@ const DAY27 = genLevel({
          T(["I've already packed my suitcase. Just kidding. It's still open on the bed."], ["Ik heb mijn koffer al ingepakt. Grapje. Hij ligt nog open op bed."]),
          T(["Home tomorrow. I'll miss the steam room. And the gourmet set. And the raclette."], ["Morgen naar huis. Ik ga het stoombad missen. En de gourmet. En de raclette."])],
   code: { answer: "7924", title: T("Door to the terrace", "Deur naar het terras"), syms: ["🌙", "👨‍👩‍👧", "🛏️", "🧖"],
-    flavor: T(["Count the nights this week.", "Count everyone in the cabin.", "Two bedrooms for two people. How many per room?", "How many people fit in the sauna?"],
-      ["Tel de nachtjes deze week.", "Tel alle mensen in het huis.", "Twee slaapkamers voor twee personen. Hoeveel per kamer?", "Hoeveel mensen passen in de sauna?"]) },
+    questions: T(["A week has 5 weekdays and 2 weekend days. How many days is that?", "The families have 4 grown-ups and 5 children. How many people altogether?", "Four people share 2 bedrooms equally. How many in each room?", "Eight people go to the sauna in 2 equal groups. How many in each group?"],
+      ["Een week heeft 5 doordeweekse dagen en 2 weekenddagen. Hoeveel dagen zijn dat?", "De gezinnen hebben 4 volwassenen en 5 kinderen. Hoeveel mensen zijn dat samen?", "Vier mensen verdelen zich eerlijk over 2 slaapkamers. Hoeveel per kamer?", "Acht mensen gaan in 2 gelijke groepen naar de sauna. Hoeveel per groep?"]),
+    flavor: T(["There are seven nights in a week too.", "Add grown-ups and children.", "Share four people between two rooms.", "Share eight people between two groups."],
+      ["Een week heeft ook zeven nachten.", "Tel volwassenen en kinderen bij elkaar op.", "Verdeel vier mensen over twee kamers.", "Verdeel acht mensen over twee groepen."]) },
   decoKinds: ["sofa", "lamp", "table", "bed", "stove"],
   doneMsg: T("Raclette gone, Uno won (by someone who won't say it out loud). Good night!", "Raclette op, Uno gewonnen (door iemand die het niet hardop zegt). Welterusten!")
 });
