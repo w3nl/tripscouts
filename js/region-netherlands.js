@@ -201,8 +201,19 @@ const NL_LEVELS = [
            T(["The wind here is so strong, I walked backwards for a while without noticing."], ["De wind is hier zo sterk, ik liep een tijdje achteruit zonder het te merken."]),
            T(["The lighthouse is red and white. And very tall. And the stairs are very many."], ["De vuurtoren is rood met wit. En heel hoog. En de trap is heel lang."])],
     code: { kind: "melody", answer: "1324", title: T("Gate in the dunes", "Hek in de duinen"),
-      riddle: T("The ship's bells in the harbour play a little tune. Four bells along the way give the notes. Play them in order.",
-        "De scheepsbellen in de haven spelen een deuntje. Vier bellen onderweg geven de tonen. Speel ze op volgorde.") },
+      riddle: T("Solve the questions at the four bells. Each answer gives a note: 1 = do, 2 = re, 3 = mi, 4 = sol, 5 = la.",
+        "Los de vragen bij de vier bellen op. Elk antwoord geeft een toon: 1 = do, 2 = re, 3 = mi, 4 = sol, 5 = la."),
+      questions: T([
+        ["When the sea is low and sandbanks appear, is it low tide or high tide? 1: low tide; 5: high tide.", "At low tide, the water level is lower."],
+        ["Is a seal a mammal or a fish? 3: mammal; 2: fish.", "Seals breathe air and feed their young milk."],
+        ["What do marram grass roots help hold in place in the dunes? 2: sand; 4: boats.", "The roots help keep dune sand from blowing away."],
+        ["Which body in space strongly influences the tides? 4: the Moon; 1: Mars.", "The Moon's gravity helps cause tides."]
+      ], [
+        ["Als de zee laag staat en zandplaten verschijnen, is het dan eb of vloed? 1: eb; 5: vloed.", "Bij eb staat het water lager."],
+        ["Is een zeehond een zoogdier of een vis? 3: zoogdier; 2: vis.", "Zeehonden ademen lucht en geven hun jongen melk."],
+        ["Wat helpen de wortels van helmgras in de duinen vasthouden? 2: zand; 4: boten.", "De wortels helpen voorkomen dat duinzand wegwaait."],
+        ["Welk hemellichaam heeft veel invloed op eb en vloed? 4: de maan; 1: Mars.", "De zwaartekracht van de maan helpt eb en vloed veroorzaken."]
+      ]) },
     task: { kind: "lights", hud: "🏮", name: T("dike lamps", "dijklampen"),
       need: T(["Fog is rolling in from the sea. The ferry can't see the harbour.", "Light the three lamps on the dike. Then the gate to the harbour opens."],
         ["Er komt mist van zee. De veerboot kan de haven niet zien.", "Steek de drie lampen op de dijk aan. Dan gaat het hek naar de haven open."]),
