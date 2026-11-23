@@ -130,7 +130,7 @@ for (const lang of ['en', 'nl']) for (const [region, day, answer, symbols] of [
 });
 
 for (const lang of ['en', 'nl']) for (const [region, day, answer] of [
-  ['pole', 1, '1355'], ['tirol', 3, '5315']
+  ['pole', 1, '1355'], ['tirol', 3, '5315'], ['norway', 3, '5432']
 ]) test(`${region} dag ${day + 1}: bellenvragen geven de tonen zonder ze voor te spelen (${lang})`, async ({ page }) => {
   await seed(page, { lang, region, unlocked: 8 });
   await startDay(page, day);

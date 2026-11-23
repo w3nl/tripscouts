@@ -101,8 +101,19 @@ const NORWAY_LEVELS = [
            T(["There's rice pudding tonight. Whoever finds the almond wins a marzipan pig."], ["Vanavond is er rijstepap. Wie de amandel vindt, wint een marsepeinen varkentje."]),
            T(["The paper stars glow in every window. From the fjord the village looks like the sky."], ["De papieren sterren gloeien in elk raam. Vanaf het fjord lijkt het dorp op de sterrenhemel."])],
     code: { kind: "melody", answer: "5432", title: T("Gate of the village square", "Hek van het dorpsplein"),
-      riddle: T("The church bells play a short tune at Christmas. Four small bells along the way give the notes. Play them in order.",
-        "Met kerst spelen de kerkklokken een kort deuntje. Vier belletjes onderweg geven de tonen. Speel ze op volgorde.") },
+      riddle: T("Solve the questions at the four bells. Each answer gives a note: 1 = do, 2 = re, 3 = mi, 4 = sol, 5 = la.",
+        "Los de vragen bij de vier bellen op. Elk antwoord geeft een toon: 1 = do, 2 = re, 3 = mi, 4 = sol, 5 = la."),
+      questions: T([
+        ["A star has five points. How many points have two stars together? 5: ten; 3: seven.", "Five plus five makes ten."],
+        ["A church is 800 years old. How many centuries is that? 4: eight; 2: four.", "A century is 100 years."],
+        ["A wooden beam comes from which living thing? 3: a tree; 1: a rock.", "Wood comes from trees."],
+        ["A candle burns for two hours each evening. How many hours in two evenings? 2: four; 5: two.", "Two times two is four."]
+      ], [
+        ["Een ster heeft vijf punten. Hoeveel punten hebben twee sterren samen? 5: tien; 3: zeven.", "Vijf plus vijf is tien."],
+        ["Een kerk is 800 jaar oud. Hoeveel eeuwen is dat? 4: acht; 2: vier.", "Een eeuw is 100 jaar."],
+        ["Van welk levend wezen komt een houten balk? 3: een boom; 1: een steen.", "Hout komt van bomen."],
+        ["Een kaars brandt elke avond twee uur. Hoeveel uur is dat in twee avonden? 2: vier; 5: twee.", "Twee keer twee is vier."]
+      ]) },
     task: { kind: "lights", hud: "🕯️", name: T("lanterns", "lantaarns"),
       need: T(["It's Christmas Eve. The church service starts soon.", "Light the three lanterns on the way to the church, so everyone can find it."],
         ["Het is kerstavond. De kerkdienst begint zo.", "Steek de drie lantaarns op weg naar de kerk aan, zodat iedereen hem kan vinden."]),
