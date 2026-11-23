@@ -193,7 +193,7 @@ The Linux app is listed at https://snapcraft.io/tripscouts (currently edge: `sud
 | 5 | The Fishing Village (5505) | fish 🐟 | 3 levers 🔧 | colours | **RYBR** | seals, fish gills and scales, and glacial fjords |
 | 6 | The Troll Forest (5606) | bells 🔔 | light 3 lamps 🔥 | word | **TROLL** | questions about light, trees, oxygen, owls and shadows |
 | 7 | Northern Lights (5707) | cups of hot chocolate ☕ | no gate | clock | **2200** | quarter hours, adding 45 minutes and the 24-hour clock |
-| 8 | Going Home (5808) | woolly socks 🧦 | bring backpack 🎒 | word | **HOME** (NL **THUIS**) | numbered letters |
+| 8 | Going Home (5808) | woolly socks 🧦 | bring backpack 🎒 | word | **HOME** (NL **THUIS**) | questions about freezing, time, mammals, wind energy and seasons (NL) |
 
 **Dalmatia** in summer (Camp Lavanda, theme `kust`: limestone, dry grass and sea urchins as spikes; scenes `adriatic`, `oldtown` and `falls`; enemy `krab`, also `meeuw` and `geit`):
 

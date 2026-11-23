@@ -232,7 +232,19 @@ const NORWAY_LEVELS = [
            T(["Same red cabin next year? With the same trolls?"], ["Volgend jaar hetzelfde rode huisje? Met dezelfde trollen?"]),
            T(["Two days of driving. Who brought the Uno cards for the ferry?"], ["Twee dagen rijden. Wie heeft de Uno-kaarten voor op de veerboot?"])],
     code: { kind: "word", answer: T("HOME", "THUIS"), extra: T("ARST", "AERO"), title: T("Driveway gate", "Hek van de oprit"),
-      riddle: T("Four letters on stones along the drive. Together they say where we're going.", "Letters op stenen langs de oprit. Samen zeggen ze waar we heen gaan.") },
+      riddle: T("Solve the questions on the stones. Their letters say where we're going.", "Los de vragen op de stenen op. Hun letters zeggen waar we heen gaan."),
+      questions: T([
+        ["What happens when liquid water freezes? H: it becomes ice; A: it becomes steam.", "Freezing turns liquid water into solid ice."],
+        ["How many minutes are in an hour? O: 60; S: 30.", "An hour has 60 minutes."],
+        ["What do mammal mothers feed their babies? M: milk; R: leaves.", "Mammals feed their young milk."],
+        ["A wind turbine can make what from the wind? E: electricity; T: snow.", "Wind turns the blades, which drive a generator."]
+      ], [
+        ["Wat gebeurt er als vloeibaar water bevriest? T: het wordt ijs; A: het wordt stoom.", "Bij bevriezen wordt vloeibaar water vast ijs."],
+        ["Hoeveel minuten zitten er in een uur? H: 60; R: 30.", "Een uur heeft 60 minuten."],
+        ["Wat geven zoogdieren hun jongen te drinken? U: melk; A: water uit kieuwen.", "Zoogdieren voeden hun jongen met melk."],
+        ["Wat kan een windmolen uit wind maken? I: elektriciteit; E: sneeuw.", "De wind draait de wieken, die een generator aandrijven."],
+        ["Hoeveel seizoenen zijn er? S: vier; O: twee.", "Lente, zomer, herfst en winter zijn vier seizoenen."]
+      ]) },
     decoKinds: ["pine", "rorbu", "pine", "kicksled"],
     doneMsg: ""
   })
