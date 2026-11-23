@@ -75,8 +75,8 @@ test('met de pijltjes kies je een ander personage', async ({ page }) => {
   await expect(page.locator('#levels button').first()).toBeFocused();
   for (let i = 0; i < 3 && !(await page.evaluate(() => !!document.activeElement.closest('#chars'))); i++) await press(page, BTN.UP);
   expect(await page.evaluate(() => !!document.activeElement.closest('#chars'))).toBe(true);
-  // omhoog komt uit bij het personage dat erboven staat; helemaal naar links is Paul
-  for (let i = 0; i < 4; i++) await press(page, BTN.LEFT);
+  // omhoog komt uit bij het personage dat erboven staat; stop bij Paul voordat links naar de reiskaart gaat
+  for (let i = 0; i < 10 && !(await page.evaluate(() => document.activeElement === document.querySelector('#chars button'))); i++) await press(page, BTN.LEFT);
   await expect(page.locator('#chars button').first()).toBeFocused();
   await press(page, BTN.RIGHT);
   await press(page, BTN.RIGHT);

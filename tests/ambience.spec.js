@@ -60,3 +60,31 @@ test('off by default; the button turns it on and it plays in a level, not in the
   await page.reload();
   await expect(page.locator('#ambBtn')).toHaveText('🌲 Sfeergeluid aan');
 });
+
+test('after a level, settings, help and progress stay quiet but level screens keep their ambience', async ({ page }) => {
+  await seed(page);
+  await page.locator('#settingsOpen').click();
+  await page.locator('#ambBtn').click();
+  await page.locator('#settingsBack').click();
+  await page.locator('#levels button').first().click();
+  await expect.poll(() => page.evaluate(() => AMB && AMB.k.beds.join())).toBe('wind');
+  await page.locator('#card .btn').first().click();
+  await expect.poll(() => page.evaluate(() => AMB && AMB.k.beds.join())).toBe('wind');
+  await page.evaluate(() => openPad());
+  await expect.poll(() => page.evaluate(() => AMB && AMB.k.beds.join())).toBe('wind');
+  await page.evaluate(() => setScreen('card'));
+  await expect.poll(() => page.evaluate(() => AMB && AMB.k.beds.join())).toBe('wind');
+  await page.evaluate(() => setScreen('play'));
+  await page.locator('#hMenu').click();
+  await expect.poll(() => page.evaluate(() => AMB)).toBeNull();
+
+  await page.locator('#settingsOpen').click();
+  expect(await page.evaluate(() => AMB)).toBeNull();
+  await page.locator('#settingsBack').click();
+  await page.locator('#helpOpen').click();
+  expect(await page.evaluate(() => AMB)).toBeNull();
+  await page.locator('#helpBack').click();
+  await page.locator('#regionBtn').click();
+  await page.locator('#mapSave').click();
+  expect(await page.evaluate(() => AMB)).toBeNull();
+});

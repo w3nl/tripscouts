@@ -2,6 +2,46 @@ const { test, expect, chromium } = require('@playwright/test');
 const fs = require('fs'), path = require('path'), os = require('os');
 const root = path.join(__dirname, '..');
 
+test.describe('een oudere offline pagina met nieuwe scripts', () => {
+  test.use({ serviceWorkers: 'block', userAgent: 'Mozilla/5.0 (Linux; Android 13) Chrome/133.0.0.0 Mobile' });
+
+  test('blijft speelbaar en biedt herladen aan', async ({ page }) => {
+    const errors = [];
+    page.on('pageerror', e => errors.push(e.message));
+    await page.route('**/index.html', async route => {
+      const response = await route.fetch();
+      let html = await response.text();
+      const start = html.indexOf('  <div class="overlay" id="settingsWrap"');
+      const end = html.indexOf('  <!-- Install as an app', start);
+      expect(start).toBeGreaterThan(-1);
+      expect(end).toBeGreaterThan(start);
+      html = html.slice(0, start) + html.slice(end);
+      html = html.replace(/<div class="title-actions">[\s\S]*?<\/div>/, `<span class="version">
+        <button type="button" class="lang" data-lang="en">English</button>
+        <button type="button" class="lang" data-lang="nl">Nederlands</button>
+        <button type="button" class="lang voice" id="voiceBtn" hidden>Voices</button>
+        <button type="button" class="lang voice" id="ambBtn">Ambience</button>
+      </span>`);
+      await route.fulfill({ response, body: html });
+    });
+    await page.goto('/index.html');
+    await expect(page.locator('html')).toHaveClass(/ready/);
+    await expect(page.locator('#update-bar')).toBeVisible();
+    await expect(page.locator('#installBar')).toBeVisible();
+    await page.locator('#installClose').click();
+    await expect(page.locator('#ambBtn')).toBeVisible();
+    await page.locator('#ambBtn').click();
+    await expect(page.locator('#ambBtn')).toHaveAttribute('aria-pressed', 'true');
+    await page.locator('#levels button').first().click();
+    await page.locator('#card .btn').first().click();
+    await expect(page.locator('#hud')).toBeVisible();
+    await page.locator('#hMenu').click();
+    await page.locator('#regionBtn').click();
+    await expect(page.locator('#mapWrap')).toBeVisible();
+    expect(errors).toEqual([]);
+  });
+});
+
 test('het spel is een installeerbare app die offline werkt', async ({ page, context }) => {
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);

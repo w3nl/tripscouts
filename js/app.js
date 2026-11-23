@@ -2,8 +2,9 @@
 // Start het spel: versie, service worker, updatebalk en de spellus.
 
 /** Staat op het titelscherm. Altijd hetzelfde getal als CACHE in sw.js (tests/pwa.spec.js controleert dat). */
-const GAME_VERSION = 93;
+const GAME_VERSION = 94;
 $("version").textContent = "v" + GAME_VERSION;
+if (legacyMenu) $("update-bar").hidden = false;
 
 /* ---------- Installeerbare app en updates ---------- */
 /** De service worker vertelt welke versie hij serveert; is die nieuwer dan deze pagina, dan bieden we herladen aan. */
@@ -52,7 +53,7 @@ function updateHints() {
   if (state !== "settings") installManual = false;
   if (inst) {
     inst.hidden = !(installOffer && !playClicked && !IS_APP() && !IN_TV_APP && ((state === "title" && !installLater()) || (state === "settings" && installManual)));
-    $("installAgain").hidden = !(IS_IOS || IS_ANDROID) || IS_APP() || IN_TV_APP || !inst.hidden;
+    if (!legacyMenu) $("installAgain").hidden = !(IS_IOS || IS_ANDROID) || IS_APP() || IN_TV_APP || !inst.hidden;
   }
   // Draaien: alleen op een aanraakscherm dat rechtop staat, in het menu of tijdens het spelen.
   if (rot) {
@@ -71,7 +72,7 @@ addEventListener("appinstalled", () => { installOffer = false; installManual = f
 // Android: meteen de keuze voor de Android-app uit Google Play (de web-app-knop komt erbij zodra de browser die aanbiedt).
 if ((IS_IOS || IS_ANDROID || (IS_CHROMEOS && location.protocol !== "chrome-extension:")) && !IS_APP() && !IN_TV_APP) installOffer = true;
 installChoice();
-$("installAgain").onclick = () => { installManual = true; installOffer = true; playClicked = false; installChoice(); updateHints(); };
+if (!legacyMenu) $("installAgain").onclick = () => { installManual = true; installOffer = true; playClicked = false; installChoice(); updateHints(); };
 $("installPlay").onclick = () => { playClicked = true; setTimeout(updateHints, 0); };
 $("installBtn").onclick = async e => {
   if (!installEvt) return;

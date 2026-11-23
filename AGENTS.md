@@ -138,7 +138,7 @@ The Linux app is listed at https://snapcraft.io/tripscouts (currently edge: `sud
 
 - Saved in `localStorage['cabin-week']`: `{ unlocked, char, best, region, regions }`. `unlocked` and `best` are the progress of the **Ardennes** (so older saves keep working); the other regions are in `regions[id] = { unlocked, best }` (`prog(id)` gives the right one). `region` is the region chosen on the map. `char` is 0–8 (one of the nine) or `"me"` (your own hero); `hero` holds the choices of your own hero (`{ name, size, voice, skin, hair, hairCol, extra, extraCol, coat, coatCol, legs, pants, glasses, beanie, scarf }`; older saves without `legs`/`extra` get the defaults: trousers, nothing in the hair). Use `heroChar()` for the character you play with, never `CHARS[save.char]`. A day counts as **done** when it has a `best` entry. The language is in `localStorage['cabin-week-lang']`. Every access is in `try/catch`; without storage the game still works (`tests/voortgang.spec.js`). The days and your own hero move to another device with a progress code and a hero code (`js/transfer.js`); if you add something to the save, add it to `cleanProgress()` or `cleanHero()` too, or it gets lost on the way.
 - Progress inside a level is not saved: a level takes a few minutes.
-- The service worker cache is `cabinweek-vN`; it only removes its own old caches (`cabinweek-`).
+- The service worker cache is `cabinweek-vN`; it only removes its own old caches (`cabinweek-`). Network-first requests can mix a cached v91 page with newer scripts. `legacyMenu` recognises that complete old menu, keeps its original controls working and offers a reload instead of failing at startup (`tests/pwa.spec.js`).
 
 ## Solutions (spoilers)
 

@@ -254,6 +254,8 @@ html.wide #padWrap .pad .cta { justify-content: flex-start !important; margin-to
 .settings-options .lang { font: inherit; font-weight: 700; color: var(--snow); background: var(--panel-2); border: 2px solid var(--line); border-radius: 12px; padding: 10px 14px; }
 .settings-options #installAgain { color: var(--pine); border-color: var(--pine); }
 .settings-options .lang[aria-pressed="true"] { color: var(--gold); border-color: var(--gold); }
+.version .lang { font: inherit; font-weight: 700; color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 8px; padding: 1px 8px; margin-left: 2px; }
+.version .lang[aria-pressed="true"] { color: var(--gold); border-color: var(--gold); }
 .title-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .title-actions .btn { font-size: 15px; padding: 7px 14px; }
 .menu-sheet { max-width: 640px; }

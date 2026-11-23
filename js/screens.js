@@ -27,11 +27,15 @@ function questLabel() {
   if (t.kind === "follow") return `${t.hud} ${L.animal && L.animal.follow ? T("follows you", "loopt mee") : T("find", "zoeken")}`;
   return `${t.hud} ${L.switches.filter(s => s.on).length}/${L.switches.length}`;
 }
+// A v91 offline page can load newer scripts when the connection returns between requests.
+const legacyMenu = ["settingsWrap", "helpWrap", "settingsOpen", "helpOpen", "settingsBack", "helpBack", "installAgain"].every(id => !$(id));
 function setScreen(s) {
   state = s;
   $("title").hidden = s !== "title";
-  $("settingsWrap").hidden = s !== "settings";
-  $("helpWrap").hidden = s !== "help";
+  if (!legacyMenu) {
+    $("settingsWrap").hidden = s !== "settings";
+    $("helpWrap").hidden = s !== "help";
+  }
   $("mapWrap").hidden = s !== "map";
   $("heroWrap").hidden = s !== "hero";
   $("saveWrap").hidden = s !== "save";
@@ -93,10 +97,12 @@ function completeLevel() {
 }
 
 function toTitle() { hideDialog(); dialog = null; setScreen("title"); buildTitle(); menuAutoFocus(); }
-$("settingsOpen").onclick = () => setScreen("settings");
-$("helpOpen").onclick = () => setScreen("help");
-$("settingsBack").onclick = toTitle;
-$("helpBack").onclick = toTitle;
+if (!legacyMenu) {
+  $("settingsOpen").onclick = () => setScreen("settings");
+  $("helpOpen").onclick = () => setScreen("help");
+  $("settingsBack").onclick = toTitle;
+  $("helpBack").onclick = toTitle;
+}
 
 /* ---------- Code lock ---------- */
 // One lock for every kind: digits, notes (a melody), colours, arrows or letters. The answer is a string of key values.
