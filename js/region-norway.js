@@ -42,10 +42,12 @@ const NORWAY_LEVELS = [
         ["Ik had de schopslee bij de winkel gezet, en nu staat hij op de rotsen.", "Trollen. Ze lenen dingen en vergeten ze terug te brengen."]),
       done: T(["My kicksled! One foot on, one foot kick, and off we go.", "The way to the village shop is open."], ["Mijn schopslee! Eén voet erop, met de andere afzetten, en gaan.", "De weg naar de dorpswinkel is open."]),
       after: T(["Kick, glide, kick, glide. Faster than the car."], ["Afzetten, glijden, afzetten, glijden. Sneller dan de auto."]) },
-    npcs: [T(["Everything here is expensive. Except the view. The view is free."], ["Alles is hier duur. Behalve het uitzicht. Dat is gratis."]),
+    npcs: [T(["Norwegian brown cheese is made by heating whey, the liquid left after making cheese."], ["Noorse bruine kaas wordt gemaakt door wei te verhitten. Wei is de vloeistof die overblijft bij het maken van kaas."]),
            T(["I tried brown cheese. It tastes like caramel and cheese had a baby."], ["Ik heb bruine kaas geproefd. Het smaakt alsof karamel en kaas een baby kregen."]),
            T(["The shop closes at three because it's dark. Sensible."], ["De winkel gaat om drie uur dicht omdat het donker is. Verstandig."])],
     code: { kind: "count", answer: "432", title: T("Gate to the village shop", "Hek naar de dorpswinkel"),
+      riddle: T("Count the red cabins. Which leftover liquid is heated to make Norwegian brown cheese? 3: whey; 1: seawater. Then count the elks.",
+        "Tel de rode huisjes. Welke overgebleven vloeistof wordt verhit voor Noorse bruine kaas? 3: wei; 1: zeewater. Tel daarna de elanden."),
       count: [["rorbu", T("red cabins", "rode huisjes")], ["kicksled", T("kicksleds", "schopsleeën")], ["deer", T("elks", "elanden")]] },
     decoKinds: ["kicksled", "pine", "rorbu", "pine"],
     doneMsg: T("Shopping done, by kicksled. The brown cheese is... interesting. The kids love it.", "Boodschappen gedaan, met de schopslee. De bruine kaas is... bijzonder. De kinderen vinden het heerlijk.")

@@ -339,3 +339,28 @@ for (const [lang, question, explanation] of [
   expect(info.npcs).toContain(explanation);
   expect([info.chalets, info.chamois]).toEqual([3, 4]);
 });
+
+for (const [lang, question, explanation] of [
+  ['en', '3: whey', 'heating whey'],
+  ['nl', '3: wei', 'wei te verhitten']
+]) test(`noorwegen schopslee: bruine kaas tussen de telvragen (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region: 'norway', unlocked: 8 });
+  const info = await page.evaluate(() => {
+    const d = LEVELS[1];
+    return { answer: d.code.answer, riddle: d.code.riddle, npcs: d.ents.filter(e => e[0] === 'npc' && e[3].lines).flatMap(e => e[3].lines).join(' '),
+      cabins: d.deco.filter(d => d[0] === 'rorbu').length, elks: d.deco.filter(d => d[0] === 'deer').length };
+  });
+  expect(info.answer).toBe('432');
+  expect(info.riddle).toContain(question);
+  expect(info.npcs).toContain(explanation);
+  expect([info.cabins, info.elks]).toEqual([4, 2]);
+  await startDay(page, 1);
+  const npc = await page.evaluate(explanation => {
+    const n = L.npcs.find(n => n.lines && n.lines.some(line => line.includes(explanation)));
+    return { x: n.x, y: n.y };
+  }, explanation);
+  await put(page, npc.x, npc.y + 32);
+  await page.keyboard.press('e');
+  await expect(page.locator('#dialog')).toBeVisible();
+  await expect(page.locator('#dialog')).toContainText(explanation);
+});
