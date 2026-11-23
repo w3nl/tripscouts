@@ -112,7 +112,20 @@ const NL_LEVELS = [
            T(["Stroopwafels were invented here. Two thin waffles with syrup in between. Genius."], ["De stroopwafel is hier uitgevonden. Twee dunne wafels met stroop ertussen. Geniaal."]),
            T(["Oliebollen already? It's not even New Year. I'll have two."], ["Nu al oliebollen? Het is nog geen oud en nieuw. Doe mij er maar twee."])],
     code: { kind: "word", answer: "GOUDA", extra: "EKSL", title: T("Gate of the market square", "Hek van de Markt"),
-      riddle: T("Five letters glow on stones in the candlelight. Together they spell this town. And a cheese.", "Vijf letters op stenen in het kaarslicht. Samen vormen ze deze stad. En een kaas.") },
+      riddle: T("Solve the five questions on the stones. Their letters spell this town and a cheese.", "Los de vijf vragen op de stenen op. Hun letters vormen deze stad en een kaas."),
+      questions: T([
+        ["Which Dutch town is famous for its cheese and stroopwafels? G: Gouda; K: Leeds.", "Gouda is a Dutch town known for both."],
+        ["Sound travels as vibrations. O: true; E: false.", "A vibrating object can make sound waves travel through air."],
+        ["What does a burning candle give off? U: light and heat; K: snow.", "A flame gives off light and heat."],
+        ["Two rounds of cheese cut into two equal halves give how many pieces? D: four; S: two.", "Two times two is four."],
+        ["Plants use sunlight to help make food. A: true; L: false.", "Plants use light, water and carbon dioxide to make food."]
+      ], [
+        ["Welke Nederlandse stad is bekend om kaas en stroopwafels? G: Gouda; K: Leeds.", "Gouda is een Nederlandse stad die om allebei bekend is."],
+        ["Geluid verplaatst zich als trillingen. O: waar; E: niet waar.", "Een trillend voorwerp kan geluidsgolven door de lucht laten gaan."],
+        ["Wat geeft een brandende kaars af? U: licht en warmte; K: sneeuw.", "Een vlam geeft licht en warmte af."],
+        ["Twee kazen elk in twee gelijke helften gesneden: hoeveel stukken zijn dat? D: vier; S: twee.", "Twee keer twee is vier."],
+        ["Planten gebruiken zonlicht om voedsel te maken. A: waar; L: niet waar.", "Planten gebruiken licht, water en koolstofdioxide om voedsel te maken."]
+      ]) },
     decoKinds: ["stall", "cheese", "gablehouse", "streetlamp"], decoExtra: [["xtree", .5]],
     doneMsg: T("The tree is lit, the square is full of candles and everyone has a warm stroopwafel. A beautiful Christmas Eve.", "De boom is aan, het plein staat vol kaarsjes en iedereen heeft een warme stroopwafel. Een mooie kerstavond.")
   }),
