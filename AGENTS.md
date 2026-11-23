@@ -147,7 +147,7 @@ The Linux app is listed at https://snapcraft.io/tripscouts (currently edge: `sud
 | Day | Level | 3 things | Task | Code | Where the digits are |
 |---|---|---|---|---|---|
 | 1 · Mon | Arrival in Pinebrook (`bos`, by hand) | cabin keys 🔑 | cup of tea 🍵 at the gate | **4944** | add bedrooms 2+2, people 4+5 and parking spaces 2+2; count the four seasons (signs in the level) |
-| 2 · Tue | Forest & Old Railway (`bos`, seed 2212, rail bike) | map pieces 🗺️ | plaster 🩹 for a grazed knee | **3817** | 🍄=3 🌲=8 🦔=1 🍂=7 |
+| 2 · Tue | Forest & Old Railway (`bos`, seed 2212, rail bike) | map pieces 🗺️ | plaster 🩹 for a grazed knee | **3817** | signs: mushrooms 1+2, pine cones 4 pairs, one night in a day and night, 5+2 days in a week |
 | 3 · Wed | Christmas Market in Luxembourg (`stad`, seed 2323, `quiet`) | mittens 🧤 | carousel ticket 🎟️ | **6382** | ⭐=6 🔔=3 🎠=8 🥨=2; in the church you can light a candle (optional) |
 | 4 · Thu | Paul's Birthday (`huis`, by hand, Lego) | presents 🎁 | bath towel 🛁 for the door upstairs | **4022** | Paul's new age 40, cake layers 2, floors above the ground floor 2 (garland on level 2, sign on level 0) |
 | 5 · Fri | Christmas Day (`sneeuw`, by hand) | baubles 🎄 | firewood 🪵 for the campfire | **5474** | kids 5, adults 4, nights 7, sauna 4 |

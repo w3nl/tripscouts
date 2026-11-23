@@ -274,13 +274,19 @@ function genLevel(o) {
   (o.signs || []).forEach(([f, lines]) => { const c = free(w * f); ents.push(["sign", c, yAt(c), lines]); });
   if (o.code) {
     const kind = o.code.kind || "symbols", ans = [...o.code.answer];
-    code = { x: codeX, y1: 2, y2: yAt(codeX), pad: codeX - 2, answer: o.code.answer, title: o.code.title, kind, keys: lockKeys(o.code), riddle: o.code.riddle, count: o.code.count };
+    code = { x: codeX, y1: 2, y2: yAt(codeX), pad: codeX - 2, answer: o.code.answer, title: o.code.title, kind, keys: lockKeys(o.code), riddle: o.code.riddle, count: o.code.count, questions: o.code.questions };
     used.add(codeX - 2);
     if (kind === "symbols") {
       const syms = o.code.syms;
-      code.riddle = T(`Four symbols: ${syms.join("  ")}. Signs along the way tell you which digit goes with which symbol.`,
-        `Vier symbolen: ${syms.join("  ")}. Onderweg staan bordjes die vertellen welk cijfer bij welk symbool hoort.`);
-      [.14, .37, .56, .74].forEach((f, i) => { const k = [2, 0, 3, 1][i], c = free(w * f); ents.push(["sign", c, yAt(c), [T(`Someone scratched something on this sign: ${syms[k]} = ${ans[k]}`, `Op dit bordje is iets gekrast: ${syms[k]} = ${ans[k]}`), o.code.flavor[k]]]); });
+      code.riddle = o.code.questions
+        ? T(`Four symbols: ${syms.join("  ")}. Solve the questions on the signs for their digits.`, `Vier symbolen: ${syms.join("  ")}. Los de vragen op de bordjes op voor de cijfers.`)
+        : T(`Four symbols: ${syms.join("  ")}. Signs along the way tell you which digit goes with which symbol.`,
+          `Vier symbolen: ${syms.join("  ")}. Onderweg staan bordjes die vertellen welk cijfer bij welk symbool hoort.`);
+      [.14, .37, .56, .74].forEach((f, i) => {
+        const k = [2, 0, 3, 1][i], c = free(w * f);
+        const clue = o.code.questions ? `${syms[k]}: ${o.code.questions[k]}` : T(`Someone scratched something on this sign: ${syms[k]} = ${ans[k]}`, `Op dit bordje is iets gekrast: ${syms[k]} = ${ans[k]}`);
+        ents.push(["sign", c, yAt(c), [clue, o.code.flavor[k]]]);
+      });
     } else if (kind === "melody" || kind === "colours" || kind === "arrows" || kind === "word") {
       // numbered clues along the way: bells, coloured lamps, signposts with an arrow, or carved letters
       const n = ans.length, end = (codeX - 4) / w;
@@ -394,8 +400,10 @@ const DAY22 = genLevel({
          T(["I saw a squirrel! Or it was a leaf. It did move."], ["Ik heb een eekhoorn gezien! Of het was een bladje. Het bewoog wel."]),
          T(["Nearly back. I can smell the chips already. Or that's my imagination."], ["Bijna terug. Ik ruik de frieten al. Of dat is de verbeelding."])],
   code: { answer: "3817", title: T("Barrier on the old railway", "Slagboom van het spoorpad"), syms: ["🍄", "🌲", "🦔", "🍂"],
-    flavor: T(["Mushrooms: look, don't eat.", "Pine trees smell like Christmas.", "Hedgehogs sleep in winter. Except this one.", "Autumn leaves, even in December."],
-      ["Paddenstoelen: kijken mag, eten niet.", "Dennen ruiken naar kerst.", "Egels slapen in de winter. Behalve deze.", "Herfstblaadjes, zelfs in december."]) },
+    questions: T(["You see 1 mushroom, then 2 more. How many in total?", "There are 4 pairs of pine cones. How many cones?", "A hedgehog sleeps by day and searches for food at night. How many nights are in one day and night?", "A week has 5 weekdays and 2 weekend days. How many days in all?"],
+      ["Je ziet 1 paddenstoel en daarna nog 2. Hoeveel samen?", "Er zijn 4 paren dennenappels. Hoeveel dennenappels?", "Een egel slaapt overdag en zoekt 's nachts eten. Hoeveel nachten zitten er in één dag en nacht?", "Een week heeft 5 doordeweekse dagen en 2 weekenddagen. Hoeveel dagen samen?"]),
+    flavor: T(["Mushrooms are fungi. Look, but don't eat wild ones.", "A pair means two.", "Hedgehogs are usually active at night.", "Count the days together."],
+      ["Paddenstoelen zijn schimmels. Kijk ernaar, maar eet geen wilde paddenstoelen.", "Een paar betekent twee.", "Egels zijn meestal 's nachts actief.", "Tel de dagen bij elkaar op."]) },
   decoKinds: ["tree", "tree", "pine"],
   doneMsg: T("The map is complete and everyone is back. Tired, muddy and happy.", "De kaart is compleet en iedereen is terug. Moe, modderig en vrolijk.")
 });
