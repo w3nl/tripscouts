@@ -229,8 +229,19 @@ const TIROL_LEVELS = [
            T(["Same chalet next year? I've already put it in my diary."], ["Volgend jaar hetzelfde chalet? Ik heb het al in mijn agenda gezet."]),
            T(["Are we there yet? We haven't even left the village."], ["Zijn we er al? We zijn het dorp nog niet eens uit."])],
     code: { kind: "colours", answer: "RWRG", title: T("Car park gate", "Hek van de parkeerplaats"),
-      riddle: T("Four lamps along the way: red and white like the Tirol flag, and one more. Enter the colours in order.",
-        "Vier lampen onderweg: rood en wit zoals de vlag van Tirol, en nog één. Voer de kleuren in, op volgorde.") },
+      riddle: T("Solve the questions at the four lamps. Choose the colour beside each correct answer.",
+        "Los de vragen bij de vier lampen op. Kies de kleur naast elk goed antwoord."),
+      questions: T([
+        ["Which colour is found in the Austrian flag? Red: red; blue: blue.", "Austria's flag has red, white and red horizontal stripes."],
+        ["Which colour does fresh snow usually look? White: white; green: green.", "Snow scatters light, so it usually looks white."],
+        ["What colour means stop at a traffic light? Red: red; green: green.", "A red traffic light tells traffic to stop."],
+        ["Which colour does chlorophyll give leaves? Green: green; red: red.", "Chlorophyll helps plants use light and makes many leaves look green."]
+      ], [
+        ["Welke kleur zit in de Oostenrijkse vlag? Rood: rood; blauw: blauw.", "De vlag van Oostenrijk heeft rode, witte en rode horizontale banen."],
+        ["Welke kleur heeft verse sneeuw meestal? Wit: wit; groen: groen.", "Sneeuw verstrooit licht en ziet er daarom meestal wit uit."],
+        ["Welke kleur betekent stoppen bij een verkeerslicht? Rood: rood; groen: groen.", "Een rood verkeerslicht zegt dat het verkeer moet stoppen."],
+        ["Welke kleur geeft bladgroen aan bladeren? Groen: groen; rood: rood.", "Bladgroen helpt planten licht te gebruiken en maakt veel bladeren groen."]
+      ]) },
     task: { kind: "levers", hud: "🔧", name: T("ski lockers", "skikluisjes"),
       need: T(["Our ski boots are still in the lockers. Three of them.", "Open all three, and then the car park gate opens too. Austrian efficiency."],
         ["Onze skischoenen staan nog in de kluisjes. Drie stuks.", "Doe ze alle drie open, dan gaat het hek van de parkeerplaats ook open. Oostenrijkse degelijkheid."]),

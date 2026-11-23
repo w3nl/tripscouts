@@ -180,7 +180,7 @@ The Linux app is listed at https://snapcraft.io/tripscouts (currently edge: `sud
 | 5 | The Toboggan Run (4505, 313 wide, a sledge down the run) | sledges 🛷 | bell 🔔 7 s | arrows | **↓←↓→** | directions, a clock face and a thermometer |
 | 6 | The Mountain Hut (4606, `huis`) | eggs 🥚 | light 3 lamps 🪔 | clock | **1930** | quarter hours, adding 45 minutes and the 24-hour clock |
 | 7 | Fondue Night (4707, `huis`) | fondue forks 🍴 | bring bread 🥖 | word | **FONDUE** | questions about melting, sharing, compass directions, condensation and maths |
-| 8 | Going Home (4808) | ski boots 🥾 | 3 levers 🔧 | colours | **RWRG** | red, white, red, green |
+| 8 | Going Home (4808) | ski boots 🥾 | 3 levers 🔧 | colours | **RWRG** | questions about Austria's flag, snow, traffic lights and leaves |
 
 **Norway** (Fjordvik, scene `fjord`, enemy `troll`):
 

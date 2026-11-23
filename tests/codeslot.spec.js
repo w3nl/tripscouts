@@ -170,16 +170,18 @@ for (const [lang, insulated, question] of [
   expect([info.igloos, info.canes]).toEqual([3, 2]);
 });
 
-for (const lang of ['en', 'nl']) test(`postkantoor: lampvragen bepalen de kleuren zonder ze te verraden (${lang})`, async ({ page }) => {
-  await seed(page, { lang, region: 'pole', unlocked: 8 });
-  await startDay(page, 4);
+for (const lang of ['en', 'nl']) for (const [region, day, answer] of [
+  ['pole', 4, 'RGBY'], ['tirol', 7, 'RWRG']
+]) test(`${region} dag ${day + 1}: lampvragen bepalen de kleuren zonder ze te verraden (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region, unlocked: 8 });
+  await startDay(page, day);
   const info = await page.evaluate(() => {
     const c = L.clues[0], draw = g.fill, colours = [];
     try { g.fill = (...args) => { colours.push(g.fillStyle); return draw.apply(g, args); }; drawClue(c); }
     finally { g.fill = draw; }
     return { x: c.x, y: c.y, question: c.question[0], colours, answer: L.d.code.answer, count: L.clues.filter(x => x.question).length };
   });
-  expect(info.answer).toBe('RGBY');
+  expect(info.answer).toBe(answer);
   expect(info.count).toBe(4);
   expect(info.colours).toContain('#d0c5ad');
   expect(info.colours).not.toContain('#e8423a');
