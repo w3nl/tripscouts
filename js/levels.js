@@ -110,8 +110,8 @@ const LEVELS = [
     spikes: [[26, 11, 2], [62, 11, 2], [90, 11, 2], [148, 11, 2]],
     gate: [106, 2, 11],
     code: { x: 154, y1: 2, y2: 11, pad: 152, answer: "5474", title: T("The gate by the Christmas tree", "Het hek bij de kerstboom"),
-      riddle: T("Number of kids, number of adults, number of nights in the cabin, and how many people fit in the sauna at once.",
-        "Aantal kinderen, aantal volwassenen, aantal nachten in het huisje, en hoeveel mensen er tegelijk in de sauna passen.") },
+      riddle: T("Four digits: children, adults, nights in a week, and people in the sauna at once. The sign helps you work them out.",
+        "Vier cijfers: kinderen, volwassenen, nachten in een week en mensen tegelijk in de sauna. Het bordje helpt je rekenen.") },
     ents: [
       ["sign", 15, 11, T(["Snow in Pinebrook! The kids: 'Wow!' The locals: 'Well, it is December.'", "And whoever tied the Christmas tree to the roof of the Saab: nicely done."],
         ["Sneeuw in Pinebrook! De kinderen: 'Wauw!' De dorpelingen: 'Ja, het is december.'", "En wie de kerstboom op het dak van de Saab heeft vastgebonden: mooi gedaan."])],
@@ -126,8 +126,8 @@ const LEVELS = [
         done: T(["Wood! Now just four adults who each want to light it a different way.", "The gate is open. On to the Christmas tree!"], ["Hout! Nu nog vier volwassenen die het op vier verschillende manieren willen aansteken.", "Het hek is open. Op naar de kerstboom!"]),
         after: T(["The fire's burning. So are the marshmallows."], ["Het vuur brandt. De marshmallows ook."]) } }],
       ["check", 109, 11],
-      ["sign", 113, 11, T(["Fact: 5 kids, 4 adults, 7 nights.", "And the sauna? It's in the cabin info. Or ask whoever made the rota."],
-        ["Weetje: 5 kinderen, 4 volwassenen, 7 nachten.", "En de sauna? Die staat in de huisinformatie. Of vraag het aan wie het rooster maakte."])],
+      ["sign", 113, 11, T(["There are 9 people. Each of the 2 families has 2 grown-ups. How many grown-ups, and how many children?", "A week has 7 days and 7 nights. The sauna has 2 benches, each with room for 2 people."],
+        ["Er zijn 9 mensen. Elk van de 2 gezinnen heeft 2 volwassenen. Hoeveel volwassenen en hoeveel kinderen zijn er?", "Een week heeft 7 dagen en 7 nachten. De sauna heeft 2 banken met elk plek voor 2 mensen."])],
       ["coin", 121, 7], ["coin", 122, 7], ["key", 131, 6], ["enemy", 135, 11], ["enemy", 146, 11],
       ...[141, 142].map(x => ["coin", x, 7]),
       ["exit", 162, 11]

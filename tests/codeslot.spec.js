@@ -56,6 +56,20 @@ for (const [lang, decades, floors] of [
   expect(info.signs).toContain(floors);
 });
 
+for (const [lang, people, sauna] of [
+  ['en', '9 people. Each of the 2 families has 2 grown-ups', '2 benches, each with room for 2 people'],
+  ['nl', '9 mensen. Elk van de 2 gezinnen heeft 2 volwassenen', '2 banken met elk plek voor 2 mensen']
+]) test(`kerstdag: de aanwijzingen leggen de sommen uit (${lang})`, async ({ page }) => {
+  await seed(page, { lang, unlocked: 8 });
+  const info = await page.evaluate(() => ({
+    answer: LEVELS[4].code.answer,
+    signs: LEVELS[4].ents.filter(e => e[0] === 'sign').flatMap(e => e[3]).join(' ')
+  }));
+  expect(info.answer).toBe('5474');
+  expect(info.signs).toContain(people);
+  expect(info.signs).toContain(sauna);
+});
+
 for (const lang of ['en', 'nl']) for (const [day, answer, symbols] of [
   [1, '3817', ['🍄', '🌲', '🦔', '🍂']],
   [2, '6382', ['⭐', '🔔', '🎠', '🥨']]
