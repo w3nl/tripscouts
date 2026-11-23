@@ -192,6 +192,20 @@ for (const lang of ['en', 'nl']) test(`noorderlicht: kaartvragen bepalen de pijl
   await expect(page.locator('#dialog')).toContainText(info.question);
 });
 
+for (const [lang, starting, explanation] of [
+  ['en', 'eleven in the evening and leaves 45 minutes later', 'add 12 to the hour'],
+  ['nl', "elf uur 's avonds klaar en vertrekt 45 minuten later", 'Tel bij een avondtijd 12 op']
+]) test(`kerstavond: de vertrektijd berekenen op een 24-uursklok (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region: 'pole', unlocked: 8 });
+  const info = await page.evaluate(() => ({
+    answer: LEVELS[6].code.answer,
+    signs: LEVELS[6].ents.filter(e => e[0] === 'sign').flatMap(e => e[3]).join(' ')
+  }));
+  expect(info.answer).toBe('2345');
+  expect(info.signs).toContain(starting);
+  expect(info.signs).toContain(explanation);
+});
+
 test('elke dag met een codeslot heeft bordjes met de cijfers of een raadsel', async ({ page }) => {
   await seed(page, { unlocked: 8 });
   const r = await page.evaluate(() => LEVELS.map(d => {

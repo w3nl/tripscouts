@@ -166,7 +166,7 @@ The Linux app is listed at https://snapcraft.io/tripscouts (currently edge: `sud
 | 4 | Building an Igloo (3404) | ice blocks 🧊 | 3 levers 🔧 | count | **342** | count igloos, insulation from trapped air (option 4), count candy canes |
 | 5 | The Post Office (3505, `huis`) | letters ✉️ | bell 🔔 6 s | colours | **RGBY** | lamp questions: stop, go, reindeer food, the Sun's light |
 | 6 | Northern Lights Night (3606) | lanterns 🏮 | light 3 lamps 🏮 | arrows | **↑→→↓** | signpost questions about north, east, turning right from north and south |
-| 7 | Christmas Eve (3707) | presents 🎁 | bring route map 🗺️ | clock | **2345** | signs with the time |
+| 7 | Christmas Eve (3707) | presents 🎁 | bring route map 🗺️ | clock | **2345** | eleven in the evening plus 45 minutes, converted to 24-hour time |
 | 8 | Going Home (3808) | scarves 🧣 | no gate | count | **253** | reindeer 2, sleighs 5, piles of presents 3 |
 
 **Tirol** (Lindenalm, scene `alps`, enemy `geit`; indoors a marmot `marmot` and pine cones on the floor):

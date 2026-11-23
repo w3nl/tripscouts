@@ -211,8 +211,8 @@ const POLE_LEVELS = [
            T(["Leave a biscuit out tonight. Santa notices these things."], ["Zet vanavond een koekje klaar. De Kerstman let op zulke dingen."])],
     code: { kind: "clock", answer: "2345", title: T("Gate to the big tree", "Hek naar de grote boom"),
       riddle: T("The gate opens at the time Santa's sleigh leaves. Set the clock (24 hours).", "Het hek gaat open op de tijd dat de slee van de Kerstman vertrekt. Zet de klok (24 uur)."),
-      signs: [[.2, T(["Timetable: the sleigh leaves at a quarter to twelve.", "At night, of course. Santa doesn't do mornings."], ["Dienstregeling: de slee vertrekt om kwart voor twaalf.", "'s Nachts natuurlijk. De Kerstman doet niet aan ochtenden."])],
-        [.5, T(["The stable clock counts 24 hours. Midnight is 00:00."], ["De klok in de stal telt 24 uur. Middernacht is 00:00."])]] },
+      signs: [[.2, T(["The sleigh is ready at eleven in the evening and leaves 45 minutes later.", "What time does it leave?"], ["De slee is om elf uur 's avonds klaar en vertrekt 45 minuten later.", "Hoe laat vertrekt hij?"])],
+        [.5, T(["An hour has 60 minutes. For an evening time, add 12 to the hour on a 24-hour clock.", "Midnight is 00:00."], ["Een uur heeft 60 minuten. Tel bij een avondtijd 12 op bij het uur op een 24-uursklok.", "Middernacht is 00:00."])]] },
     decoKinds: ["xtree", "presents", "sleigh", "deer", "candycane"],
     doneMsg: T("The sleigh took off right on time. Somewhere a bell is ringing. Merry Christmas!", "De slee vertrok precies op tijd. Ergens klinkt een belletje. Vrolijk kerstfeest!")
   }),
