@@ -2531,7 +2531,7 @@ function drawClue(c) {
   g.strokeStyle = OUT; g.lineWidth = 1.5;
   if (c.kind === "melody") {
     // a bell on a post, in the colour of its note
-    const col = NOTES[+c.v - 1][3], a = c.ring ? Math.sin(c.ring / 2.5) * c.ring / 100 : 0;
+    const col = c.question ? "#d0c5ad" : NOTES[+c.v - 1][3], a = c.ring ? Math.sin(c.ring / 2.5) * c.ring / 100 : 0;
     g.fillStyle = "#6b4528"; g.fillRect(cx - 2.5, by - 52, 5, 52); g.strokeRect(cx - 2.5, by - 52, 5, 52); g.fillRect(cx - 2.5, by - 54, 16, 5); g.strokeRect(cx - 2.5, by - 54, 16, 5);
     g.save(); g.translate(cx + 10, by - 49); g.rotate(a);
     g.fillStyle = col; g.beginPath(); g.moveTo(-3, 0); g.quadraticCurveTo(-4, 10, -9, 15); g.lineTo(9, 15); g.quadraticCurveTo(4, 10, 3, 0); g.closePath(); g.fill(); g.stroke();

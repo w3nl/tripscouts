@@ -102,6 +102,24 @@ for (const lang of ['en', 'nl']) test(`noordpool: de klimaat- en natuurvragen ge
     expect(info.signs).toContain(`${symbol}: ${info.questions[i]}`);
 });
 
+for (const lang of ['en', 'nl']) test(`rendierstallen: bellenvragen geven de tonen zonder ze voor te spelen (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region: 'pole', unlocked: 8 });
+  await startDay(page, 1);
+  const info = await page.evaluate(() => {
+    const c = L.clues[0];
+    P.x = c.x + 5; P.y = c.y + 32 - P.h; P.vx = P.vy = 0;
+    step();
+    return { x: c.x, y: c.y, heard: c.heard, ring: c.ring, question: c.question[0], answer: L.d.code.answer };
+  });
+  expect(info.answer).toBe('1355');
+  expect(info.heard).toBe(false);
+  expect(info.ring).toBe(0);
+  await put(page, info.x + 5, info.y + 32);
+  await page.keyboard.press('e');
+  await expect(page.locator('#dialog')).toBeVisible();
+  await expect(page.locator('#dialog')).toContainText(info.question);
+});
+
 test('elke dag met een codeslot heeft bordjes met de cijfers of een raadsel', async ({ page }) => {
   await seed(page, { unlocked: 8 });
   const r = await page.evaluate(() => LEVELS.map(d => {

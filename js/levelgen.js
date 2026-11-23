@@ -290,7 +290,7 @@ function genLevel(o) {
     } else if (kind === "melody" || kind === "colours" || kind === "arrows" || kind === "word") {
       // numbered clues along the way: bells, coloured lamps, signposts with an arrow, or carved letters
       const n = ans.length, end = (codeX - 4) / w;
-      ans.forEach((v, i) => { const c = free(w * (.12 + i * (end - .16) / (n - 1))); ents.push(["clue", room(c), yAt(c), { kind, i, n, v, look: o.code.look }]); });
+      ans.forEach((v, i) => { const c = free(w * (.12 + i * (end - .16) / (n - 1))); ents.push(["clue", room(c), yAt(c), { kind, i, n, v, look: o.code.look, question: o.code.questions && o.code.questions[i] }]); });
     } else if (kind === "clock") {
       (o.code.signs || []).forEach(([f, lines]) => { const c = free(w * f); ents.push(["sign", c, yAt(c), lines]); });
     }

@@ -36,8 +36,19 @@ const POLE_LEVELS = [
            T(["Reindeer eat lichen. I tried some. I'll stick to chips."], ["Rendieren eten mos. Ik heb het geproefd. Ik blijf bij frietjes."]),
            T(["The one with the shiny nose is the boss. Nobody argues with that nose."], ["Die met de glimmende neus is de baas. Niemand spreekt die neus tegen."])],
     code: { kind: "melody", answer: "1355", title: T("Paddock gate", "Hek van de wei"),
-      riddle: T("The gate opens with a tune. Four reindeer bells hang along the way, each with its own note. Play them in their order.",
-        "Het hek gaat open met een deuntje. Onderweg hangen vier rendierbellen, elk met een eigen toon. Speel ze in hun volgorde.") },
+      riddle: T("Solve the questions at the four bells. Each answer gives a note: 1 = do, 2 = re, 3 = mi, 4 = sol, 5 = la.",
+        "Los de vragen bij de vier bellen op. Elk antwoord geeft een toon: 1 = do, 2 = re, 3 = mi, 4 = sol, 5 = la."),
+      questions: T([
+        ["Reindeer eat lichen. Which is a lichen? 1: a partnership of a fungus and an alga. 2: a rock.", "A lichen is a fungus living together with an alga."],
+        ["A reindeer has 2 pairs of legs and an owl has 1 pair. How many pairs together?", "Add the pairs, not the individual legs."],
+        ["Ten carrots are shared equally between 2 reindeer. How many does each get?", "Divide the ten carrots into two equal groups."],
+        ["A calf sleeps for 2 hours and then another 3. How many hours altogether?", "Add the hours together."]
+      ], [
+        ["Rendieren eten korstmos. Wat is korstmos? 1: een schimmel en een alg die samenleven. 2: een steen.", "Korstmos is een schimmel die samenleeft met een alg."],
+        ["Een rendier heeft 2 paar poten en een uil 1 paar. Hoeveel paren samen?", "Tel de paren op, niet de losse poten."],
+        ["Tien wortels worden eerlijk verdeeld over 2 rendieren. Hoeveel krijgt elk rendier?", "Verdeel de tien wortels in twee gelijke groepen."],
+        ["Een kalfje slaapt 2 uur en daarna nog 3 uur. Hoeveel uur samen?", "Tel de uren bij elkaar op."]
+      ]) },
     task: { kind: "follow", hud: "🦌", animal: "🦌", name: T("reindeer calf", "rendierkalfje"),
       need: T(["One of the calves wandered off to play. Its mum is worried sick.", "Find the calf and walk it back to me. It will follow you, it likes people."],
         ["Een van de kalfjes is gaan spelen en weggelopen. Zijn moeder is ongerust.", "Zoek het kalfje en loop met hem terug naar mij. Hij loopt je wel achterna, hij houdt van mensen."]),
