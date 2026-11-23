@@ -268,6 +268,26 @@ for (const [lang, starting, explanation] of [
   }
 });
 
+for (const [lang, starting, explanation] of [
+  ['en', '45 minutes after half past one', 'Add 12 to the hour'],
+  ['nl', "45 minuten na half twee", 'Tel voor een middaguur 12 op']
+]) test(`giethoorn: rekenen met de 24-uursklok (${lang})`, async ({ page }) => {
+  await seed(page, { lang, region: 'netherlands', unlocked: 8 });
+  expect(await page.evaluate(() => LEVELS[4].code.answer)).toBe('1415');
+  await startDay(page, 4);
+  for (const text of [starting, explanation]) {
+    const sign = await page.evaluate(text => {
+      const s = L.signs.find(s => s.lines.some(line => line.includes(text)));
+      return { x: s.x, y: s.y, line: s.lines.find(line => line.includes(text)) };
+    }, text);
+    await put(page, sign.x + 5, sign.y + 32);
+    await page.keyboard.press('e');
+    await expect(page.locator('#dialog')).toBeVisible();
+    await expect(page.locator('#dialog')).toContainText(sign.line);
+    await page.evaluate(() => { while (dialog) advanceDialog(); });
+  }
+});
+
 for (const [lang, location, question] of [
   ['en', "Antarctica's coast", '5: penguins'],
   ['nl', 'kust van Antarctica', '5: pinguïns']

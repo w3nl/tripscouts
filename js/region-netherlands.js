@@ -143,10 +143,10 @@ const NL_LEVELS = [
     npcs: [T(["Koek en zopie: a little stall on the ice with hot chocolate. The best invention ever."], ["Koek en zopie: een kraampje op het ijs met warme chocomel. De beste uitvinding ooit."]),
            T(["The houses here have thatched roofs and little bridges to the front door."], ["De huizen hier hebben rieten daken en bruggetjes naar de voordeur."]),
            T(["Holes in the ice are marked with a branch. Stay away from the branches."], ["Wakken zijn gemarkeerd met een tak. Blijf uit de buurt van de takken."])],
-    code: { kind: "clock", answer: "1415", title: T("Gate by the koek-en-zopie", "Hek bij de koek-en-zopie"),
+    code: { kind: "clock", learning: true, answer: "1415", title: T("Gate by the koek-en-zopie", "Hek bij de koek-en-zopie"),
       riddle: T("The gate opens when the koek-en-zopie opens. Set the clock (24 hours).", "Het hek gaat open als de koek-en-zopie opengaat. Zet de klok (24 uur)."),
-      signs: [[.2, T(["Koek-en-zopie: hot chocolate and pea soup on the ice.", "Open at a quarter past two in the afternoon."], ["Koek-en-zopie: warme chocomel en erwtensoep op het ijs.", "Open om kwart over twee 's middags."])],
-        [.5, T(["The clock on the ice counts 24 hours."], ["De klok op het ijs telt 24 uur."])]] },
+      signs: [[.2, T(["The koek-en-zopie opens 45 minutes after half past one in the afternoon.", "A quarter of an hour is 15 minutes."], ["De koek-en-zopie gaat 45 minuten na half twee 's middags open.", "Een kwartier is 15 minuten."])],
+        [.5, T(["The clock counts 24 hours. Add 12 to the hour for afternoon times.", "For example, one in the afternoon is 13:00."], ["De klok telt 24 uur. Tel voor een middaguur 12 op bij het uur.", "Bijvoorbeeld: één uur 's middags is 13:00."])]] },
     decoKinds: ["thatch", "willow", "thatch", "stall"],
     stalls: T(["Koek en zopie", "Hot chocolate", "Pea soup", "Stroopwafels"], ["Koek en zopie", "Warme chocomel", "Erwtensoep", "Stroopwafels"]),
     doneMsg: T("Skating on Christmas Day, pea soup on the ice, and nobody fell through. A real Dutch winter fairy tale.", "Schaatsen op eerste kerstdag, erwtensoep op het ijs, en niemand erdoor gezakt. Een echt Hollands wintersprookje.")
