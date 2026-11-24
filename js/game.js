@@ -74,7 +74,9 @@ const RIDE_FEEL = {
   bike: { top: 6.8, back: 2.2, coast: 0, acc: .3, brake: .08 },
   kicksled: { top: 6.6, back: 2.5, coast: 0, acc: .2, brake: .035 },
   husky: { top: 6.2, back: 6.2, coast: 0, acc: .25, brake: .16 },
-  railbike: { top: 5.4, back: 3, coast: 0, acc: .25, brake: .1 }
+  railbike: { top: 5.4, back: 3, coast: 0, acc: .25, brake: .1 },
+  // a SUP board: paddling takes a while to get going, and the board glides on when you stop
+  sup: { top: 5.6, back: 2.6, coast: 0, acc: .09, brake: .025 }
 };
 const HUSKY_LEAD = 100;
 function rideAt(col) { const r = L.d.ride; return r && col >= r.x0 && col <= r.x1 ? r.kind : null; }
@@ -225,7 +227,9 @@ function respawn() { P.x = L.respawn.x; P.y = L.respawn.y; P.vx = P.vy = 0; P.in
 function crashRide() {
   P.rideCrash = { kind: P.ride, time: 45, feet: P.y + P.h };
   P.vx = P.vy = 0; P.slide = 0; P.inv = 0;
-  pop(P.x + P.w / 2, P.y - 10, T("Crash!", "Boem!"), "#ff8a8a"); SFX.hurt(); gpRumble();
+  if (P.ride === "sup") { pop(P.x + P.w / 2, P.y - 10, T("Splash!", "Plons!"), "#bff4ff"); burst(P.x + P.w / 2 - P.face * 34, P.y + P.h, "#ffffff", 16); }
+  else pop(P.x + P.w / 2, P.y - 10, T("Crash!", "Boem!"), "#ff8a8a");
+  SFX.hurt(); gpRumble();
 }
 /** The canoe hits a rock and turns upside down: a big splash, and step() sends you back to the last flag. */
 function capsize() {
@@ -365,7 +369,7 @@ function step() {
   L.time++;
   if (P.rideCrash) {
     edges.length = 0;
-    if (--P.rideCrash.time <= 0) { P.inv = 0; hurt(T("Crash!", "Boem!")); respawn(); }
+    if (--P.rideCrash.time <= 0) { P.inv = 0; hurt(P.rideCrash.kind === "sup" ? T("Splash!", "Plons!") : T("Crash!", "Boem!")); respawn(); }
     return;
   }
   // Capsized in the canoe (the Ardèche): upside down in the water for a moment, then, like after a fall into a pit,
@@ -515,7 +519,7 @@ function step() {
     // bumping into a block on a ride: oops, no harm done
     if (hit === "S" && P.ride && L.time - (P.bonk || -99) > 45) { P.bonk = L.time; pop(P.x + P.w / 2, P.y - 8, T("Oops!", "Oeps!"), "#fff"); tone(160, .12, "triangle", .05); }
     if (hit === "R" && P.ride) {
-      if (["bike", "ski", "skates", "sled", "kicksled"].includes(P.ride)) crashRide();
+      if (["bike", "ski", "skates", "sled", "kicksled", "sup"].includes(P.ride)) crashRide();
       else { P.inv = 0; hurt(T("Crash!", "Boem!")); respawn(); }
       return;
     }
@@ -594,7 +598,8 @@ function step() {
   }
 
   // enemies
-  const rail = L.d.ride && L.d.ride.kind === "railbike" ? L.d.ride : null;
+  // Animals stay off the rail bike's track (cattle grids at both ends) and off the sea of a SUP ride.
+  const ride = L.d.ride, fence = ride && ride.kind === "railbike" ? [ride.x0 - 1, ride.x1 + 2] : ride && ride.kind === "sup" ? [ride.x0, ride.x1 + 1] : null;
   for (const e of L.enemies) {
     if (e.dead) { e.dead++; continue; }
     animalCall(e);
@@ -602,7 +607,7 @@ function step() {
     const nx = e.x + e.vx, front = e.vx > 0 ? nx + e.w : nx;
     const ftx = Math.floor(front / TS), fty = Math.floor((e.y + e.h - 1) / TS);
     const below = cell(ftx, fty + 1);
-    const railGrate = rail && nx < (rail.x1 + 2) * TS && nx + e.w > (rail.x0 - 1) * TS;
+    const railGrate = fence && nx < fence[1] * TS && nx + e.w > fence[0] * TS;
     // at a wall or an edge it turns around; an animal coming for you waits there instead (it won't jump after you)
     if (railGrate || isSolid(ftx, fty) || !(isSolid(ftx, fty + 1) || below === "=")) { if (!e.chase) e.vx = -e.vx; } else e.x = nx;
     if (overlap(P, e) && e.kind === "alg") {
