@@ -19,6 +19,9 @@ const RIDE_SIGNS = {
     T("Kick, glide, kick, glide!", "Afzetten, glijden, afzetten, glijden!")],
   husky: [T("A husky team! Hold → to follow the trail, ← to slow down or go back.", "Een hondenslee! Houd → vast om het spoor te volgen, ← om te remmen of terug te gaan."),
     T("Jump together over the snow banks. The dogs are in front, so jump in good time!", "Spring samen over de sneeuwhopen. De honden lopen voorop, dus spring op tijd!")],
+  sup: [T("SUP boards for hire! Stand up and paddle with ← and →: it takes a moment to get going, and the board glides on.", "SUP-boards te huur! Ga staan en peddel met ← en →: op gang komen duurt even, en het board glijdt door."),
+    T("Jump over the buoys. Paddle into a rock and you fall in: splash, a heart less, back to the last flag!", "Spring over de boeien. Peddel je tegen een rots, dan val je in het water: plons, een hartje minder, terug naar de laatste vlag!"),
+    T("The water is lovely and warm. Falling in is allowed, but only on purpose.", "Het water is heerlijk warm. Erin vallen mag, maar alleen expres.")],
   railbike: [T("A rail bike! Pedal with ← and →. The bike stays on the rails.", "Een spoorfiets! Trap met ← en →. De fiets blijft op de rails."),
     T("Jump over the low ribbons; hold ↓, 💬 or X/B on a controller to duck under branches.", "Spring over de lage linten; houd ↓, 💬 of X/B op een controller vast om onder takken te bukken."),
     T("Some branches are high enough for a small rider to pass without ducking.", "Onder sommige takken passen kleine rijders zonder te bukken."),
@@ -35,7 +38,7 @@ function genLevel(o) {
   //     carries you, rocks stick out of the water to jump over, and the river drops down two small waterfalls,
   //     each followed by rapids. Gives the level a `river` ({ x0, x1, surf, rapids }) and `rocks`.
   //   ride: { kind, len } – a stretch near the start where you don't walk but ride: "ski" or "sled" down a slope (the
-  //     ground starts at row 9 and drops a row three times), "skates", "bike", "kicksled", "husky" or "railbike" on flat ground.
+  //     ground starts at row 9 and drops a row three times), "skates", "bike", "kicksled", "husky", "railbike" or "sup" (a SUP board on the sea) on flat ground.
   //     Small blocks and tall rocks to jump over, with coins above them; one of the three things hangs above it.
   //     Gives the level a `ride` ({ kind, x0, x1 }); game.js changes how you move there, world.js draws what you ride.
   //   ice, dark, water, interior – used by the game and the drawing code, not by the generator.
@@ -271,10 +274,10 @@ function genLevel(o) {
   } else if (ride) {
     // a ride gets a sign at the start that says how it works, and a flag where you get off again
     const c = free(ride.x0 - 6, 3, ride.x0 - 2);
-    const lines = ride.kind === "railbike" || ride.kind === "husky" ? RIDE_SIGNS[ride.kind] : [...RIDE_SIGNS[ride.kind],
+    const lines = ["railbike", "husky", "sup"].includes(ride.kind) ? RIDE_SIGNS[ride.kind] : [...RIDE_SIGNS[ride.kind],
       T("Small bumps stop you. Hit a tall rock and you fall: back to the last flag!", "Kleine hindernissen stoppen je. Raak je een hoge rots, dan val je: terug naar de laatste vlag!")];
     ents.push(["sign", c, yAt(c), lines]);
-    if (ride.kind === "railbike" || ride.kind === "bike" || ride.kind === "husky") {
+    if (["railbike", "bike", "husky", "sup"].includes(ride.kind)) {
       const start = free(ride.x0 - 2, 3, ride.x0 - 1); ents.push(["check", start, yAt(start)]);
     }
     const f = free(ride.x1 + 5, ride.x1 + 3); ents.push(["check", f, yAt(f)]);

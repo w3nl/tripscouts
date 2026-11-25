@@ -1188,10 +1188,11 @@ function buildInterior() {
 
 /* ---------- Kleine voorgrond-details op de grond ---------- */
 function buildGroundDecor() {
-  const list = [], th = L.d.theme;
+  const list = [], th = L.d.theme, sea = L.d.ride && L.d.ride.kind === "sup" ? L.d.ride : null;
   if (th === "huis") return list;
   for (let x = 0; x < L.w; x++) for (let y = 1; y < ROWS; y++) {
     if (L.grid[y][x] !== "#" || L.grid[y - 1][x] !== " ") continue;
+    if (sea && x >= sea.x0 && x <= sea.x1) continue; // no grass or pebbles on the sea of a SUP ride
     const r = hash(x * 13 + y * 7);
     if (r < .45) continue;
     list.push({ x: x * TS + 4 + hash(x) * 22, y: y * TS + 2, k: fl(hash(x * 3.7 + 1) * 6), r });
@@ -2865,6 +2866,56 @@ function drawFallenRider(ch, x, feet, face, hat, theme, summer) {
   g.fillStyle = ch.shoes || "#3a2a22"; g.beginPath(); g.ellipse(14, -2, 4, 2.5, 0, 0, 7); g.fill();
   g.restore();
 }
+/** A SUP board on the sea: a long board with a turned-up nose and a stripe, rocking gently on the waves. */
+function drawSup(cx, y, face, rock) {
+  g.save(); g.translate(cx, y); g.rotate(rock || 0); g.scale(face, 1); g.lineJoin = "round"; g.strokeStyle = OUT; g.lineWidth = 1.5;
+  g.fillStyle = "#f4f7f2"; g.beginPath(); g.moveTo(-30, -1); g.lineTo(24, -1); g.quadraticCurveTo(33, -2, 34, -6); g.quadraticCurveTo(35, 0, 28, 4);
+  g.lineTo(-27, 4); g.quadraticCurveTo(-32, 3, -30, -1); g.closePath(); g.fill(); g.stroke();
+  g.fillStyle = "#1fa5b5"; g.fillRect(-26, .3, 52, 1.6);
+  g.fillStyle = "#f07a3a"; g.fillRect(-4, -1, 9, 1.2);
+  g.restore();
+}
+/** The SUP paddle: held with both hands (`hand`, the lower hand), the blade dipping in ahead and pulling back. */
+function drawSupPaddle(rx, feet, face, rk, phase, hand) {
+  const bx = rx + face * (16 + 10 * Math.sin(phase)) * rk, by = feet + 8, tx = hand.x + face * 2 * rk, ty = hand.y - 13 * rk;
+  g.save(); g.lineCap = "round";
+  g.strokeStyle = OUT; g.lineWidth = 4.5; g.beginPath(); g.moveTo(tx, ty); g.lineTo(bx, by); g.stroke();
+  g.strokeStyle = "#2c3640"; g.lineWidth = 2.5; g.beginPath(); g.moveTo(tx, ty); g.lineTo(bx, by); g.stroke();
+  g.strokeStyle = "#2c3640"; g.lineWidth = 4; g.beginPath(); g.moveTo(tx - 3, ty); g.lineTo(tx + 3, ty); g.stroke();
+  const a = Math.atan2(by - hand.y, bx - hand.x);
+  g.fillStyle = "#f2c42a"; g.strokeStyle = OUT; g.lineWidth = 1.5; g.beginPath(); g.ellipse(bx, by, 9, 4, a, 0, 7); g.fill(); g.stroke();
+  // the blade under water, and a little splash where the shaft goes in
+  g.globalAlpha = .7; g.fillStyle = waterColour(); g.fillRect(bx - 9, feet + 2, 18, 10); g.globalAlpha = 1;
+  g.fillStyle = "rgba(255,255,255,.8)"; g.beginPath(); g.ellipse(bx, feet + 2, 5, 1.6, 0, 0, 7); g.fill();
+  g.restore();
+}
+/** The sea of a SUP ride: turquoise water over the ground (the board floats on top), waves, foam at both beaches,
+    and red-and-white buoys where the ride has blocks. */
+function drawRideSea(c0, c1) {
+  const r = L.d.ride, a = Math.max(c0, r.x0), b = Math.min(c1, r.x1);
+  if (a > b) return;
+  let row = 0; while (row < ROWS && L.grid[row][a] !== "#") row++;
+  const top = row * TS - 2;
+  g.fillStyle = waterColour(); g.fillRect(a * TS, top, (b - a + 1) * TS + (b === r.x1 ? 0 : 1), VIEW_H - top);
+  g.fillStyle = "rgba(255,255,255,.45)";
+  for (let c = a; c <= b; c++) for (let i = 0; i < 2; i++) g.fillRect(c * TS + ((frame * .4 + i * 16 + c * 7) % (TS - 8)), top + 4 + i * 10, 8, 1.5);
+  // foam where the sea meets each beach
+  g.fillStyle = "rgba(255,255,255,.85)";
+  [[r.x0, 1], [r.x1 + 1, -1]].forEach(([c, d]) => { if (c < a || c > b + 1) return; for (let i = 0; i < 4; i++) { g.beginPath(); g.ellipse(c * TS + d * (3 + i * 6), top + 1 + Math.sin(frame / 12 + i) * 1.2, 4 - i * .6, 2, 0, 0, 7); g.fill(); } });
+  // buoys
+  for (let c = a; c <= b; c++) for (let y = 0; y < ROWS; y++) if (L.grid[y][c] === "S") drawBuoy(c * TS + 16, (y + 1) * TS - 2 + Math.sin(frame / 14 + c) * 1.5, top);
+}
+/** A round buoy, red with a white band, floating with its bottom in the water. */
+function drawBuoy(x, y, water) {
+  g.save(); g.strokeStyle = OUT; g.lineWidth = 2;
+  g.fillStyle = "#d8402a"; g.beginPath(); g.arc(x, y - 11, 13, 0, 7); g.fill(); g.stroke();
+  g.save(); g.beginPath(); g.arc(x, y - 11, 12, 0, 7); g.clip(); g.fillStyle = "#f4f2ec"; g.fillRect(x - 14, y - 15, 28, 7); g.restore();
+  g.fillStyle = "rgba(255,255,255,.55)"; g.beginPath(); g.ellipse(x - 5, y - 17, 4, 2.5, -.5, 0, 7); g.fill();
+  g.strokeStyle = "#3a3a3a"; g.lineWidth = 2; g.beginPath(); g.moveTo(x, y - 24); g.lineTo(x, y - 30); g.stroke();
+  g.globalAlpha = .75; g.fillStyle = waterColour(); g.fillRect(x - 15, water, 30, y + 2 - water); g.globalAlpha = 1;
+  g.fillStyle = "rgba(255,255,255,.8)"; g.beginPath(); g.ellipse(x, water + 1, 15, 2, 0, 0, 7); g.fill();
+  g.restore();
+}
 /** The frozen canal of a skating ride: smooth, pale blue ice over the ground, with white scratches from the skates. */
 function drawRideIce(c0, c1) {
   const r = L.d.ride;
@@ -3063,11 +3114,14 @@ function render() {
   const T = getTex(theme, L.d.spikeKind);
   g.imageSmoothingEnabled = false;
   const x0 = Math.max(0, fl(cx / TS) - 1), x1 = Math.min(L.w - 1, fl((cx + viewW) / TS) + 1);
-  for (let ty = 0; ty < ROWS; ty++) for (let tx = x0; tx <= x1; tx++) { const c = L.grid[ty][tx]; if (c !== " " && c !== "G" && c !== "H") drawTile(c, tx * TS, ty * TS, theme, tx, ty, T); }
+  // on a SUP ride the blocks are buoys, drawn with the sea (drawRideSea())
+  const sup = L.d.ride && L.d.ride.kind === "sup" ? L.d.ride : null;
+  for (let ty = 0; ty < ROWS; ty++) for (let tx = x0; tx <= x1; tx++) { const c = L.grid[ty][tx]; if (c !== " " && c !== "G" && c !== "H" && !(c === "S" && sup && tx >= sup.x0 && tx <= sup.x1)) drawTile(c, tx * TS, ty * TS, theme, tx, ty, T); }
   g.imageSmoothingEnabled = true;
 
   if (L.d.water) drawWater(cx);
   if (L.d.ride && L.d.ride.kind === "skates") drawRideIce(x0, x1);
+  if (sup) drawRideSea(x0, x1);
   if (L.d.ride && L.d.ride.kind === "railbike") drawRailTrack(x0, x1);
   if (L.d.ride && L.d.ride.hazards) drawRideHazards(x0, x1);
   for (const m of L.movers) drawMover(m);
@@ -3124,6 +3178,16 @@ function render() {
     const pHat = L.d.birthday === ch.name ? "party" : hat;
     if (P.rideCrash) {
       const crash = P.rideCrash, cx = P.x + P.w / 2, feet = crash.feet, k = ch.size || 1, face = P.face;
+      if (crash.kind === "sup") {
+        // fallen in: the board drifts on, you bob in the water next to it
+        const px = cx - face * 34, water = feet - 2;
+        drawSup(cx, feet, face, Math.sin(frame / 8) * .06);
+        drawFallenRider(ch, px, feet + 14, face, pHat, theme, summer);
+        g.globalAlpha = .85; g.fillStyle = waterColour(); g.fillRect(px - 26, water, 52, 34); g.globalAlpha = 1;
+        g.strokeStyle = "rgba(255,255,255,.85)"; g.lineWidth = 1.5;
+        for (let i = 0; i < 2; i++) { const t = (frame / 20 + i / 2) % 1; g.beginPath(); g.ellipse(px, water + 1, 10 + t * 18, 2 + t * 2, 0, 0, 7); g.globalAlpha = 1 - t; g.stroke(); }
+        g.globalAlpha = 1;
+      } else {
       if (crash.kind === "bike") drawBike(cx, feet, face, k, P.x / 10, true);
       if (crash.kind === "railbike") drawRailbike(cx, feet, face, k, P.x / 10, true);
       if (crash.kind === "kicksled") drawKicksled(cx, feet, face);
@@ -3134,6 +3198,7 @@ function render() {
       if (crash.kind === "ski") drawSkis(px + face * 8 * k, feet, face, k);
       if (crash.kind === "skates") drawSkates(px + face * 13 * k, feet, face, k);
       drawFallenRider(ch, px, feet, face, pHat, theme, summer);
+      }
     } else if (P.capsize) {
       // capsized: only the bottom of the canoe shows, rocking in the water (you are underneath it)
       const cx = P.x + P.w / 2, wt = waterTop(fl(cx / TS));
@@ -3157,7 +3222,11 @@ function render() {
         handle = { x: dx * Math.cos(a) + dy * Math.sin(a), y: -dx * Math.sin(a) + dy * Math.cos(a) - (ch.kid ? 12 : 13) };
       }
       if (rd === "husky") handle = { x: 14 / rk, y: -30 / rk };
-      if (P.onGround && !P.canoe) shadowAt(rx, feet, rd ? 24 : 11);
+      // on a SUP board both hands hold the paddle, which moves with the distance paddled
+      const supPhase = P.x * .045, supRock = Math.sin(frame / 16 + P.x * .01) * .04;
+      if (rd === "sup") handle = { x: 11 + 3 * Math.sin(supPhase), y: -19 };
+      if (P.onGround && !P.canoe && rd !== "sup") shadowAt(rx, feet, rd ? 24 : 11);
+      if (rd === "sup") drawSup(rx, feet, P.face, supRock);
       if (rd === "bike") drawBike(rx, feet, P.face, rk, pedal);
       if (rd === "kicksled") drawKicksled(rx, feet, P.face);
       if (rd === "husky") drawHuskySled(rx, feet, P.face, P.x * .25);
@@ -3169,10 +3238,11 @@ function render() {
       const bikeDuck = seat && (rd === "bike" || rd === "railbike") && P.railDuck;
       if (bikeDuck) { g.save(); g.translate(rx, feet + seat.seat); g.rotate(P.face * RAIL_DUCK_ANGLE); g.translate(-rx, -feet - seat.seat); }
       // on skis you glide (no steps); on skates and a kicksled you stride
-      drawPerson(ch, rx, seat ? seat.by : railJump ? feet - 26 * rk - P.railJump : feet, 1, P.face, rd === "skates" || rd === "kicksled" ? P.anim * .55 : P.anim, railJump || !P.onGround, pHat,
+      drawPerson(ch, rx, seat ? seat.by : railJump ? feet - 26 * rk - P.railJump : feet, 1, P.face, rd === "sup" ? 0 : rd === "skates" || rd === "kicksled" ? P.anim * .55 : P.anim, railJump || !P.onGround, pHat,
         { t: frame * 16, moving: Math.abs(P.vx) > .3 && !P.canoe && (!rd || rd === "skates" || rd === "kicksled"), scarf, summer, indoor: theme === "huis", duck: !!bikeDuck, hideLegs: rd === "railbike" && !!seat, handle });
       if (bikeDuck) g.restore();
       if (P.canoe || seat) g.restore();
+      if (rd === "sup") drawSupPaddle(rx, feet, P.face, rk, supPhase, { x: rx + P.face * handle.x * rk, y: feet + handle.y * rk });
       if (rd === "ski") drawSkis(rx, feet, P.face, rk);
       if (rd === "skates") drawSkates(rx, feet, P.face, rk);
       if (rd === "sled") drawSled(rx, feet, P.face, rk, ch.pants);

@@ -302,8 +302,8 @@ test('a ladder: hold ↑ to climb up onto the loft, hold ↓ to climb back down'
   await page.keyboard.up('ArrowDown');
 });
 
-/* ---------- Rides: skis, a sledge, skates, a bike and a kicksled ---------- */
-const RIDES = [['tirol', 1, 'ski'], ['tirol', 4, 'sled'], ['netherlands', 4, 'skates'], ['netherlands', 5, 'bike'], ['norway', 1, 'kicksled']];
+/* ---------- Rides: skis, a sledge, skates, a bike, a kicksled and a SUP board ---------- */
+const RIDES = [['tirol', 1, 'ski'], ['tirol', 4, 'sled'], ['netherlands', 4, 'skates'], ['netherlands', 5, 'bike'], ['norway', 1, 'kicksled'], ['dalmatia', 3, 'sup']];
 for (const [region, day, kind] of RIDES) {
   test(`een stuk ${kind} in ${region} dag ${day + 1}: je loopt daar niet, je rijdt`, async ({ page }) => {
     const errors = []; page.on('pageerror', e => errors.push(e.message));
@@ -330,7 +330,7 @@ for (const [region, day, kind] of RIDES) {
     if (kind === 'ski' || kind === 'sled') expect(moved).toBeGreaterThan(60);
     else expect(moved).toBeLessThan(5);
     // after the ride you walk again
-    await page.evaluate(r => { P.x = (r.x1 + 3) * TS; P.y = 0; P.vx = 0; }, r);
+    await page.evaluate(r => { P.x = (r.x1 + 3) * TS; P.y = 0; P.vx = 0; P.onGround = false; }, r);
     await page.waitForFunction(() => P.onGround);
     expect(await page.evaluate(() => P.ride)).toBeNull();
     expect(errors).toEqual([]);
@@ -381,7 +381,7 @@ test('vallen bij de ritten: even blijven zitten, dan een hartje eraf en terug na
       for (let i = 0; i < 80 && !P.rideCrash; i++) step();
       const crash = P.rideCrash && { kind: P.rideCrash.kind, time: P.rideCrash.time, hearts: P.hearts };
       let drawn = false, fallen = false;
-      const bike = drawBike, railbike = drawRailbike, sled = drawSled, kicksled = drawKicksled, skis = drawSkis, skates = drawSkates, person = drawFallenRider;
+      const bike = drawBike, railbike = drawRailbike, sled = drawSled, kicksled = drawKicksled, skis = drawSkis, skates = drawSkates, sup = drawSup, person = drawFallenRider;
       try {
         drawBike = (...a) => { drawn = a[5] === true; bike(...a); };
         drawRailbike = (...a) => { drawn = a[5] === true; railbike(...a); };
@@ -389,9 +389,10 @@ test('vallen bij de ritten: even blijven zitten, dan een hartje eraf en terug na
         drawKicksled = (...a) => { drawn = true; kicksled(...a); };
         drawSkis = (...a) => { drawn = true; skis(...a); };
         drawSkates = (...a) => { drawn = true; skates(...a); };
+        drawSup = (...a) => { drawn = true; sup(...a); };
         drawFallenRider = (...a) => { fallen = true; person(...a); };
         render();
-      } finally { drawBike = bike; drawRailbike = railbike; drawSled = sled; drawKicksled = kicksled; drawSkis = skis; drawSkates = skates; drawFallenRider = person; }
+      } finally { drawBike = bike; drawRailbike = railbike; drawSled = sled; drawKicksled = kicksled; drawSkis = skis; drawSkates = skates; drawSup = sup; drawFallenRider = person; }
       const x = P.x, y = P.y; edges.push('jump'); held.jump = true;
       for (let i = 0; i < 10; i++) step();
       const stayed = P.x === x && P.y === y && P.hearts === 3 && !!P.rideCrash;
