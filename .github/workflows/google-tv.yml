@@ -42,7 +42,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v6
         with:
-          gradle-version: '9.9.2'
+          gradle-version: '9.9.3'
 
       - name: Put the game in the app
         run: |
