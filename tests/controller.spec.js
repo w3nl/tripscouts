@@ -219,6 +219,8 @@ test('afstandsbediening: het codeslot met pijltjes en OK, en een getypte code me
   await page.keyboard.type('4944');                          // typen en versturen werkt zoals altijd
   await expect(page.locator('#padWrap')).toBeHidden();
   await page.evaluate(() => { L.codeOpen = false; openPad(); });
+  // the focus goes to the first key one frame after the lock opens (menuAutoFocus): wait for it
+  await expect.poll(() => page.evaluate(() => document.activeElement.textContent.trim())).toBe('1');
   await page.keyboard.press('ArrowRight');                   // van de 1 naar de 2
   await page.keyboard.press('Enter');
   await expect(page.locator('#digits span').first()).toHaveText('2');

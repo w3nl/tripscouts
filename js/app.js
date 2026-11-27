@@ -2,7 +2,7 @@
 // Start het spel: versie, service worker, updatebalk en de spellus.
 
 /** Staat op het titelscherm. Altijd hetzelfde getal als CACHE in sw.js (tests/pwa.spec.js controleert dat). */
-const GAME_VERSION = 95;
+const GAME_VERSION = 97;
 $("version").textContent = "v" + GAME_VERSION;
 if (legacyMenu) $("update-bar").hidden = false;
 
@@ -98,7 +98,7 @@ addEventListener("resize", updateHints);
 // hapert het lopen. Daarom tekenen we het poppetje, de vijanden en de camera op de tussenstand tussen de laatste
 // twee stappen (interpolatie). De spelregels blijven precies hetzelfde; alleen het tekenen is vloeiender.
 const STEP_MS = 1000 / 60;
-let last = 0, acc = 0, simT = 0;
+let last = 0, last2 = 0, acc = 0, simT = 0;
 const before = { L: null, x: 0, y: 0, cam: 0, en: [] };
 function snapshot() {
   before.L = L;
@@ -123,8 +123,53 @@ function renderSmooth(a) {
     if (mvSame) L.movers.forEach((m, i) => { m.x = mv[i][0]; m.y = mv[i][1]; });
   }
 }
+/* ---------- Graphics (settings): the #gfxBtn cycles auto → sharp → smooth (see resize() in canvas.js) ---------- */
+// (an older cached page has no #gfxBtn: then graphics stay on auto)
+function showGfx() {
+  const b = $("gfxBtn");
+  if (!b) return;
+  b.textContent = { auto: T("🖼️ Graphics: auto", "🖼️ Beeld: automatisch"), sharp: T("🖼️ Graphics: sharp", "🖼️ Beeld: scherp"), smooth: T("🖼️ Graphics: smooth", "🖼️ Beeld: soepel") }[gfxMode];
+  b.title = { auto: T("Sharp, and a little less sharp by itself if the game doesn't run smoothly on this device.", "Scherp, en vanzelf iets minder scherp als het spel op dit apparaat niet soepel loopt."),
+    sharp: T("Always as sharp as the screen. Can stutter on TVs and slower phones.", "Altijd zo scherp als het scherm. Kan haperen op tv's en tragere telefoons."),
+    smooth: T("Fewer pixels: a little softer, but much smoother on TVs and slower phones.", "Minder pixels: iets zachter, maar veel soepeler op tv's en tragere telefoons.") }[gfxMode];
+}
+if ($("gfxBtn")) $("gfxBtn").onclick = () => {
+  gfxMode = { auto: "sharp", sharp: "smooth", smooth: "auto" }[gfxMode];
+  // choosing auto again starts sharp and learns anew
+  if (gfxMode === "auto") gfxAuto = 2;
+  try { localStorage.setItem(GFX_KEY, gfxMode); localStorage.setItem(GFX_AUTO_KEY, String(gfxAuto)); } catch (e) {}
+  resize(); showGfx(); tone(700, .04, "triangle", .04);
+};
+showGfx();
+/* Graphics "auto": while you play, count the frames that come late (more than 22 ms: a missed frame on a 60 Hz screen,
+   and on a 50 Hz TV too). If about a third of 3 seconds goes to late frames, draw fewer pixels: one step down
+   (GFX_STEPS), remembered per device. It counts in time, not frames, so a slow device gets there just as quickly. Never
+   in the first 2 seconds after a level starts or the size changes (caches are being made then), never in the menus or
+   a conversation, and not in automated tests (navigator.webdriver), unless a test asks for it (window.__gfxWatch). */
+const gfxWatch = { t: 0, late: 0, skip: 2000, state: "", size: 0 };
+function watchFrames(dt) {
+  // a new screen or a new canvas size (also a window you resize yourself): the caches are made again, so wait a moment
+  if (state !== gfxWatch.state || resizes !== gfxWatch.size) { gfxWatch.state = state; gfxWatch.size = resizes; gfxWatch.skip = 2000; gfxWatch.t = gfxWatch.late = 0; }
+  // A pause of more than a second is the page waiting (another tab, the device asleep), not a slow frame. Slower frames
+  // than that do count, capped, so a device at 10 frames a second or less steps down too.
+  if (gfxMode !== "auto" || state !== "play" || dialog || document.hidden || dt > 1000 || (navigator.webdriver && !window.__gfxWatch)) return;
+  dt = Math.min(dt, 250);
+  if (gfxWatch.skip > 0) { gfxWatch.skip -= dt; return; }
+  gfxWatch.t += dt; if (dt > 22) gfxWatch.late += dt;
+  if (gfxWatch.t < 3000) return;
+  const late = gfxWatch.late / gfxWatch.t;
+  gfxWatch.t = gfxWatch.late = 0;
+  // late counts the time spent in late frames: at 50 fps a fifth of the frames late is about a third of the time
+  if (late <= .3) return;
+  const next = GFX_STEPS.find(r => r < renderRatio - .01);
+  if (!next) return;
+  gfxAuto = next;
+  try { localStorage.setItem(GFX_AUTO_KEY, String(gfxAuto)); } catch (e) {}
+  resize(); gfxWatch.skip = 2000;
+}
 function loop(ts) {
   const dt = Math.min(100, ts - (last || ts)); last = ts; acc += dt;
+  watchFrames(ts - (last2 || ts)); last2 = ts;
   pollGamepads();
   // simT is het moment van de laatste stap; elke stap verwerkt de knoppen tot en met zijn eigen moment (applyHolds).
   if (!simT || Math.abs(ts - acc - simT) > 3 * STEP_MS) {
