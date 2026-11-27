@@ -2,7 +2,7 @@
 // Start het spel: versie, service worker, updatebalk en de spellus.
 
 /** Staat op het titelscherm. Altijd hetzelfde getal als CACHE in sw.js (tests/pwa.spec.js controleert dat). */
-const GAME_VERSION = 98;
+const GAME_VERSION = 99;
 $("version").textContent = "v" + GAME_VERSION;
 if (legacyMenu) $("update-bar").hidden = false;
 
