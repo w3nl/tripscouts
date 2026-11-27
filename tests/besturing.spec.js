@@ -873,3 +873,32 @@ for (const char of [0, 3, 8]) test(`spoorfiets: het hele spoor is te rijden met 
   expect(result).toMatchObject({ finished: true, hearts: 3, flag: true });
   expect(result.coins).toBeGreaterThan(0);
 });
+
+test('op een dier springen dat door de stekelbosjes loopt: het dier valt om, jij houdt je hartjes', async ({ page }) => {
+  await seed(page);
+  await startDay(page, 0);
+  const r = await page.evaluate(() => {
+    // the first spikes of the level, and an animal standing in the middle of them
+    const [sx, sy, n] = L.d.spikes[0], cx = (sx + n / 2) * TS;
+    const fall = (withAnimal) => {
+      L.enemies = withAnimal ? [{ kind: L.d.enemy || "zwijn", x: cx - 15, y: (sy + 1) * TS - 22, w: 30, h: 22, vx: 0, dead: 0 }] : [];
+      P.hearts = 3; P.inv = 0; P.slide = 0; P.vx = 0; P.vy = 6; P.onGround = false;
+      P.x = cx - P.w / 2; P.y = (sy + 1) * TS - 22 - P.h - 30;   // 30 px above the animal's back, falling
+      for (let i = 0; i < 12; i++) step();
+      return { hearts: P.hearts, knocked: withAnimal ? L.enemies.length === 0 || L.enemies[0].dead > 0 : null };
+    };
+    // an animal just beside you (half a pixel), walking under you in the same step you land
+    const walkIn = () => {
+      P.hearts = 3; P.inv = 0; P.slide = 0; P.vx = 0; P.onGround = false;
+      P.x = cx - P.w / 2; P.y = (sy + 1) * TS - 22 - P.h - 30; P.vy = 6;
+      for (let i = 0; i < 30 && P.y + P.h + P.vy + .55 < (sy + 1) * TS - 22; i++) step();   // fall until the next step lands
+      L.enemies = [{ kind: L.d.enemy || "zwijn", x: P.x + P.w + .5, y: (sy + 1) * TS - 22, w: 30, h: 22, vx: -1, spd: 1, dead: 0 }];
+      for (let i = 0; i < 6; i++) step();
+      return { hearts: P.hearts, knocked: L.enemies.length === 0 || L.enemies[0].dead > 0 };
+    };
+    return { animal: fall(true), spikes: fall(false), walkIn: walkIn() };
+  });
+  expect(r.animal).toEqual({ hearts: 3, knocked: true });   // on the animal: no harm, it is knocked over
+  expect(r.walkIn).toEqual({ hearts: 3, knocked: true });   // also when it walks under you in the step you land
+  expect(r.spikes.hearts).toBe(2);                          // straight onto the spikes still hurts
+});

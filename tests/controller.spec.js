@@ -203,6 +203,8 @@ test('afstandsbediening: met de pijltjes en OK (Enter) kies je een dag en begin 
   await expect(page.locator('#levels button').first()).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.locator('#cardWrap')).toBeVisible();
+  // the focus reaches "Play" one frame after the card opens (menuAutoFocus): wait for it
+  await expect(page.locator('#card .btn').first()).toBeFocused();
   await page.keyboard.press('Enter');                        // "Spelen" heeft de focus
   await expect(page.locator('#hud')).toBeVisible();
   // in het spel blijven de pijltjes gewoon lopen
