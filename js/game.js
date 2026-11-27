@@ -577,7 +577,13 @@ function step() {
   // Landing on an animal that walks through the spikes: you touch the animal, not the spikes. Your feet sink a few
   // pixels into the spike tile in the step you land, and this check comes before the animals, so without this you
   // got hurt (and pushed up) instead of knocking it over. The same test as the stomp (and the moose's bounce) below.
-  const onAnimal = P.vy > 0 && L.enemies.some(e => !e.dead && overlap(P, e) && prevBottom <= e.y + (e.kind === "alg" ? 16 : 12));
+  // The animals move after this check, so it also counts an animal that walks under you in this step: its box is
+  // widened by the most it can move in one step (its pace, or 1.4× that when it comes for you).
+  const onAnimal = P.vy > 0 && L.enemies.some(e => {
+    if (e.dead) return false;
+    const reach = Math.max(Math.abs(e.vx), (e.spd || 0) * 1.4) + .5;
+    return overlap(P, { x: e.x - reach, y: e.y, w: e.w + 2 * reach, h: e.h }) && prevBottom <= e.y + (e.kind === "alg" ? 16 : 12);
+  });
   if (!onAnimal) {
     const x0 = Math.floor((P.x + 3) / TS), x1 = Math.floor((P.x + P.w - 3) / TS), ty = Math.floor((P.y + P.h - 2) / TS);
     for (let tx = x0; tx <= x1; tx++) if (cell(tx, ty) === "^" && (P.y + P.h) > ty * TS + 16) { hurt(L.d.spikeMsg); break; }

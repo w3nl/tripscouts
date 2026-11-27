@@ -887,8 +887,18 @@ test('op een dier springen dat door de stekelbosjes loopt: het dier valt om, jij
       for (let i = 0; i < 12; i++) step();
       return { hearts: P.hearts, knocked: withAnimal ? L.enemies.length === 0 || L.enemies[0].dead > 0 : null };
     };
-    return { animal: fall(true), spikes: fall(false) };
+    // an animal just beside you (half a pixel), walking under you in the same step you land
+    const walkIn = () => {
+      P.hearts = 3; P.inv = 0; P.slide = 0; P.vx = 0; P.onGround = false;
+      P.x = cx - P.w / 2; P.y = (sy + 1) * TS - 22 - P.h - 30; P.vy = 6;
+      for (let i = 0; i < 30 && P.y + P.h + P.vy + .55 < (sy + 1) * TS - 22; i++) step();   // fall until the next step lands
+      L.enemies = [{ kind: L.d.enemy || "zwijn", x: P.x + P.w + .5, y: (sy + 1) * TS - 22, w: 30, h: 22, vx: -1, spd: 1, dead: 0 }];
+      for (let i = 0; i < 6; i++) step();
+      return { hearts: P.hearts, knocked: L.enemies.length === 0 || L.enemies[0].dead > 0 };
+    };
+    return { animal: fall(true), spikes: fall(false), walkIn: walkIn() };
   });
   expect(r.animal).toEqual({ hearts: 3, knocked: true });   // on the animal: no harm, it is knocked over
+  expect(r.walkIn).toEqual({ hearts: 3, knocked: true });   // also when it walks under you in the step you land
   expect(r.spikes.hearts).toBe(2);                          // straight onto the spikes still hurts
 });
