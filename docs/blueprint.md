@@ -276,6 +276,36 @@ Uit dit project, over publiceren:
 - **Parallelle PR's die allemaal het versienummer verhogen, botsen op die ene regel.** Geef ze oplopende nummers en voeg na elke samenvoeging `main` in de volgende.
 - **Vraag naar gevoelige dagen** en behandel ze apart, rustig en zonder spelelementen die eraan afdoen.
 
+Uit TripScouts, over snelheid (november 2026):
+- **Een beeld is vooral pixels vullen, niet JavaScript.** De spelcode kostte 1 tot 3 ms per beeld; de rest was alles wat elk beeld opnieuw over het hele scherm ging: een verloop als lucht, de vignet, opgeschaalde achtergrondlagen, noorderlicht, het donker. Zoek de winst daar.
+- **Meet met een flush.** Een canvas verzamelt tekenopdrachten en voert ze pas uit als zijn buffer vol is. Wie alleen de tijd van `render()` meet, ziet snelle beelden met af en toe een piek van honderden milliseconden: dat is een meetfout, geen hapering. Zet `g.getImageData(0, 0, 1, 1)` na elk beeld (en vóór en na elk onderdeel dat je los wilt meten), dan meet je het echte werk.
+- **Kopieer wat stilstaat 1-op-1, op de eigen resolutie van het scherm.** Een verloop over het hele scherm vullen kostte 4,3 ms, een kant-en-klare kopie 0,1 ms; een laag opschalen 2,6 ms, een voorgeschaalde laag kopiëren 0,4 ms. Teken stille dingen één keer op schermresolutie en kopieer ze op hele pixels. Gemiddeld ging een beeld op tv-formaat zo van 19 naar 7 à 8 ms, zonder dat het er anders uitziet.
+- **Houd zulke caches klein, en een ding er nooit twee keer in.** Een voorgeschaalde laag is op 1080p zo'n 8 MB: bewaar er hoogstens een paar en gooi de oudste weg. Stond dezelfde laag na een nieuwe resolutie twee keer in de lijst, dan gooide het opruimen de laag weg die net in gebruik was, en werd hij elk beeld opnieuw gemaakt (17 in plaats van 60 fps). Een test die controleert dat een cache tussen twee beelden *hetzelfde* blijft, vangt dat.
+- **De resolutie is de grootste hefboom**: de tijd per beeld schaalt met het aantal pixels (×2 kostte 24 ms, ×1 maar 9). Geef een instelling Beeld: *automatisch*, *scherp* en *soepel*. Laat *automatisch* zelf een stap omlaag gaan als beelden te laat komen, en onthoud dat per apparaat.
+- **Meet zo'n automatische stand in tijd, niet in beelden**, anders duurt het op een toestel van 10 fps een halve minuut. Negeer pauzes van meer dan een seconde (een ander tabblad), maar tel trage beelden wél mee (afgetopt), anders gaat juist het traagste toestel nooit omlaag. Wacht even na het begin van een level en na elke nieuwe grootte (dan worden de caches gemaakt), meet niet in menu's of gesprekken, en zet hem uit in tests.
+- **"Elk ander beeld" verversen: tel stappen sinds de vorige keer, niet even en oneven.** Met een vaste tijdstap gaan er bij 30 fps steeds twee stappen per beeld voorbij, dus de teller blijft oneven en het noorderlicht bevroor.
+- **Een fps-teller als tekst in de pagina, twee keer per seconde bijgewerkt**, kost niets; teken hem niet elk beeld op het canvas.
+- **Teken een zacht effect (noorderlicht) op een kwart van de resolutie** en schaal het op: je ziet het verschil niet.
+- **Controleer elke snelheidswinst op het beeld:** zet dezelfde stand (vaste tijd, toeval, poppetje, dieren) van `main` en van je branch naast elkaar en vergelijk ze pixel voor pixel.
+
+Uit TripScouts, over spelregels:
+- **Botsvolgorde telt.** De stekels werden vóór de dieren gecontroleerd: wie op een dier landde dat door de bramen liep, zakte in die stap een paar pixels de stekeltegel in en kreeg een tik in plaats van het dier om te gooien. Laat beide controles het over dezelfde stand eens zijn, inclusief hoe ver het dier in die stap nog kan lopen.
+- **Dieren die op je af komen maken tests onvoorspelbaar.** Laat het hulpje dat het poppetje ergens neerzet, de dieren vlak bij die plek eerst weghalen.
+- **Een rit (spoorfiets) is een eigen toestand**, met eigen snelheid en eigen botsingen. Laat het poppetje op de rails staan en tel een sprong apart op (`railJump`), en laat de botsing het getekende poppetje volgen (grootte, bukken, sprong), anders klopt "kinderen passen eronder" niet.
+
+Uit TripScouts, over tests:
+- **Een test moet de fout kunnen zien.** Draai een nieuwe test ook op de oude code: faalt hij daar niet, dan test hij niets. (Een test zette de juiste offline kopie terug vóór hij keek.)
+- **Snellere code maakt racende tests zichtbaar.** De focus in een menu komt één beeld later; toen het tekenen sneller werd, drukten tests al op een pijltje voordat de focus er was. Wacht in de test op de focus, niet op een vaste tijd.
+- **Een testopstelling kan zelf iets doen:** een poppetje op y = 0 neerzetten liet het 352 pixels hoog op de spoorfiets "springen". Zet het op de grond.
+
+Uit TripScouts, over publiceren:
+- **Lever de lettertypen mee** in plaats van Google Fonts: het werkt offline vanaf het eerste bezoek, er gaat niets naar buiten, en de privacyverklaring klopt.
+- **De service worker bewaart alleen de spelpagina als offline kopie.** Anders overschrijft elke andere pagina op de site (de privacypagina, een doorverwijspagina) de kopie van het spel.
+- **Onveranderlijke releases** (*immutable releases*) kunnen na publiceren niet meer veranderen: maak per versie een release, met de bestanden er in één keer bij. Een release van vóór die instelling blijft veranderlijk, en dat verbergt het probleem tot je hem ooit opnieuw maakt. Een onderbroken poging laat een concept achter: sla alleen een *gepubliceerde* release met het bestand over.
+- **"Latest" kan maar één soort release zijn.** Voor een tweede app een vaste link: een kleine pagina op de site die de hoogste versie opzoekt (niet de eerste in de lijst: een later herhaalde oude build staat bovenaan) en doorstuurt.
+- **Twee PR's die dezelfde regel naar hetzelfde versienummer zetten, gaan zonder conflict samen**, en dan heeft het tweede hetzelfde nummer als wat al online staat. Verhoog na het samenvoegen.
+- **Een AI-reviewer vindt echte randgevallen** (onder 10 fps, een concept-release, een test die zichzelf repareert): neem ze serieus, controleer ze eerst in de code, en laat een test zien dat de oplossing werkt.
+
 ## 15. Stappenplan voor een nieuw thema
 
 1. **Intake** (§2): wie, foto's, waar, wanneer, per dag, bijzondere dagen, persoonlijke details, apparaten.
