@@ -35,6 +35,11 @@ body { margin: 0; background: var(--night); color: var(--snow); font-family: var
 #game { position: fixed; inset: 0; }
 #cv { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
 html.lowres #cv { image-rendering: auto; } /* Graphics "smooth" (or "auto" a step down): fewer pixels, scaled up smoothly */
+/* The frame counter (settings: FPS on): small, bottom centre, between the touch buttons; updated twice a second */
+#fps { position: absolute; left: 50%; bottom: max(6px, env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 5; pointer-events: none;
+  font: 600 12px/1 var(--display); color: #8dffb5; background: rgba(8,10,24,.6); border-radius: 8px; padding: 4px 8px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+#fps.meh { color: #ffd25e; }
+#fps.slow { color: #ff8a8a; }
 button { font: inherit; color: inherit; cursor: pointer; }
 button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 

@@ -112,3 +112,26 @@ test('het noorderlicht beweegt ook als er per beeld twee stappen voorbijgaan (30
   });
   expect(drawn).toBeGreaterThanOrEqual(5);
 });
+
+test('fps in beeld: aan en uit bij instellingen, bewaard, en twee keer per seconde bijgewerkt', async ({ page }) => {
+  await seed(page, { lang: 'nl' });
+  await expect(page.locator('#fps')).toBeHidden();         // standaard uit
+  await page.locator('#settingsOpen').click();
+  await expect(page.locator('#fpsBtn')).toHaveText('📊 FPS uit');
+  await page.locator('#fpsBtn').click();
+  await expect(page.locator('#fpsBtn')).toHaveText('📊 FPS aan');
+  await expect(page.locator('#fpsBtn')).toHaveAttribute('aria-pressed', 'true');
+  expect(await page.evaluate(() => localStorage.getItem('cabin-week-fps'))).toBe('1');
+  await page.reload();
+  await startDay(page, 0);
+  await expect(page.locator('#fps')).toBeVisible();
+  await expect(page.locator('#fps')).toHaveText(/^\d+ fps · 2×$/);
+  // in tekst, niet op het canvas: het telt alleen beelden en verandert twee keer per seconde
+  const changes = await page.evaluate(() => new Promise(res => {
+    let n = 0; const mo = new MutationObserver(() => n++);
+    mo.observe($('fps'), { childList: true, characterData: true, subtree: true });
+    setTimeout(() => { mo.disconnect(); res(n); }, 2000);
+  }));
+  expect(changes).toBeGreaterThanOrEqual(2);
+  expect(changes).toBeLessThanOrEqual(6);
+});

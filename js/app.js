@@ -2,7 +2,7 @@
 // Start het spel: versie, service worker, updatebalk en de spellus.
 
 /** Staat op het titelscherm. Altijd hetzelfde getal als CACHE in sw.js (tests/pwa.spec.js controleert dat). */
-const GAME_VERSION = 97;
+const GAME_VERSION = 98;
 $("version").textContent = "v" + GAME_VERSION;
 if (legacyMenu) $("update-bar").hidden = false;
 
@@ -167,9 +167,42 @@ function watchFrames(dt) {
   try { localStorage.setItem(GFX_AUTO_KEY, String(gfxAuto)); } catch (e) {}
   resize(); gfxWatch.skip = 2000;
 }
+/* ---------- FPS (settings, #fpsBtn): frames per second and the graphics step, bottom centre ----------
+   Costs next to nothing: the loop only counts frames, and the text changes twice a second (not drawn on the canvas). */
+const FPS_KEY = "cabin-week-fps";
+let fpsOn = (() => { try { return localStorage.getItem(FPS_KEY) === "1"; } catch (e) { return false; } })();
+const fpsCount = { n: 0, t: 0 };
+function showFps() {
+  const b = $("fpsBtn");
+  if (b) {
+    b.textContent = fpsOn ? T("📊 FPS on", "📊 FPS aan") : T("📊 FPS off", "📊 FPS uit");
+    b.setAttribute("aria-pressed", String(fpsOn));
+    b.title = T("Shows how many frames per second the game draws, and how sharp (pixels per screen pixel).", "Laat zien hoeveel beelden per seconde het spel tekent, en hoe scherp (pixels per schermpixel).");
+  }
+  if ($("fps")) $("fps").hidden = !fpsOn; // (an older cached page has no counter)
+  fpsCount.n = 0; fpsCount.t = 0;
+}
+if ($("fpsBtn")) $("fpsBtn").onclick = () => {
+  fpsOn = !fpsOn;
+  try { localStorage.setItem(FPS_KEY, fpsOn ? "1" : "0"); } catch (e) {}
+  showFps(); tone(700, .04, "triangle", .04);
+};
+showFps();
+function countFps(dt) {
+  if (!fpsOn || !$("fps")) return;
+  // a pause (another tab) doesn't count: start again
+  if (dt > 1000 || document.hidden) { fpsCount.n = 0; fpsCount.t = 0; return; }
+  fpsCount.n++; fpsCount.t += dt;
+  if (fpsCount.t < 500) return;
+  const fps = Math.round(fpsCount.n * 1000 / fpsCount.t), el = $("fps");
+  el.textContent = `${fps} fps · ${+renderRatio.toFixed(2)}×`;
+  // 50 is normal on a 50 Hz TV
+  el.className = fps >= 48 ? "" : fps >= 30 ? "meh" : "slow";
+  fpsCount.n = 0; fpsCount.t = 0;
+}
 function loop(ts) {
   const dt = Math.min(100, ts - (last || ts)); last = ts; acc += dt;
-  watchFrames(ts - (last2 || ts)); last2 = ts;
+  watchFrames(ts - (last2 || ts)); countFps(ts - (last2 || ts)); last2 = ts;
   pollGamepads();
   // simT is het moment van de laatste stap; elke stap verwerkt de knoppen tot en met zijn eigen moment (applyHolds).
   if (!simT || Math.abs(ts - acc - simT) > 3 * STEP_MS) {
