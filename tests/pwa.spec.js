@@ -91,6 +91,45 @@ test('de privacypagina overschrijft de offline kopie van het spel niet', async (
   await context.setOffline(false);
 });
 
+test('de pagina /android/ overschrijft de offline kopie van het spel ook niet', async ({ page, context }) => {
+  await page.route('https://api.github.com/**', route => route.fulfill({ status: 503, body: '' }));
+  await page.route('https://github.com/**', route => route.fulfill({ status: 200, contentType: 'text/html', body: '<h1>Releases</h1>' }));
+  await page.goto('/');
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.waitForTimeout(500);
+  await page.goto('/android/');
+  await page.waitForURL('https://github.com/w3nl/tripscouts/releases');
+  // straight to offline: no online visit to the game in between, which would put the right copy back
+  await page.waitForTimeout(500);
+  await context.setOffline(true);
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveClass(/ready/);
+  await expect(page.locator('#title')).toBeVisible();
+  await context.setOffline(false);
+});
+
+test('tripscouts.online/android: door naar de .apk van de nieuwste Android-release, anders naar de lijst', async ({ page }) => {
+  const apk = 'https://github.com/w3nl/tripscouts/releases/download/android-v1.250/cabin-week.apk';
+  await page.route('https://api.github.com/repos/w3nl/tripscouts/releases*', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify([
+    { tag_name: 'linux-v1.100.0', draft: false, prerelease: false, assets: [{ name: 'tripscouts.snap', browser_download_url: 'https://x/snap' }] },
+    { tag_name: 'android-v1.251', draft: true, prerelease: false, assets: [{ name: 'cabin-week.apk', browser_download_url: 'https://x/draft.apk' }] },
+    // an older build that was retried later is first in the list: the page must still take the highest version
+    { tag_name: 'android-v1.249', draft: false, prerelease: false, assets: [{ name: 'cabin-week.apk', browser_download_url: 'https://x/old.apk' }] },
+    { tag_name: 'android-v1.250', draft: false, prerelease: false, assets: [{ name: 'cabin-week.apk', browser_download_url: apk }] },
+    { tag_name: 'android-v1.9', draft: false, prerelease: false, assets: [{ name: 'cabin-week.apk', browser_download_url: 'https://x/nine.apk' }] },
+  ]) }));
+  let asked = null;
+  await page.route('https://github.com/**', route => { asked = route.request().url(); route.fulfill({ status: 200, contentType: 'text/plain', body: 'apk' }); });
+  await page.goto('/android/');
+  await expect.poll(() => asked).toBe(apk);                  // de hoogste gepubliceerde versie, niet het concept, de snap of de eerste in de lijst
+  // GitHub niet bereikbaar (of te vaak gevraagd): de lijst met releases
+  await page.unroute('https://api.github.com/repos/w3nl/tripscouts/releases*');
+  await page.route('https://api.github.com/**', route => route.fulfill({ status: 403, body: '' }));
+  asked = null;
+  await page.goto('/android/');
+  await expect.poll(() => asked).toBe('https://github.com/w3nl/tripscouts/releases');
+});
+
 test('Chrome biedt de Chrome Web Store-extensie aan', async ({ page }) => {
   await page.addInitScript(() => Object.defineProperty(navigator, 'userAgent', { get: () => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36' }));
   await page.goto('/');

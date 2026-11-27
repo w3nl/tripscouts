@@ -1,5 +1,6 @@
-# Builds the Android app (phone, tablet and Google TV) with the game inside. On main the app goes to the release "google-tv",
-# so you can install it on the TV with the Downloader app. See docs/google-tv.md.
+# Builds the Android app (phone, tablet and Google TV) with the game inside. On main every build becomes its own release
+# "android-v1.<run>" with the .apk; tripscouts.online/android always sends you to the newest one, for the Downloader app on
+# the TV. See docs/google-tv.md.
 name: Build the Android app
 
 on:
@@ -137,11 +138,26 @@ jobs:
           path: cabin-week-google-play.7z
           retention-days: 7
 
-      - name: Attach the app to the release "google-tv"
+      # Releases in this repository are immutable: once published, nothing can be added or replaced. So every build on
+      # main gets its own release, "android-v1.<run>" like the app's versionName, created with the .apk in one go. It is
+      # never marked as the latest release (that is the Linux snap: releases/latest/download/tripscouts.snap); the fixed
+      # address for the newest .apk is tripscouts.online/android (android/index.html looks up the newest release).
+      - name: Publish the app as a release
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release view google-tv >/dev/null 2>&1 || gh release create google-tv --title "Android app" --latest=false \
-            --notes "TripScouts for Android (phone, tablet, Google TV). On the TV, install with the Downloader app: see docs/google-tv.md."
-          gh release upload google-tv cabin-week.apk --clobber
+          V="1.$GITHUB_RUN_NUMBER"; G=$(grep -oP 'GAME_VERSION = \K[0-9]+' js/app.js)
+          TAG="android-v$V"
+          # A published release with the .apk is done. A draft (an earlier try that stopped between creating and publishing)
+          # is removed and made again; a draft can still be deleted, a published release can't be changed.
+          if STATE=$(gh release view "$TAG" --json isDraft,assets --jq '"\(.isDraft) \([.assets[].name] | index("cabin-week.apk") != null)"' 2>/dev/null); then
+            if [ "$STATE" = "false true" ]; then
+              echo "::notice::The release $TAG already exists (releases can't be changed)."
+              exit 0
+            fi
+            echo "::warning::The release $TAG was left unfinished ($STATE); making it again."
+            gh release delete "$TAG" --yes --cleanup-tag
+          fi
+          gh release create "$TAG" cabin-week.apk --target "$GITHUB_SHA" --latest=false --title "Android app $V (game v$G)" \
+            --notes "TripScouts for Android (phone, tablet, Google TV), version $V with game version $G. On a Google TV, type tripscouts.online/android in the Downloader app: it always gives the newest one (see docs/google-tv.md)."

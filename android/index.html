@@ -1,0 +1,53 @@
+<!doctype html>
+<!-- A short, fixed address for the newest Android app: tripscouts.online/android. Every build of the app on main is its
+     own release on GitHub ("android-v1.<build>", releases there can't be changed), so this page looks up the newest one
+     and sends you to its .apk. Type it in the Downloader app on a Google TV. See docs/google-tv.md.
+     It asks GitHub for the list of releases; if that doesn't work, it opens that list, where you pick the newest. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>TripScouts for Android</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0d1730; color: #eef3ff; font: 18px/1.5 system-ui, sans-serif; text-align: center; }
+  main { padding: 24px; max-width: 34em; }
+  a { color: #ffd25e; }
+  .nl { color: #b8c4dc; }
+</style>
+</head>
+<body>
+<main>
+  <p id="msg">Looking for the newest TripScouts app for Android…<br><span class="nl">De nieuwste TripScouts-app voor Android wordt opgezocht…</span></p>
+  <p><a id="list" href="https://github.com/w3nl/tripscouts/releases">All releases · Alle releases</a></p>
+</main>
+<script>
+  "use strict";
+  const LIST = "https://github.com/w3nl/tripscouts/releases";
+  const msg = document.getElementById("msg");
+  /** The .apk of the newest Android release in a list from the GitHub API, or null. "Newest" is the highest version
+      (android-v1.<build>), not the first in the list: an older build that is retried later comes first in the list, but
+      its app can't update a newer one. */
+  function newestApk(releases) {
+    const build = r => +(/^android-v1\.(\d+)$/.exec(r.tag_name) || [])[1];
+    const ok = (releases || []).filter(r => !r.draft && !r.prerelease && build(r) > 0 && (r.assets || []).some(a => /\.apk$/.test(a.name)));
+    const r = ok.sort((a, b) => build(b) - build(a))[0];
+    return r ? r.assets.find(a => /\.apk$/.test(a.name)).browser_download_url : null;
+  }
+  function fallback() {
+    msg.innerHTML = 'Pick the newest "Android app" in the list.<br><span class="nl">Kies de nieuwste "Android app" in de lijst.</span>';
+    location.replace(LIST);
+  }
+  fetch("https://api.github.com/repos/w3nl/tripscouts/releases?per_page=40", { headers: { Accept: "application/vnd.github+json" } })
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(list => {
+      const url = newestApk(list);
+      if (!url) return fallback();
+      msg.innerHTML = 'Downloading… Choose <b>Install</b> when it is done.<br><span class="nl">Downloaden… Kies <b>Installeren</b> als het klaar is.</span>';
+      location.replace(url);
+    })
+    .catch(fallback);
+</script>
+</body>
+</html>

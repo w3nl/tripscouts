@@ -92,7 +92,7 @@ The `.aab` is **not public**: it is only in the run, inside a 7z file with your 
 
    The release bundle is optimised with **R8** (smaller and faster, as Google Play recommends). Its mapping file is already inside the `.aab`, so Play shows readable crash reports by itself. Does Play Console still say there is no deobfuscation file? Then upload `cabin-week-mapping.txt` at **App bundle explorer → the version → Downloads → ReTrace mapping file**.
 
-(The `.apk` on the release **google-tv** is public and fine to share: that is the version for Downloader on the TV. Google Play does not take an `.apk`.)
+(The `.apk` on the releases **android-v1.&lt;build&gt;** is public and fine to share: that is the version for Downloader on the TV, always the newest at `tripscouts.online/android`. Google Play does not take an `.apk`.)
 
 ### C3. Upload to internal testing
 
