@@ -9,7 +9,8 @@ const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '
 
 http.createServer((req, res) => {
   const urlPath = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-  const file = path.join(root, urlPath === '/' ? 'index.html' : urlPath);
+  // a folder gives its index.html, like GitHub Pages (/ is the game, /android/ the page for the newest Android app)
+  const file = path.join(root, urlPath.endsWith('/') ? urlPath + 'index.html' : urlPath);
   if (!file.startsWith(root) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404); return res.end('Niet gevonden'); }
   res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
   fs.createReadStream(file).pipe(res);

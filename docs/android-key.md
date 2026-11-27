@@ -6,7 +6,7 @@ What the workflow then makes:
 
 | File | Where | Public? |
 |---|---|---|
-| `cabin-week.apk` | release **google-tv** (for Downloader on the TV) | yes, that is fine |
+| `cabin-week.apk` | a release **android-v1.&lt;build&gt;** per build (for Downloader on the TV: `tripscouts.online/android`) | yes, that is fine |
 | `cabin-week.aab` | artifact `cabin-week-google-play`, inside a 7z file with a password | **no** |
 
 Anyone with a GitHub account can download an artifact of a public repository. That is why the `.aab` is in a 7z file whose password is your `ANDROID_KEYSTORE_PASSWORD`.

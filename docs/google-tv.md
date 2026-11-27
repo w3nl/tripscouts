@@ -46,9 +46,11 @@ Whether a controller works in such a browser depends on the browser. If not, use
 
 ## 3. The app on the Google TV
 
-The workflow *Build the Android app* (`google-tv.yml`) builds **one Android app** with the whole game inside on every change. It is the same app for phone, tablet, Google TV and compatible Chromebooks (on the TV it has its own tile on the home screen); this page only covers the TV part. For Chrome OS, see [chromebook.md](chromebook.md). It works offline. On `main` the app is attached to the release **google-tv**:
+The workflow *Build the Android app* (`google-tv.yml`) builds **one Android app** with the whole game inside on every change. It is the same app for phone, tablet, Google TV and compatible Chromebooks (on the TV it has its own tile on the home screen); this page only covers the TV part. For Chrome OS, see [chromebook.md](chromebook.md). It works offline. On `main` every build becomes its own release, **android-v1.&lt;build&gt;** (the same number as the app's version), with `cabin-week.apk`. Releases in this repository are immutable (they can't be changed once published), so the app is never replaced in an old release. The short, fixed address for the newest one is:
 
-`https://github.com/w3nl/tripscouts/releases/download/google-tv/cabin-week.apk`
+`tripscouts.online/android`
+
+That page (`android/index.html` on the site) asks GitHub for the newest Android release and sends you to its `.apk`. If that doesn't work, it opens the list of releases: pick the newest *Android app*. (Until November 2026 the app was in one release, **google-tv**, that was updated every time. That release is no longer updated.)
 
 **Once on the Google TV:**
 

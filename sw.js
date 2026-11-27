@@ -1,7 +1,7 @@
 // Service worker: maakt het spel installeerbaar en offline speelbaar.
 // Verhoog CACHE bij elke wijziging, zodat telefoons de nieuwe versie krijgen, en houd GAME_VERSION in js/app.js
 // hetzelfde getal (tests/pwa.spec.js controleert dat). De pagina toont dat getal en biedt herladen aan bij een nieuwere versie.
-const CACHE = 'cabinweek-v99';
+const CACHE = 'cabinweek-v100';
 const CORE = [
   './',
   './index.html',
@@ -66,8 +66,9 @@ self.addEventListener('fetch', event => {
   const url = new URL(req.url);
 
   // De pagina: eerst het netwerk (no-cache: GitHub Pages laat browsers bestanden 10 minuten hergebruiken), offline de kopie.
-  // Niet voor de privacypagina: die mag de offline kopie van het spel (index.html) niet overschrijven.
-  if (req.mode === 'navigate' && !url.pathname.endsWith('/privacy.html')) {
+  // Alleen voor het spel zelf: andere pagina's (de privacypagina, /android/) mogen de offline kopie niet overschrijven.
+  const game = new URL('./', location).pathname;
+  if (req.mode === 'navigate' && (url.pathname === game || url.pathname === game + 'index.html')) {
     event.respondWith(fetch(req.url, { cache: 'no-cache', credentials: 'same-origin' }).then(res => { const copy = res.clone(); caches.open(CACHE).then(c => c.put('./index.html', copy)); return res; })
       .catch(() => caches.match('./index.html')));
     return;
