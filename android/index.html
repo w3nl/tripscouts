@@ -26,9 +26,13 @@
   "use strict";
   const LIST = "https://github.com/w3nl/tripscouts/releases";
   const msg = document.getElementById("msg");
-  /** The .apk of the newest Android release in a list from the GitHub API, or null. */
+  /** The .apk of the newest Android release in a list from the GitHub API, or null. "Newest" is the highest version
+      (android-v1.<build>), not the first in the list: an older build that is retried later comes first in the list, but
+      its app can't update a newer one. */
   function newestApk(releases) {
-    const r = (releases || []).find(r => !r.draft && !r.prerelease && /^android-v/.test(r.tag_name) && (r.assets || []).some(a => /\.apk$/.test(a.name)));
+    const build = r => +(/^android-v1\.(\d+)$/.exec(r.tag_name) || [])[1];
+    const ok = (releases || []).filter(r => !r.draft && !r.prerelease && build(r) > 0 && (r.assets || []).some(a => /\.apk$/.test(a.name)));
+    const r = ok.sort((a, b) => build(b) - build(a))[0];
     return r ? r.assets.find(a => /\.apk$/.test(a.name)).browser_download_url : null;
   }
   function fallback() {
