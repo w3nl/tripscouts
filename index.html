@@ -28,6 +28,7 @@
 <body>
 <div id="game">
   <canvas id="cv"></canvas>
+    <div id="fps" hidden aria-hidden="true"></div>
 
   <div id="hud" hidden>
     <span class="pill lvl" id="hLvl">Level 1</span>
@@ -110,6 +111,7 @@
         <button type="button" class="lang" data-lang="en" lang="en">English</button>
         <button type="button" class="lang" data-lang="nl" lang="nl">Nederlands</button>
         <button type="button" class="lang" id="gfxBtn">🖼️ Graphics: auto</button>
+        <button type="button" class="lang" id="fpsBtn" aria-pressed="false">📊 FPS off</button>
       </div>
       <p data-nl="Geluid en installatie">Sound and installation</p>
       <div class="settings-options">
