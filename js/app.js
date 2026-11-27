@@ -2,7 +2,7 @@
 // Start het spel: versie, service worker, updatebalk en de spellus.
 
 /** Staat op het titelscherm. Altijd hetzelfde getal als CACHE in sw.js (tests/pwa.spec.js controleert dat). */
-const GAME_VERSION = 96;
+const GAME_VERSION = 97;
 $("version").textContent = "v" + GAME_VERSION;
 if (legacyMenu) $("update-bar").hidden = false;
 
@@ -146,10 +146,14 @@ showGfx();
    (GFX_STEPS), remembered per device. It counts in time, not frames, so a slow device gets there just as quickly. Never
    in the first 2 seconds after a level starts or the size changes (caches are being made then), never in the menus or
    a conversation, and not in automated tests (navigator.webdriver), unless a test asks for it (window.__gfxWatch). */
-const gfxWatch = { t: 0, late: 0, skip: 2000, state: "" };
+const gfxWatch = { t: 0, late: 0, skip: 2000, state: "", size: 0 };
 function watchFrames(dt) {
-  if (state !== gfxWatch.state) { gfxWatch.state = state; gfxWatch.skip = 2000; gfxWatch.t = gfxWatch.late = 0; }
-  if (gfxMode !== "auto" || state !== "play" || dialog || document.hidden || dt >= 100 || (navigator.webdriver && !window.__gfxWatch)) return;
+  // a new screen or a new canvas size (also a window you resize yourself): the caches are made again, so wait a moment
+  if (state !== gfxWatch.state || resizes !== gfxWatch.size) { gfxWatch.state = state; gfxWatch.size = resizes; gfxWatch.skip = 2000; gfxWatch.t = gfxWatch.late = 0; }
+  // A pause of more than a second is the page waiting (another tab, the device asleep), not a slow frame. Slower frames
+  // than that do count, capped, so a device at 10 frames a second or less steps down too.
+  if (gfxMode !== "auto" || state !== "play" || dialog || document.hidden || dt > 1000 || (navigator.webdriver && !window.__gfxWatch)) return;
+  dt = Math.min(dt, 250);
   if (gfxWatch.skip > 0) { gfxWatch.skip -= dt; return; }
   gfxWatch.t += dt; if (dt > 22) gfxWatch.late += dt;
   if (gfxWatch.t < 3000) return;

@@ -15,8 +15,9 @@ let scale = 1, viewW = 800, dpr = 1;
 const GFX_KEY = "cabin-week-graphics", GFX_AUTO_KEY = "cabin-week-graphics-auto", GFX_STEPS = [2, 1.5, 1, .75];
 let gfxMode = (() => { try { const m = localStorage.getItem(GFX_KEY); return m === "sharp" || m === "smooth" ? m : "auto"; } catch (e) { return "auto"; } })();
 let gfxAuto = (() => { try { const r = +localStorage.getItem(GFX_AUTO_KEY); return GFX_STEPS.includes(r) ? r : 2; } catch (e) { return 2; } })();
-let renderRatio = 1;
+let renderRatio = 1, resizes = 0; // resizes counts the size changes (watchFrames() waits a moment after one)
 function resize() {
+  resizes++;
   dpr = Math.min(2, window.devicePixelRatio || 1);
   renderRatio = gfxMode === "sharp" ? dpr : gfxMode === "smooth" ? Math.min(dpr, 1, 720 / innerHeight) : Math.min(dpr, gfxAuto);
   cv.width = Math.round(innerWidth * renderRatio); cv.height = Math.round(innerHeight * renderRatio);

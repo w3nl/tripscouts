@@ -1040,14 +1040,16 @@ function getSceneLayers(scene) {
   return LAYERS[scene] = out;
 }
 /** Northern lights: a few slow, wavy green and purple curtains. They are soft and slow, so they are drawn at a quarter
-    of the screen's resolution, every other frame, onto their own canvas (AURORA_CV), and scaled up: the same picture
+    of the screen's resolution, every other step, onto their own canvas (AURORA_CV), and scaled up: the same picture
     for much less work per frame. */
 const AURORA_CV = mk(1, 1), AURORA_Q = 4, AURORA_H = 230;
 function drawAurora(strength) {
   const m = g.getTransform(), k = m.a / AURORA_Q, w = Math.ceil(viewW * k), h = Math.ceil(AURORA_H * k);
   const stale = AURORA_CV.width !== w || AURORA_CV.height !== h || AURORA_CV._s !== strength;
   if (stale) { AURORA_CV.width = w; AURORA_CV.height = h; AURORA_CV._s = strength; }
-  if (stale || frame % 2 === 0) {
+  // every other step: by the steps since the last drawing, not by even frames (at 30 fps two steps go by per frame)
+  if (stale || frame - (AURORA_CV._f || 0) >= 2 || frame < AURORA_CV._f) {
+    AURORA_CV._f = frame;
     const ac = AURORA_CV.getContext("2d");
     ac.setTransform(1, 0, 0, 1, 0, 0); ac.clearRect(0, 0, w, h); ac.setTransform(k, 0, 0, k, 0, 0);
     withCtx(ac, () => auroraCurtains(strength));

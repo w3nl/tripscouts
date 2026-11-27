@@ -80,3 +80,35 @@ test('na een andere resolutie blijven de lagen klaarstaan (niet elk beeld opnieu
   });
   expect(r).toEqual([{ ratio: 1.5, same: true, unique: true }, { ratio: 1, same: true, unique: true }, { ratio: .75, same: true, unique: true }]);
 });
+
+test('beeld automatisch: ook bij 10 beelden per seconde of minder een stap omlaag, maar niet na een pauze of een nieuwe grootte', async ({ page }) => {
+  await seed(page);
+  await startDay(page, 0);
+  const r = await page.evaluate(() => {
+    window.__gfxWatch = true;
+    for (let i = 0; i < 30; i++) watchFrames(16.7);        // de eerste 2 seconden telt niets: eerst wachten
+    gfxWatch.skip = 0; gfxWatch.t = gfxWatch.late = 0;
+    for (let i = 0; i < 12; i++) watchFrames(5000);        // de pagina wachtte (ander tabblad): telt niet
+    const afterPause = renderRatio;
+    for (let i = 0; i < 25; i++) watchFrames(150);         // ruim 3 seconden op 6 beelden per seconde
+    const slow = renderRatio;
+    // na een nieuwe grootte (ook zelf het venster groter maken) begint het kijken opnieuw, met eerst 2 seconden wachten
+    gfxWatch.skip = 0; gfxWatch.t = 2900; gfxWatch.late = 2900;
+    resize();
+    for (let i = 0; i < 10; i++) watchFrames(30);
+    return { afterPause, slow, afterResize: renderRatio, waiting: gfxWatch.skip > 0 && gfxWatch.t === 0 };
+  });
+  expect(r).toEqual({ afterPause: 2, slow: 1.5, afterResize: 1.5, waiting: true });
+});
+
+test('het noorderlicht beweegt ook als er per beeld twee stappen voorbijgaan (30 beelden per seconde)', async ({ page }) => {
+  await seed(page, { region: 'norway', unlocked: 8 });
+  await startDay(page, 0);
+  const drawn = await page.evaluate(() => {
+    const seen = new Set();
+    frame = 1001;                                           // oneven, en dan steeds twee stappen verder
+    for (let i = 0; i < 6; i++) { render(); seen.add(AURORA_CV._f); frame += 2; }
+    return seen.size;
+  });
+  expect(drawn).toBeGreaterThanOrEqual(5);
+});
