@@ -34,6 +34,7 @@ button { touch-action: manipulation; }
 body { margin: 0; background: var(--night); color: var(--snow); font-family: var(--body); font-size: 14px; overflow: hidden; -webkit-tap-highlight-color: transparent; }
 #game { position: fixed; inset: 0; }
 #cv { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+html.lowres #cv { image-rendering: auto; } /* Graphics "smooth" (or "auto" a step down): fewer pixels, scaled up smoothly */
 button { font: inherit; color: inherit; cursor: pointer; }
 button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 

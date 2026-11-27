@@ -1039,12 +1039,26 @@ function getSceneLayers(scene) {
   }
   return LAYERS[scene] = out;
 }
-/** Northern lights: a few slow, wavy green and purple curtains (cheap: three paths per frame). */
+/** Northern lights: a few slow, wavy green and purple curtains. They are soft and slow, so they are drawn at a quarter
+    of the screen's resolution, every other frame, onto their own canvas (AURORA_CV), and scaled up: the same picture
+    for much less work per frame. */
+const AURORA_CV = mk(1, 1), AURORA_Q = 4, AURORA_H = 230;
 function drawAurora(strength) {
+  const m = g.getTransform(), k = m.a / AURORA_Q, w = Math.ceil(viewW * k), h = Math.ceil(AURORA_H * k);
+  const stale = AURORA_CV.width !== w || AURORA_CV.height !== h || AURORA_CV._s !== strength;
+  if (stale) { AURORA_CV.width = w; AURORA_CV.height = h; AURORA_CV._s = strength; }
+  if (stale || frame % 2 === 0) {
+    const ac = AURORA_CV.getContext("2d");
+    ac.setTransform(1, 0, 0, 1, 0, 0); ac.clearRect(0, 0, w, h); ac.setTransform(k, 0, 0, k, 0, 0);
+    withCtx(ac, () => auroraCurtains(strength));
+  }
+  g.drawImage(AURORA_CV, 0, 0, viewW, AURORA_H);
+}
+function auroraCurtains(strength) {
   const cols = [["rgba(90,255,170,", 150], ["rgba(120,230,255,", 110], ["rgba(190,120,255,", 80]];
   for (let k = 0; k < 3; k++) {
     const [c, base] = cols[k], amp = 26 + k * 8;
-    g.fillStyle = grad("aurora" + k, () => { const gr = g.createLinearGradient(0, base - 70, 0, base + 60); gr.addColorStop(0, c + "0)"); gr.addColorStop(.55, c + (.38 * strength).toFixed(2) + ")"); gr.addColorStop(1, c + "0)"); return gr; });
+    g.fillStyle = grad("aurora" + k + "-" + strength, () => { const gr = g.createLinearGradient(0, base - 70, 0, base + 60); gr.addColorStop(0, c + "0)"); gr.addColorStop(.55, c + (.38 * strength).toFixed(2) + ")"); gr.addColorStop(1, c + "0)"); return gr; });
     g.beginPath(); g.moveTo(0, base + 60);
     for (let x = 0; x <= viewW + 24; x += 24) g.lineTo(x, base - 50 + Math.sin(x * .006 + frame * .008 + k * 2) * amp + Math.sin(x * .017 - frame * .011) * 10);
     g.lineTo(viewW + 24, base + 60); g.fill();
@@ -1055,18 +1069,21 @@ function drawSceneSky(scene) {
     polder: ["#4a6488", "#8ea6c4", "#d8c8b8"], grachten: ["#0a1430", "#2a3466", "#6a5a82"], duinen: ["#5a7ca8", "#a8c4dc", "#f0dcc0"],
     adriatic: ["#2a7ad8", "#7ac0f0", "#d8f0fa"], smaland: ["#3a7ad8", "#9ad0f0", "#eef8f4"], oldtown: ["#3a7ad0", "#f0b878", "#f8d8a8"], falls: ["#3a8ad8", "#9ad0f0", "#e0f4f8"],
     highlands: ["#7298b1", "#bdd0ce", "#f2dbac"], ardeche: ["#2a78d0", "#8ac6ee", "#f6e6c0"], laguna: ["#3a80d0", "#a0d0ee", "#f6e0c8"], venezia: ["#3a7ad0", "#9acaee", "#f8e2c4"], burano: ["#3a80d8", "#a0d4f2", "#f4ecd8"], verona: ["#2a5aa8", "#e8a888", "#f8d8a8"], dolomiti: ["#2a6ad0", "#8ac0ee", "#f0e4f0"], grotte: ["#0e0a08", "#1e1610", "#2e2218"] }[scene];
-  g.fillStyle = grad("sky-" + scene, () => { const gr = g.createLinearGradient(0, 0, 0, VIEW_H); gr.addColorStop(0, skies[0]); gr.addColorStop(.62, skies[1]); gr.addColorStop(1, skies[2]); return gr; });
-  g.fillRect(0, 0, viewW, VIEW_H);
-  if (scene === "grotte") return; // inside a cave: no sun, no stars
+  const summer = ["adriatic", "oldtown", "falls", "smaland", "highlands", "ardeche", "laguna", "venezia", "burano", "verona", "dolomiti"].includes(scene);
+  // the sky, and in summer the sun, don't move: drawn once, then copied (screenCached())
+  screenCached("sky-" + scene, () => {
+    g.fillStyle = grad("sky-" + scene, () => { const gr = g.createLinearGradient(0, 0, 0, VIEW_H); gr.addColorStop(0, skies[0]); gr.addColorStop(.62, skies[1]); gr.addColorStop(1, skies[2]); return gr; });
+    g.fillRect(0, 0, viewW, VIEW_H);
+    if (summer) {
+      // summer: a big warm sun, no stars
+      const sx = viewW * (scene === "oldtown" || scene === "ardeche" ? .78 : scene === "highlands" ? .76 : .2), sy = scene === "oldtown" ? 150 : scene === "highlands" ? 74 : 80;
+      g.fillStyle = grad("sun-" + scene, () => { const sg = g.createRadialGradient(sx, sy, 10, sx, sy, 160); sg.addColorStop(0, "rgba(255,250,210,1)"); sg.addColorStop(.25, "rgba(255,236,160,.7)"); sg.addColorStop(1, "rgba(255,236,160,0)"); return sg; });
+      g.fillRect(sx - 160, sy - 160, 320, 320);
+      g.fillStyle = "#fff8d8"; g.beginPath(); g.arc(sx, sy, 30, 0, 7); g.fill();
+    }
+  });
+  if (scene === "grotte" || summer) return; // inside a cave: no sun, no stars; in summer: no stars
   g.fillStyle = "#fff";
-  if (scene === "adriatic" || scene === "oldtown" || scene === "falls" || scene === "smaland" || scene === "highlands" || scene === "ardeche" || scene === "laguna" || scene === "venezia" || scene === "burano" || scene === "verona" || scene === "dolomiti") {
-    // summer: a big warm sun, no stars
-    const sx = viewW * (scene === "oldtown" || scene === "ardeche" ? .78 : scene === "highlands" ? .76 : .2), sy = scene === "oldtown" ? 150 : scene === "highlands" ? 74 : 80;
-    g.fillStyle = grad("sun-" + scene, () => { const sg = g.createRadialGradient(sx, sy, 10, sx, sy, 160); sg.addColorStop(0, "rgba(255,250,210,1)"); sg.addColorStop(.25, "rgba(255,236,160,.7)"); sg.addColorStop(1, "rgba(255,236,160,0)"); return sg; });
-    g.fillRect(sx - 160, sy - 160, 320, 320);
-    g.fillStyle = "#fff8d8"; g.beginPath(); g.arc(sx, sy, 30, 0, 7); g.fill();
-    return;
-  }
   const starA = { alps: .5, polder: .15, duinen: 0 }[scene] ?? 1;
   if (starA) for (let i = 0; i < 70; i++) { g.globalAlpha = (.3 + .6 * Math.abs(Math.sin(frame / (30 + i % 13) + i))) * starA; g.fillRect(((hash(i * 3) * 3000) % viewW + viewW) % viewW, hash(i * 7) * 220, 2, 2); }
   g.globalAlpha = 1;
@@ -1091,8 +1108,35 @@ function drawLayer(cnv, off) {
   const [y0, h] = layerBand(cnv);
   if (!h) return;
   let x = -(((off % LW) + LW) % LW);
+  // Copied 1:1 from a copy at the screen's own scale: much cheaper than scaling it up every frame, and sharper.
+  const m = g.getTransform(), big = !m.b && !m.c && m.a === m.d && scaledLayer(cnv, y0, h, m.a);
+  if (big) {
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    const py = Math.round(m.f + y0 * m.a);
+    for (; x < viewW; x += LW) g.drawImage(big, Math.round(m.e + x * m.a), py);
+    g.setTransform(m);
+    return;
+  }
   for (; x < viewW; x += LW) g.drawImage(cnv, 0, y0, LW, h, x, y0, LW, h);
 }
+/** The band of a layer at scale k, made once (per scale). It is one column wider at each end, drawn on from the next
+    repeat of the layer, so two copies side by side never leave a gap. Null when it would be too big for the GPU. */
+function scaledLayer(cnv, y0, h, k) {
+  if (cnv._big && cnv._bigK === k) return cnv._big;
+  const w = Math.ceil(LW * k) + 2;
+  if (w > 4096 || k > 3.2) return null;
+  const c = mk(w, Math.ceil(h * k) + 1), cg = c.getContext("2d");
+  cg.setTransform(k, 0, 0, k, 0, -y0 * k);
+  cg.drawImage(cnv, 0, 0); cg.drawImage(cnv, LW, 0);
+  cnv._big = c; cnv._bigK = k;
+  // at most 8 at a time (a scene has 3 or 4 layers, about 8 MB each on a 1080p screen): the oldest go first
+  // (a layer made again at a new scale moves to the end, it is never in the list twice)
+  const i = BIG_LAYERS.indexOf(cnv); if (i >= 0) BIG_LAYERS.splice(i, 1);
+  BIG_LAYERS.push(cnv);
+  while (BIG_LAYERS.length > 8) { const old = BIG_LAYERS.shift(); old._big = null; old._bigK = 0; }
+  return c;
+}
+const BIG_LAYERS = [];
 
 /* ---------- Interieur (hele level in één keer getekend) ---------- */
 function buildInterior() {
@@ -1235,6 +1279,22 @@ function grad(key, make) {
   if (gradsW !== viewW) { for (const k in GRADS) delete GRADS[k]; gradsW = viewW; }
   return GRADS[key] || (GRADS[key] = make());
 }
+// Still, full-screen pieces (a sky, the vignette) are drawn once at the canvas's own resolution and then copied 1:1
+// every frame. Filling a gradient over every pixel each frame costs many times more, on TVs and slower phones most of
+// all. A very large canvas (4K) draws them directly, so the copies don't eat too much memory.
+const SCREEN_CACHE = new Map();
+function screenCached(key, draw) {
+  const W = cv.width, H = cv.height;
+  if (W * H > 4200000) { draw(); return; }
+  const k = key + "|" + W + "x" + H + "|" + viewW;
+  let c = SCREEN_CACHE.get(k);
+  if (!c) {
+    if (SCREEN_CACHE.size >= 3) SCREEN_CACHE.clear();
+    c = mk(W, H); const cg = c.getContext("2d"); cg.setTransform(scale, 0, 0, scale, 0, 0);
+    withCtx(cg, draw); SCREEN_CACHE.set(k, c);
+  }
+  const m = g.getTransform(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(c, 0, 0); g.setTransform(m);
+}
 function drawBackground(theme, camX) {
   const scene = arguments.length > 2 ? arguments[2] : L && L.d.scene;
   if (SCENES.has(scene)) {
@@ -1254,9 +1314,11 @@ function drawBackground(theme, camX) {
   }
   const Ls = getLayers(theme);
   if (theme === "bos") {
-    g.fillStyle = grad("sky-bos", () => { const gr = g.createLinearGradient(0, 0, 0, VIEW_H); gr.addColorStop(0, "#3a8ad6"); gr.addColorStop(.6, "#9fd3f0"); gr.addColorStop(1, "#d8f0f6"); return gr; });
-    g.fillRect(0, 0, viewW, VIEW_H);
-    g.fillStyle = grad("sun", () => { const sun = g.createRadialGradient(viewW * .2, 80, 10, viewW * .2, 80, 120); sun.addColorStop(0, "rgba(255,250,210,1)"); sun.addColorStop(.25, "rgba(255,240,170,.8)"); sun.addColorStop(1, "rgba(255,240,170,0)"); return sun; }); g.fillRect(0, 0, viewW, 260);
+    screenCached("sky-bos", () => {
+      g.fillStyle = grad("sky-bos", () => { const gr = g.createLinearGradient(0, 0, 0, VIEW_H); gr.addColorStop(0, "#3a8ad6"); gr.addColorStop(.6, "#9fd3f0"); gr.addColorStop(1, "#d8f0f6"); return gr; });
+      g.fillRect(0, 0, viewW, VIEW_H);
+      g.fillStyle = grad("sun", () => { const sun = g.createRadialGradient(viewW * .2, 80, 10, viewW * .2, 80, 120); sun.addColorStop(0, "rgba(255,250,210,1)"); sun.addColorStop(.25, "rgba(255,240,170,.8)"); sun.addColorStop(1, "rgba(255,240,170,0)"); return sun; }); g.fillRect(0, 0, viewW, 260);
+    });
     drawLayer(Ls.clouds, camX * .08 + frame * .15);
     drawLayer(Ls.far, camX * .15);
     g.fillStyle = "rgba(220,240,250,.25)"; g.fillRect(0, 250, viewW, 120);
@@ -1267,14 +1329,14 @@ function drawBackground(theme, camX) {
     for (let i = 0; i < 3; i++) { const bx = ((frame * (.6 + i * .2) + i * 400) % (viewW + 200)) - 100, by = 70 + i * 26 + Math.sin(frame / 40 + i) * 6, w = Math.sin(frame / 6 + i) * 3;
       g.beginPath(); g.moveTo(bx - 6, by - w); g.lineTo(bx, by); g.lineTo(bx + 6, by - w); g.stroke(); }
   } else if (theme === "stad") {
-    g.fillStyle = grad("sky-stad", () => { const gr = g.createLinearGradient(0, 0, 0, VIEW_H); gr.addColorStop(0, "#142247"); gr.addColorStop(.55, "#4b4f86"); gr.addColorStop(1, "#d9967a"); return gr; }); g.fillRect(0, 0, viewW, VIEW_H);
+    screenCached("sky-stad", () => { g.fillStyle = grad("sky-stad", () => { const gr = g.createLinearGradient(0, 0, 0, VIEW_H); gr.addColorStop(0, "#142247"); gr.addColorStop(.55, "#4b4f86"); gr.addColorStop(1, "#d9967a"); return gr; }); g.fillRect(0, 0, viewW, VIEW_H); });
     g.fillStyle = "#fff"; for (let i = 0; i < 40; i++) { g.globalAlpha = .3 + .5 * Math.abs(Math.sin(frame / 40 + i)); g.fillRect(((hash(i * 3) * 3000 - camX * .04) % viewW + viewW) % viewW, hash(i * 7) * 160, 2, 2); } g.globalAlpha = 1;
     drawLayer(Ls.far, camX * .15);
     g.fillStyle = "rgba(230,170,150,.18)"; g.fillRect(0, 250, viewW, 120);
     drawLayer(Ls.mid, camX * .3); drawBgAnimals(camX, Ls.mid, "mid");
     drawLayer(Ls.near, camX * .5); drawBgAnimals(camX, Ls.near, "near");
   } else {
-    g.fillStyle = grad("sky-sneeuw", () => { const gr = g.createLinearGradient(0, 0, 0, VIEW_H); gr.addColorStop(0, "#081230"); gr.addColorStop(.7, "#2a4a82"); gr.addColorStop(1, "#4a6fa8"); return gr; }); g.fillRect(0, 0, viewW, VIEW_H);
+    screenCached("sky-sneeuw", () => { g.fillStyle = grad("sky-sneeuw", () => { const gr = g.createLinearGradient(0, 0, 0, VIEW_H); gr.addColorStop(0, "#081230"); gr.addColorStop(.7, "#2a4a82"); gr.addColorStop(1, "#4a6fa8"); return gr; }); g.fillRect(0, 0, viewW, VIEW_H); });
     g.fillStyle = "#fff";
     for (let i = 0; i < 90; i++) {
       const tw = .4 + .6 * Math.abs(Math.sin(frame / (30 + i % 17) + i));
@@ -2622,10 +2684,12 @@ function drawFlakes() {
   g.globalAlpha = 1;
 }
 function vignette() {
-  g.fillStyle = grad("vignette", () => {
-    const vg = g.createRadialGradient(viewW / 2, VIEW_H * .55, VIEW_H * .45, viewW / 2, VIEW_H * .55, Math.max(viewW, VIEW_H) * .8);
-    vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(10,10,30,.32)"); return vg;
-  }); g.fillRect(0, 0, viewW, VIEW_H);
+  screenCached("vignette", () => {
+    g.fillStyle = grad("vignette", () => {
+      const vg = g.createRadialGradient(viewW / 2, VIEW_H * .55, VIEW_H * .45, viewW / 2, VIEW_H * .55, Math.max(viewW, VIEW_H) * .8);
+      vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(10,10,30,.32)"); return vg;
+    }); g.fillRect(0, 0, viewW, VIEW_H);
+  });
 }
 
 /* ---------- Region gameplay: water, movers and darkness ---------- */
